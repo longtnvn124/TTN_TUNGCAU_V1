@@ -204,4 +204,16 @@ export class DotThiKetQuaService {
     return this.http.get<Dto>(this.api, {params}).pipe(map(res => res.recordsTotal));
   }
 
+  getlimitAndselect(select:string):Observable<ShiftTests[]>{
+
+      const fromObject = {
+        paged: 1,
+        limit: -1,
+        select:select
+      };
+      const params = new HttpParams({fromObject});
+      return this.http.get<Dto>(''.concat(this.api), {params}).pipe(map(res => res.data));
+
+  }
+
 }

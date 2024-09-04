@@ -3,7 +3,7 @@ import {ChartOptions} from '@shared/models/chart-options';
 import {ChartComponent, ApexAxisChartSeries} from 'ng-apexcharts';
 import {DhtdHtkt} from '@shared/models/dhtd-htkt';
 
-import {forkJoin, Observable, of, timer} from 'rxjs';
+import {forkJoin, Observable, of, switchMap, timer} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AuthService} from '@core/services/auth.service';
 import {CardWidgetService} from '@modules/admin/features/home/widgets/card-widget/card-widget.component';
@@ -14,6 +14,7 @@ import {NganHangDeService} from "@shared/services/ngan-hang-de.service";
 import {HttpParams} from "@angular/common/http";
 import {Dto} from "@core/models/dto";
 import {PointsService} from "@shared/services/points.service";
+import {DotThiKetQuaService} from "@shared/services/dot-thi-ket-qua.service";
 
 interface DhtdHtktReportTable {
   loading: boolean;
@@ -93,6 +94,7 @@ export class HomeComponent implements OnInit {
     private pointsService:PointsService,
     protected nganHangDeService: NganHangDeService,
     private dotThiDanhSachService: DotThiDanhSachService,
+    private dotThiKetQuaService:DotThiKetQuaService
 
   ) {
     const lastYear = new Date().getFullYear();
@@ -147,7 +149,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     const y = new Date().getFullYear();
     this.lastFourYearsAgo = [y - 4, y - 3, y - 2, y - 1];
-
+    loadShift
   }
 
   loadTable(year: string, title: string, sum: number) {
@@ -161,6 +163,21 @@ export class HomeComponent implements OnInit {
 
   changeTableReportMode() {
     this.tblReport.mode = this.tblReport.mode === 'total' ? 'percent' : 'total';
+  }
+
+  loadShift(){
+    this.dotThiKetQuaService.getlimitAndselect('id,shift_id').pipe(map(m=>{
+      const ids = [...new Set(m.map(a=>a.shift_id))];
+      return forkJoin([of(m),this.dotThiDanhSachService.getDataByIds(ids)]).subscribe({
+        next:([ketqua, dotthi])=>{
+          console.log(ketqua);
+          console.log(dotthi);
+        },
+        error:()=>{
+
+        }
+      })
+    }))
   }
 
 

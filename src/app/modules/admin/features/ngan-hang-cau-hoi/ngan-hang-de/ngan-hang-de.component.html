@@ -57,10 +57,47 @@
             </div>
             <div class="col-6">
               <p class="form-row">
-                <label>Thời gian làm bài(Phút)<span class="ovic-mark">*</span></label>
-                <input type="number" placeholder="vd:60, 90, ..." formControlName="time_per_test"
-                       autocomplete="off">
+                <label>Đảo vị trí câu hỏi<span class="ovic-mark">*</span></label>
+                <p-dropdown class="w-100" [options]="randomQuestion" optionValue="value" optionLabel="label"></p-dropdown>
+<!--                <input type="number" placeholder="vd:60, 90, ..." formControlName="time_per_test"-->
+<!--                       autocomplete="off">-->
               </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <div class="form-row">
+                <label>Hình thức thi <span class="ovic-mark">*</span></label>
+                <div class="test-container">
+                  <div class="test-btns">
+                    <button pRipple pButton class=" select-height-42px"
+                            [class]="changeTb === 'cabai' ? 'p-button-primary' : 'ovic-button-none-selected'"
+                            icon="pi pi-list" (click)="selectChangeTb('cabai')" label="Cả bài"></button>
+                    <button pRipple pButton class=" select-height-42px"
+                            [class]="changeTb === 'tungcau' ? 'p-button-primary' : 'ovic-button-none-selected'"
+                            icon="pi pi-th-large" (click)="selectChangeTb('tungcau')" label="Từng câu"></button>
+                  </div>
+                  <div class="test-per-times">
+                      <div *ngIf="changeTb === 'cabai'" class="row">
+                        <div class="col-12">
+                          <div class="form-row">
+                            <label>Thời gian làm bài <span class="ovic-mark">*</span></label>
+                            <input type="number" placeholder="vd:60, 90, ..." formControlName="time_per_test">
+                          </div>
+                        </div>
+                      </div>
+                    <div *ngIf="changeTb === 'tungcau'" class="row">
+                      <div class="col-12">
+                        <div class="form-row">
+                          <label>Thời gian làm bài <span class="ovic-mark">*</span></label>
+                          <input type="number" placeholder="vd:60, 90, ..." formControlName="time_per_test_tungcau">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 

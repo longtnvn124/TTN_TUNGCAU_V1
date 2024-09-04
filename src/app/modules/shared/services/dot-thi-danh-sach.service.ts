@@ -198,5 +198,16 @@ export class DotThiDanhSachService {
     const params = this.httpParamsHelper.paramsConditionBuilder(conditions, new HttpParams({fromObject}));
     return this.http.get<Dto>(this.api, {params}).pipe(map(res => res.data));
   }
-
+  getDataByIds(ids:number[]): Observable<Shift[]> {
+    const fromObject = {
+      paged: 1,
+      limit: -1,
+      orderby: 'title',
+      order: 'ASC',
+      include:ids.join(','),
+      include_by:'id'
+    };
+    const params = new HttpParams({fromObject});
+    return this.http.get<Dto>(''.concat(this.api), {params}).pipe(map(res => res.data));
+  }
 }

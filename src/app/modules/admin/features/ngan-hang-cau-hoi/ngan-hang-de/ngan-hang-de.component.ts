@@ -10,6 +10,8 @@ import {ThemeSettingsService} from "@core/services/theme-settings.service";
 import {DateTimeServer, ServerTimeService} from "@shared/services/server-time.service";
 import {DotThiDanhSachService} from "@shared/services/dot-thi-danh-sach.service";
 import {Shift} from "@shared/models/quan-ly-doi-thi";
+import {Auth} from "@core/models/auth";
+import {AuthService} from "@core/services/auth.service";
 
 
 interface FormNganHangDe extends OvicForm {
@@ -23,28 +25,28 @@ interface FormNganHangDe extends OvicForm {
 export class NganHangDeComponent implements OnInit {
   @ViewChild('fromUpdate', {static: true}) fromUpdate: TemplateRef<any>;
   @ViewChild('formAddQuestion', {static: true}) formAddQuestion: TemplateRef<any>;
-  rows = this.themeSettingsService.settings.rows;
-  loadInitFail: false;
-  formActive: FormNganHangDe;
-  formSave: FormGroup;
-  page = 1;
-  subscription = new Subscription();
-  index: number;
-  sizeFullWidth = 1024;
-  isLoading = true;
-  needUpdate = false;
-  menuName: 'nganhangde';
-  search: string;
-  listData: NganHangDe[];
-  recordsTotal: number;
+  rows                : number = this.themeSettingsService.settings.rows;
+  loadInitFail        : boolean = false;
+  formActive          : FormNganHangDe;
+  formSave            : FormGroup;
+  page                : number = 1;
+  subscription        : Subscription = new Subscription();
+  index               : number;
+  sizeFullWidth       : number = 1024;
+  isLoading           : boolean = true;
+  needUpdate          : boolean = false;
+  menuName            : string = 'nganhangde';
+  search              : string = '';
+  listData            : NganHangDe[];
+  recordsTotal        : number;
+  bankQuestionSelect  : NganHangDe = null;
+  dataTitle           :string[];
+  btn_checkAdd        : 'Lưu lại' | 'Cập nhật';
   filePermission = {
     canDelete: true,
     canDownload: true,
     canUpload: true
   };
-  bankQuestionSelect:NganHangDe = null;
-dataTitle:string[];
-  btn_checkAdd: 'Lưu lại' | 'Cập nhật';
   private OBSERVE_PROCESS_FORM_DATA = new Subject<FormNganHangDe>();
   tblStructure: OvicTableStructure[] = [
     {
@@ -151,6 +153,14 @@ dataTitle:string[];
       color: '<span class="badge badge--size-normal badge-danger w-100">Không hợp lệ</span>'
     }
   ];
+
+  randomQuestion = [
+    {label:'Đảo vị trí câu hỏi',value:1},
+    {label:'Không vị trí câu hỏi',value:0},
+  ];
+
+
+  changeTb : string = 'cabai';// 'cabai' | 'tungcau'
   constructor(
     private nganHangDeService: NganHangDeService,
     private notificationService: NotificationService,
@@ -158,12 +168,16 @@ dataTitle:string[];
     private themeSettingsService: ThemeSettingsService,
     private serverTimeService : ServerTimeService ,
     private danhsachdoithiServicer:DotThiDanhSachService,
+    private auth: AuthService
   ) {
     this.formSave = this.fb.group({
       title: ['', Validators.required],
       desc: [''],
       number_questions_per_test: [null,Validators.required],
       time_per_test: [null, Validators.required],
+      time_per_test_tungcau: [null, Validators.required],
+      type_test: ['cabai', Validators.required],
+      ramdom_quetion: [0, Validators.required],
     });
     const observeProcessFormData = this.OBSERVE_PROCESS_FORM_DATA.asObservable().pipe(debounceTime(100)).subscribe(form => this.__processFrom(form));
     this.subscription.add(observeProcessFormData);
@@ -174,6 +188,7 @@ dataTitle:string[];
   }
 
   ngOnInit(): void {
+    console.log(this.auth.roles);
     this.loadInit();
   }
 
@@ -290,6 +305,8 @@ dataTitle:string[];
     const decision = button.data && this.listData ? this.listData.find(u => u.id === button.data) : null;
     switch (button.name) {
       case 'BUTTON_ADD_NEW':
+        this.changeTb = 'cabai';
+
         this.btn_checkAdd = "Lưu lại";
         this.formActive = this.listForm[FormType.ADDITION];
         this.preSetupForm(this.menuName);
@@ -298,9 +315,14 @@ dataTitle:string[];
           desc: '',
           number_questions_per_test: 0,
           time_per_test: 0,
+          ramdom_question:0,
+          type_test:'cabai',
+          time_per_test_tungcau:0,
+
         });
         break;
       case 'EDIT_DECISION':
+        this.changeTb = decision.type_test;
         this.btn_checkAdd = "Cập nhật";
         const object1 = this.listData.find(u => u.id === decision.id);
         this.formSave.reset({
@@ -384,6 +406,11 @@ dataTitle:string[];
     })
     ;
   }
+  }
+  selectChangeTb(type:'cabai' | 'tungcau'){
+    console.log(type)
+    this.changeTb = type;
+    this.f['type_test'].setValue(type);
   }
 
 }
