@@ -1,0 +1,221 @@
+<div *ngIf="!unLesson" class="header" id="header">
+  <!--  <div style="padding:0 40px">-->
+  <div class="w-100 d-block">
+    <div class="row d-flex justify-content-between align-items-center" style="padding: 6px 22px;">
+      <div style="padding-left:15px;cursor: pointer" class="header-logo" (click)="btn_GoHome()">
+        <a><img src="assets/images/quochuy.png"></a>
+        <h3 class="header-logo_title ml-2">Ban tuyên giáo Tỉnh uỷ</h3>
+      </div>
+      <div class="nav-menu-container">
+        <ul class="nav-menu">
+          <li class="btn-li-a btn-li-a-select" (click)="btn_gioithieu()"><a>Giới thiệu</a></li>
+          <li class="btn-li-a btn-li-a-select" (click)="btn_31Chuyende()"><a>31 chuyên đề</a></li>
+          <li class="btn-li-a btn-li-a-select" (click)="btn_vr360()"><a>Vr 360</a></li>
+          <li class="btn-li-a btn-li-a-select" (click)="btn_sukien()"><a>Sự kiện</a></li>
+          <li class="btn-li-a btn-li-a-select" (click)="btn_nhanvat()"><a>Nhân vật lịch sử</a></li>
+          <li class="btn-li-a btn-li-a-select" (click)="btn_search()"><a>Tìm kiếm</a></li>
+          <li class="btn-li-a btn-li-a-select" (click)="btn_login()"><a>Đăng nhập</a></li>
+        </ul>
+      </div>
+      <div *ngIf="!action_menu" class="nav-menu_btn" (click)="btnActionMenu()">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+      </div>
+      <div *ngIf="action_menu" class="nav-menu_btn nav-menu_btn-active" (click)="btnActionMenu()">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+      </div>
+    </div>
+    <div *ngIf="action_menu" class="drop-nav-menu">
+      <li (click)="btn_gioithieu()"><a>Giới thiệu</a></li>
+      <li (click)="btn_31Chuyende()"><a>31 chuyên đề</a></li>
+      <li (click)="btn_vr360()"><a>Vr 360</a></li>
+      <li (click)="btn_sukien()"><a>Sự kiện</a></li>
+      <li (click)="btn_nhanvat()"><a>Nhân vật lịch sử</a></li>
+      <li (click)="btn_shift()"><a>Đợt thi tìm hiểu</a></li>
+      <li (click)="btn_search()"><a>Tìm kiếm</a></li>
+      <li (click)="btn_login()"><a>Đăng nhập</a></li>
+    </div>
+  </div>
+</div>
+
+
+<ng-container [ngSwitch]="mode">
+  <ng-container *ngSwitchDefault>
+    <div class="home-container">
+      <div class="home-slider">
+        <p-galleria [autoPlay]="true" [value]="slides" [numVisible]="1" [circular]="true" [showItemNavigators]="true"
+                    [showThumbnails]="false" [containerStyle]="{ 'max-width': '100%','max-height':'650px' }">
+          <ng-template pTemplate="item" let-item>
+            <img [src]="item.img"
+                 style="width: 100%; max-height: 650px;height: 100% ;display: block;object-fit: cover"/>
+          </ng-template>
+        </p-galleria>
+      </div>
+    </div>
+    <div class="vr-container container col-xxl- mt-5">
+      <div class="d-flex justify-content-center align-items-center flex-column">
+        <div class="vr-container_title mb-2">Vr 360 tiêu biểu</div>
+        <hr class="hr-custom-1">
+        <hr class="hr-custom-2">
+        <div class="d-flex justify-content-center align-items-center flex-wrap mt-4">
+          <div *ngFor="let item of dataLinhvuc">
+            <button pButton pRipple
+                    [class]="linhvucId === item.id ? 'p-button-primary button-selection ' : 'button-none-selection'"
+                    label="{{item.ten}}" class="mx-2 my-1" style="border-radius:40px"
+                    (click)="selectDatavr(item.id)"></button>
+          </div>
+
+        </div>
+        <div *ngFor="let vr of dataVr"></div>
+        <!--  thay tế-->
+        <div class="w-100 mt-3">
+          <div class="row row-cols-2 h-100">
+            <div class=" flex-wrap justify-content-between align-items-center col-sm-6 col-md-3 p-0"
+                 *ngFor="let item of dataVr" (click)="btnSelectNgulieu(item)">
+              <div class="d-inline-block" style=" max-width:300px; width:100%; overflow: hidden;cursor: pointer">
+                <img class="w-100 h-100 ovic-img-zoom" [src]="item.file_thumbnail ? item['_img_thumbnail']: 'assets/images/placeholder-3x2.jpg'" alt="">
+              </div>
+              <!--<div class="w-100 d-inline-block  ovic&#45;&#45;parent-image position-relative">
+                <div class='head-card_hover w-100' style="cursor: pointer;">
+                  <p-image [src]="item.file_thumbnail ? item['_img_thumbnail']: 'assets/images/placeholder-3x2.jpg'"
+                           alt="Image"
+                           width="100%" [preview]="true"></p-image>
+                </div>
+              </div>-->
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="dataVr == []">
+          <div class="w-100 d-flex justify-content-center align-items-center" style="height:300px">
+            <h3>Không có dữ kiệu </h3>
+          </div>
+        </ng-container>
+      </div>
+
+
+    </div>
+
+    <div class="shift-test-container mt-5" style="background: #75837ad4;max-width: 100%;overflow: hidden; ">
+      <div class=" container d-flex justify-content-center align-items-center flex-column py-5">
+        <div class="row ">
+          <div class="col text-right shif-test-left shif-test__img">
+            <img class="w-100" style="max-width:100%"t src="assets/icon-png/shift-test.png" alt="">
+          </div>
+          <div class="col shif-test-right resize-test-right">
+            <div class="w-100 text-center p-2">
+              <h3 class="shift-test__title">Tìm hiểu về Lịch sử - Văn hoá</h3>
+              <h3 class="shift-test__title">thông qua các cuộc thi</h3>
+              <button pButton pRipple label="Chi tiết" class="btn_shifTest mt-2" (click)="btn_shift()"></button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="shift-test-container container col-xxl- mt-5 mb-4">
+      <div class="d-flex justify-content-center align-items-center flex-column">
+        <div class="vr-container_title mb-2">Sự kiện tiêu biểu</div>
+        <hr class="hr-custom-1">
+        <hr class="hr-custom-2">
+        <div class="d-flex justify-content-center align-items-center flex-wrap mt-4">
+          <div *ngFor="let item of dataLinhvuc">
+            <button pButton pRipple
+                    [class]="loaidoituong === item.id ? 'p-button-primary button-selection ' : 'button-none-selection'"
+                    label="{{item.ten}}" class="mx-2 my-1" style="border-radius:40px"
+                    (click)="selectDataSukien(item.id)"></button>
+          </div>
+        </div>
+        <div class="w-100 mt-3">
+          <div class="row row-cols-2 h-100">
+            <ng-container *ngIf="dataSukien,else unData">
+              <div class=" flex-wrap justify-content-between align-items-center col-sm-6 col-md-3 p-0"
+                   *ngFor="let item of dataSukien">
+                <div class="w-100 inline-block shadow-6 bg-white ovic--parent-image position-relative">
+                  <div class='head-card_hover w-100' style="cursor: pointer;">
+                    <p-image [src]="item.files ? item['_img_thumbnail']: 'assets/images/placeholder-3x2.jpg'"
+                             alt="Image"
+                             width="100%" [preview]="true"></p-image>
+                  </div>
+                </div>
+              </div>
+
+            </ng-container>
+            <ng-template #unData>
+              <div class="w-100 justify-content-center align-items-center" style="height:300px">
+                <h3 class="font-weight-bold"> Không có dữ liệu</h3>
+              </div>
+            </ng-template>
+
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'VR360'">
+    <div class="container" style="padding-top: 80px">
+      <div class="header-custom">
+        <p class="nhanvat-title"> Vr360 </p>
+        <div>
+          <button pButton pRipple class="p-button-secondary mr-2" icon="pi pi-angle-left"></button>
+          <button pButton pRipple class="p-button-secondary " icon="pi pi-angle-right"></button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="'NHANVAT'">
+  </ng-container>
+  <ng-container *ngSwitchCase="'SUKIEN_TONGHOP'">
+  </ng-container>
+  <ng-container *ngSwitchCase="'SEARCH'">
+  </ng-container>
+  <ng-container *ngSwitchCase="'CHUYENDE'">
+  </ng-container>
+  <ng-container *ngSwitchCase="'GIOITHIEU'">
+  </ng-container>
+
+</ng-container>
+
+
+<div *ngIf="!unLesson" class="footer_container" #footer>
+  <div class="footer-section">
+    <div class="container section-footer__container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 text-right footer-left">
+          <div class="d-inline-flex flex-column justify-content-center h-100">
+            <h3 class="footer__title"> Ban Tuyên Giáo</h3>
+            <h3 class="footer__title"> Tỉnh uỷ Tỉnh Thái Nguyên</h3>
+<!--            <div class="footer__social text-center">-->
+<!--              <a href="https://www.facebook.com/" class="footer__social__link">-->
+<!--                <i class="fa fa-facebook"></i></a>-->
+<!--              <a href="https://twitter.com/" class="footer__social__link">-->
+<!--                <i class="fa fa-twitter"></i></a>-->
+<!--              <a href="https://www.youtube.com/" class="footer__social__link">-->
+<!--                <i class="fa fa-google"></i>-->
+<!--              </a>-->
+<!--            </div>-->
+          </div>
+        </div>
+        <div class=" col-md-6 footer-right">
+          <address class="footer__address">
+            <p>Địa chỉ: Số 28 - Đ.Phan Đình Phùng - TP.Thái Nguyên - T.Thái Nguyên</p>
+            <p>Email: vanthu.btgtu@thainguyen.gov.vn </p>
+            <p>Tel: 0208 3855.529 | Fax: 0208 3855529</p>
+          </address>
+        </div>
+      </div>
+
+    </div>
+    <div class="container d-flex align-items-center justify-content-center border-top mt-2" style="font-size: 12px">
+      Bản quyền thuộc Tỉnh uỷ tỉnh Thái Nguyên
+    </div>
+  </div>
+</div>
+
+<!--<div class="position-absolute w-100 h-100">-->
+<!--  <button class="btn-li-a btn-li-a-select"> select</button>-->
+
+<!--</div>-->

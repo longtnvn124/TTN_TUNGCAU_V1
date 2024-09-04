@@ -1,0 +1,49 @@
+/*---------------------------------------*/
+
+.nv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #A20102;
+  height: 50px;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: fixed;
+  top:0;
+  width:100%;
+}
+
+.nv-header_left, .nv-header_right {
+  color: #fff;
+
+}
+
+.nv-header_left {
+  display: flex;
+  align-items: center;
+
+}
+.nv-header_right{
+  display: flex;
+  align-items: center;
+}
+
+
+.nv-header_left i {
+  font-size: 18px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.nv-header_left div {
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  line-height:17px;
+}
+
+.nv-header_right i {
+  font-size: 18px;
+  padding: 8px;
+}
+

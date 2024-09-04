@@ -1,0 +1,39 @@
+<ng-container *ngIf="control">
+    <div cdkDropList class="ovic-reorder-list" (cdkDropListDropped)="drop($event)" [class.ovic-is-loading]="!_fileList">
+        <div class="ovic-reorder-item" [class.no-preview]="!preview" *ngFor="let file of _fileList" cdkDrag>
+            <div class="ovic-reorder-item__inner" (click)="fileDetail(file)">
+                <div class="ovic-reorder__icon ovic-file-color">
+                    <i [ngClass]="file | ovicFileIcon" aria-hidden="true"></i>
+                </div>
+                <div class="ovic-reorder__info">
+                    <span class="ovic-reorder__file-name">{{ file.title ? file.title : file.name }}</span>
+                    <div class="ovic-reorder__file-size">{{file[ 'file_size' ]}}</div>
+                </div>
+                <button type="button" class="btn ovic-reorder__btn-unset-file" (click)="removeFile(file)">&times;</button>
+            </div>
+        </div>
+        <div class="ovic-reorder-item elm-button">
+            <div class="ovic-reorder-item__inner">
+                <button class="ovic-reorder__btn-add-file btn" (click)="addMoreFile()">
+                    <i class="fi fi-rr-add" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="!control">
+    <div class="ovic-reorder-list" [class.ovic-is-loading]="!_fileList">
+        <div class="ovic-reorder-item" [class.no-preview]="!preview" *ngFor="let file of _fileList">
+            <div class="ovic-reorder-item__inner" (click)="fileDetail(file)">
+                <div class="ovic-reorder__icon ovic-file-color">
+                    <i [ngClass]="file | ovicFileIcon" aria-hidden="true"></i>
+                </div>
+                <div class="ovic-reorder__info">
+                    <span class="ovic-reorder__file-name">{{ file.title ? file.title : file.name }}</span>
+                    <div class="ovic-reorder__file-size">{{file[ 'file_size' ]}}</div>
+                </div>
+            </div>
+        </div>
+        <p class="ovic-reorder-item__empty-mes text-info" *ngIf="_fileList && ! _fileList.length">{{emptyMess}}</p>
+    </div>
+</ng-container>

@@ -1,0 +1,34 @@
+.search-container{
+  margin-top: 20px;
+  width:100%;
+  height:100%;
+
+}
+
+.search-nav{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  width:100%;
+  padding-bottom:10px;
+  border-bottom: 1px solid #517B63;
+}
+.input-search-content{
+  width: 100%;
+  margin-right: 10px;
+  height:42px!important;
+}
+.btn-search{
+  background:#517b63 ;
+  border:#517b63;
+  height:42px;
+  width: 107px;
+  margin-left: 10px;
+}
+.btn-search:hover{
+  color:#fff;
+  background: #3A4E42;
+  border:#3A4E42;
+}
+/*3f604d*/
+/*3A4E42*/

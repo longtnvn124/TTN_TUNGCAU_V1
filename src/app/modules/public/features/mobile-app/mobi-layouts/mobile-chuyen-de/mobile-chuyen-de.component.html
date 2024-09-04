@@ -1,0 +1,81 @@
+<div class="w-100 d-block" style="height:var(--max-screen-height);">
+  <div class="wrap-ictu-learning-board d-flex w-100 h-100 overflow-hidden">
+    <div class="ictu-learning-board d-flex overflow-hidden position-relative"
+         [@layout]=" expandLayout ? 'expanded' : 'minimal'" [class.layout--expanded]="expandLayout">
+      <div
+        class="ictu-learning-board__section--left ictu-learning-board__section position-relative d-flex flex-column h-100"
+        [@mobileMenu]="mobileMenu">
+<!--        <div class="ictu-learning-board__section__head">-->
+<!--          <div class="d-flex w-100 h-100 justify-content-center align-items-center position-relative">-->
+<!--            <h4 class="d-block m-0 p-0 &#45;&#45;fs-17 &#45;&#45;lh-1_5 text-uppercase &#45;&#45;fw-500 text-center text-white">Danh mục bài-->
+<!--              học</h4>-->
+<!--            <button class="ictu-learning-board__section__head__close-button p-button-danger element-hide-before-1200"-->
+<!--                    pButton pRipple icon="pi pi-times" (click)="closeMenuMobile()"></button>-->
+<!--          </div>-->
+<!--        </div>-->
+        <div class="ictu-learning-board__section__body ovic-scroll-style">
+          <button class="ictu-learning-board__section__head__close-button p-button-danger element-hide-before-1200"
+                  pButton pRipple icon="pi pi-times" (click)="closeMenuMobile()"></button>
+          <app-mobile-chuye-de-menu class="lesson-board d-block w-100 h-100" (dataEvent)="passData($event)" [param_cd_id]="chuyende_id_param"></app-mobile-chuye-de-menu>
+        </div>
+        <div class="ictu-learning-board__section__foot">
+          <ul class="ictu-learning-board__directions">
+            <!--back to home-->
+            <li class="ictu-learning-board__directions__elm ictu-learning-board__directions__elm--size-140px">
+              <button [pTooltip]="'Quay lại trang chủ'" [tooltipPosition]="'top'" (click)="backHome()"
+                      class="ictu-learning-board__directions__elm__button--dashboard btn ictu-learning-board__directions__elm__button ictu-learning-board__directions__elm-go-home">
+                <i class="fa fa-home" aria-hidden="true"></i>
+                <span class="ictu-learning-board__directions__elm__button__label">Trang chủ</span>
+              </button>
+              <ng-template #hideBackToDashboardButton>
+                <button disabled="disabled"
+                        class="btn ictu-learning-board__directions__elm__button ictu-learning-board__button--invisible ictu-learning-board__directions__elm-go-home">
+                  <i class="fa fa-home" aria-hidden="true"></i>
+                  <span class="ictu-learning-board__directions__elm__button__label">Trang chủ</span>
+                </button>
+              </ng-template>
+            </li>
+
+            <!--previous lesson-->
+            <li class="ictu-learning-board__directions__elm">
+              <button class="btn ictu-learning-board__directions__elm__button ictu-learning-board__button--invisible">
+                <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+              </button>
+            </li>
+
+            <!--next lesson-->
+            <li class="ictu-learning-board__directions__elm">
+              <button class="btn ictu-learning-board__directions__elm__button ictu-learning-board__button--invisible">
+                <i class="fa fa-angle-double-down" aria-hidden="true"></i>
+              </button>
+            </li>
+
+            <!--chat button-->
+            <li class="ictu-learning-board__directions__elm">
+              <button class="btn ictu-learning-board__directions__elm__button ictu-learning-board__button--invisible">
+                <i class="fa fa-comments-o" aria-hidden="true"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+        <div class="ictu-learning-board__section__angle">
+          <button type="button" class="ictu-learning-board__section__angle__btn btn element-hide-after-1200"
+                  (click)="toggleExpandLayout()">
+            <i class="ictu-learning-board__section__angle__btn__icon fa" aria-hidden="true"
+               [ngClass]="[expandLayout ? 'fa-angle-double-right' : 'fa-angle-double-left']"></i>
+          </button>
+          <button type="button" class="ictu-learning-board__section__angle__btn btn element-hide-before-1200"
+                  (click)="toggleMenuMobile()">
+            <i class="ictu-learning-board__section__angle__btn__icon fa" aria-hidden="true"
+               [ngClass]="[mobileMenu !== 'open' ? 'fa-angle-double-right' : 'fa-angle-double-left mobile-icon']"></i>
+          </button>
+        </div>
+      </div>
+      <div class="ictu-learning-board__section--right ictu-learning-board__section">
+        <app-mobile-chuye-de-content class="d-block w-100 h-100 " style="overflow:hidden; overflow-y: auto;" [params]="sharedData"></app-mobile-chuye-de-content>
+      </div>
+    </div>
+  </div>
+
+
+</div>

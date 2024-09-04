@@ -1,0 +1,30 @@
+
+<!--<div class="w-100 h-100 d-flex justify-content-center align-items-center">-->
+<!--  Chức năng này đang phát triển-->
+<!--</div>-->
+<div *ngIf="viewLazy, else data" class="w-100 h-100 d-flex justify-content-center align-items-center">
+  <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+</div>
+
+<ng-template #data>
+  <div class="w-100 h-100 py-5 d-block">
+    <div class="container">
+      <div class="card my-2">
+        <p-chart type="bar" [data]="dataCharts" [options]="optionsCharts" height="800px"></p-chart>
+        <div class="chart-title">Danh sách thống kê thí sinh theo đơn vị</div>
+      </div>
+
+      <div class="table-chart-50">
+        <div class="w-100 d-block ovic-scroll-style px-0 py-5 ">
+          <ovic-table emptyMessage="Danh sách trống" [index]="index" [data]="dataShiftTest"
+                      styleClass="tbl-danh-sach-tap-the head-input-size--normal head-input-size--250px overflow-hidden" dataKey="id"
+                      rowHover="true"
+                      [rows]="15" tableName="Danh sách 50 thí sinh có điểm cao nhất" [tblStructure]="tblStructureShiftTest"
+                      [enableSearch]="false" [enableSearchLocal]="false" [searchDebounceTime]="800"></ovic-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+

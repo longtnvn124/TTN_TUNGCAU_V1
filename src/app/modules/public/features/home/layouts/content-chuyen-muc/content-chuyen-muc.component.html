@@ -1,0 +1,100 @@
+<div class="w-100 d-block" style="min-height:calc(100vh - 134px);padding-top: 70px;">
+  <div class="container">
+    <div class="chuyen-muc-container">
+      <div class="chuyen-muc-left">
+        <div class="chuyen-muc-left_content">
+          <div class="chuyen-muc-header">
+            Danh mục chuyên mục
+          </div>
+          <div class="chuyen-muc-data">
+            <div class="chuyen-muc-item" *ngFor="let item of dataChuyenmuc"
+                 [ngClass]="chuyenmucselect === item.id ? 'chuyen-muc-item_active':''"
+                 (click)="btnSelectChuyenmuc(item)">
+              <div class="chuyen-muc-item_content">
+                <div>{{item.ten}}</div>
+
+              </div>
+            </div>
+          </div>
+          <div class=" chuyen-muc-data-rps row row-cols-2 mx-0">
+
+            <div
+              class=" d-flex flex-wrap flex-row justify-content-between align-items-center col-sm-6 col-md-4 col-lg-4 p-2"
+              *ngFor="let item of dataChuyenmuc" (click)="btnSelectChuyenmuc(item)">
+              <div [ngClass]="chuyenmucselect === item.id ? 'chuyen-muc-item_active':''" class="chuyen-muc-item">{{item.ten}}</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <div class="chuyen-muc-right">
+        <div class="ngulieuso__container my-3 h-100 w-100">
+          <div *ngIf="ngulieuImage360.length ?? 0 > 0">
+            <div class="ngulieuso__title">
+              <h3 style="font-size: 20px;"> Ngữ liệu ảnh Vr 360</h3>
+            </div>
+            <div class="intro-x row row-cols-2" style="margin-left: -7px;margin-right: -7px;">
+              <div
+                class="d-flex flex-wrap flex-row justify-content-between align-items-center col-sm-6 col-md-4 col-lg-3 p-2"
+                *ngFor="let item of ngulieuImage360" (click)="btnSelectNgulieu(item)">
+                <div class="w-100 d-inline-block shadow-sm bg-white border ovic--parent-image position-relative"
+                     style="border-radius:4px">
+                  <div class='head-card_hover w-100 bg-image hover-zoom' style="cursor: pointer;">
+                    <div class="position-relative w-100 st-image img-child-max-width" style="overflow: hidden">
+                      <img class="w-100 h-100 ovic-img-zoom"
+                           [src]="item.file_thumbnail ? item['__file_thumbnail'] : 'assets/images/placeholder-3x2.jpg'"
+                           alt="">
+                    </div>
+                    <div class="m-2">
+                      <div
+                        class="headding-card ngulieuso_item_title">
+                        {{item.title}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="ngulieuVideo360.length ?? 0 > 0">
+            <div class="ngulieuso__title mt-4">
+              <h3 style="font-size: 20px;"> Ngữ liệu video Vr 360</h3>
+            </div>
+            <div class="intro-x row row-cols-2" style="margin-left: -7px;margin-right: -7px;">
+              <div
+                class="d-flex flex-wrap flex-row justify-content-between align-items-center col-sm-6 col-md-4 col-lg-3 p-2"
+                *ngFor="let item of ngulieuVideo360" (click)="btnSelectNgulieu(item)">
+                <div class="w-100 d-inline-block shadow-sm bg-white border ovic--parent-image position-relative"
+                     style="border-radius:4px">
+                  <div class='head-card_hover w-100 bg-image hover-zoom' style="cursor: pointer;">
+                    <div class="position-relative w-100 st-image img-child-max-width" style="overflow: hidden">
+                      <img class="w-100 h-100 ovic-img-zoom" loading="lazy"
+                           [src]="item.file_thumbnail ? item['__file_thumbnail'] : 'assets/images/placeholder-3x2.jpg'"
+                           alt="">
+                    </div>
+                    <div class="m-2">
+                      <div
+                        class="headding-card text-capitalize text_hover ngulieuso_item_title">
+                        {{item.title}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <ng-container *ngIf="!ngulieuImage360.length ?? 0 > 0 && !ngulieuVideo360.length ?? 0 > 0">
+            <div class="d-flex justify-content-center align-items-center mx-1" style="font-size:14px">Không có dữ liệu
+            </div>
+
+          </ng-container>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,264 @@
+.ctn_body {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.hover {
+  cursor: pointer;
+}
+.btn-ctm{
+  border: 1px solid #e0e0e0;
+  min-height: 42px;
+}
+
+.tooltip {
+  background-color: rgba(96, 145, 116, 0.61);
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 5px;
+  padding: 6px;
+  opacity: 0;
+  transform: translate3d(-50%, -100%, 0);
+  transition: opacity .3s, transform .3s;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.tooltip.is-active {
+  opacity: 1;
+  transform: translate3d(-50%, calc(-100% - 20px), 0);
+}
+.onRight-bottom {
+  float: left;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+
+  right: 20px;
+  bottom: 50px;
+  z-index: 100;
+}
+
+.ctn-left {
+  padding-right: 20px;
+  border-right: 1px solid #3A4E42;
+}
+
+.ctn-right {
+  margin: 0;
+  padding: 0 20px ;
+}
+
+.datainfo-title {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+.datainfo-title, .datainfo-body {
+  width: 100%;
+  border: 1px dashed #3A4E42;
+  border-radius: 5px;
+  padding: 10px 10px;
+}
+.datainfo-title__p {
+  font-size: 16px;
+  font-weight: 600;
+}
+.datainfo-body__dec {
+  display: block;
+  font-weight: bold;
+}
+.datainfo-body__dec span{
+  font-weight: normal;
+}
+.datainfo-body__tag {
+  display: inline-block;
+}
+.datainfo-body__tag--item{
+  background: #3A4E42;
+  color:#fff;
+  padding: 7px 10px 5px;
+  border-radius: 999px;
+  line-height: 1;
+  margin: 5px;
+}
+.datainfo-body__img{
+  padding:0 10px 10px 10px;
+  max-height:300px;
+  /*max-width:300px;*/
+  width:100%;
+  background-size: cover;
+}
+.datainfo-body__audio{
+  width:100%;
+}
+
+.btn-backtoScene{
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 14px;
+
+}
+.onCenter-bottom{
+  display:flex;
+  flex-direction: column;
+  position: absolute;
+  bottom:20px;
+  left:50%;
+  transform: translate(-50%, -50%);
+}
+.onCenter-bottom button{
+  outline: none;
+  background: transparent;
+  border: none;
+  font-size:30px;
+}
+.onCenter-bottom_item{
+  width:30px;
+  height: 30px;
+  color:#fff;
+  padding:10px;
+}
+.onCenter-bottom_item svg{
+  width: 26px;
+  height: auto;
+  fill: currentColor;
+
+}
+.onCenter-bottom_item :hover{
+  fill: #d6b1d0;
+  /*border: 1px solid #94a0b4;*/
+}.onCenter-bottom_item :active{
+   transform: translateY(4px);
+ }
+/*========================Menu Bottom=============================*/
+.menu-bottom-container {
+  width: 100%;
+  bottom: 0;
+  height: 60px;
+  background: transparent;
+  /*background-color: transparent;*/
+  border-top: 2px solid #fff;
+}
+
+.menu-bottom {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.menu-bottom_item {
+  margin-left: 10px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  height: 52px;
+  line-height: 3;
+}
+
+.menu-bottom_item:hover {
+  background-color: #3A4E42;
+  cursor: pointer;
+}
+
+
+.hd-dl-info {
+  border: 1px solid;
+  border-radius: 6px;
+}
+
+.hd-dl-info-item {
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid;
+  padding-bottom: 10px;
+}
+
+
+.hd-dl-info-item > svg {
+  width: 100px;
+  height: auto;
+  fill: #495057;
+}
+
+.hd-dl-info_title {
+  line-height: 2;
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 800;
+  margin-left: 4px;
+}
+
+.bd-dl-info {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.bd-dl-info_item {
+  /*border-bottom: 1px solid;*/
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+}
+
+.bd-dl-info_item-icon {
+  margin: 4px;
+  padding-left: 10px;
+}
+
+.bd-dl-info_item-title {
+  margin: 4px;
+  /* border-left: 1px solid; */
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.btn-round {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.bd-dl-info_item-icon img {
+  width: 36px;
+  height: 100%;
+  padding: 2px;
+}
+
+.map-Resize {
+  position: absolute;
+  left: 35px;
+  bottom: 35px;
+  width: 250px;
+  height: 250px;
+}
+
+
+@media(width<800px){
+  .ctn-left{
+    padding:0;
+    border:0;
+  }
+  .datainfo-body__img{
+    padding:10px
+  }
+}
+.btn-backStart{
+  position:fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.btn-backStart svg{
+  height: 50px;
+  width: 100%;
+  fill: #fff;
+}

@@ -1,0 +1,26 @@
+<div class="ovic-reorder-list" [class.ovic-reorder-list--empty-list]="!fileList || !fileList.length">
+  <div class="ovic-reorder-item" *ngFor="let file of fileList">
+    <div class="ovic-reorder-item__inner" >
+      <div class="ovic-reorder__icon ovic-file-color">
+        <i [ngClass]="file | ovicFileIcon" aria-hidden="true"></i>
+      </div>
+      <div class="ovic-reorder__info" [class.--has-download-permission]="permission['canDownload']" [class.--has-delete-permission]="permission['canDelete']">
+        <span class="ovic-reorder__file-name">{{ file.title ? file.title : file.name }}</span>
+        <div class="ovic-reorder__file-size">{{file[ 'file_size' ]}}</div>
+        <button pButton pRipple type="button" icon="pi pi-times" class="p-button p-button-text p-button-danger p-button-rounded" *ngIf="permission['canDelete']" (click)="btnDeleteFile(file)"></button>
+        <button pButton pRipple type="button" icon="pi pi-download" class="p-button p-button-text p-button-plain p-button-rounded" *ngIf="permission['canDownload']" (click)="btnDownloadFile(file)"></button>
+      </div>
+    </div>
+  </div>
+  <p class="ovic-reorder-item__empty-mes text-danger" *ngIf="(!fileList || !fileList.length) && !permission['canUpload']">{{emptyMess}}</p>
+  <div class="ovic-reorder-item elm-button" *ngIf="permission && permission['canUpload']">
+    <div class="ovic-reorder-item__inner">
+      <button class="ovic-reorder__btn-add-file btn" (click)="fileChooser.click()">
+        <i class="fi fa fa-paperclip" aria-hidden="true"></i>
+      </button>
+      <input type="file" [accept]="_accept" [multiple]="multiple" class="d-none" (change)="onSelectFiles($event)" #fileChooser/>
+    </div>
+  </div>
+
+</div>
+

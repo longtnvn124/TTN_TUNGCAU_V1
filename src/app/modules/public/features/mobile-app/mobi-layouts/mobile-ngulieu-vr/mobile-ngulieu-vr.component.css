@@ -1,0 +1,70 @@
+/*---------------------------------------*/
+
+.nv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #A20102;
+  height: 50px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.nv-header_left, .nv-header_right {
+  color: #fff;
+
+}
+
+.nv-header_left {
+  display: flex;
+  align-items: center;
+
+}
+.nv-header_right{
+  display: flex;
+  align-items: center;
+}
+
+
+
+.nv-header_left i {
+  font-size: 18px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.nv-header_left div {
+  font-size: 16px;
+  font-weight: 600;
+  line-height:17px;
+  text-transform: uppercase;
+}
+
+.nv-header_right i {
+  font-size: 18px;
+  padding: 8px;
+}
+
+
+/*==================================*/
+.ngulieuso__title{
+  font-size: 18px;
+  font-weight: 500;
+  border-bottom: 1px solid;
+  display: inline-block;
+  margin-left: 10px;
+  padding-right: 36px;
+  padding-bottom: 6px;
+}
+.ngulieuso_item_title{
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  height: 36px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/*-------------------------------------*/

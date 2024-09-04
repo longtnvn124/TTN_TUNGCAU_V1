@@ -1,0 +1,39 @@
+<div class="ovic-picker-wrap">
+    <button class="btn-icon-picker"><i id="icon" class="{{icon}}"></i></button>
+    <button class="btn btn-icon btn-primary" (click)="openPicker(ovicIconPanel)">Chọn icon</button>
+    <button class="btn btn-icon btn-danger" (click)="deleteIcon()">Xoá icon</button>
+</div>
+
+<ng-template #ovicIconPanel>
+    <div class="modal-header ">
+        <h4 class="modal-title" id="modal-title">Chọn icon</h4>
+        <button type="button" class="close" aria-describedby="modal-title" (click)="iconPanel.dismiss(false)">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body ovic-modal-body">
+        <div class="tabs">
+            <ul class="tabs-contain">
+                <ng-container *ngFor="let load of package; let i=index">
+                    <li>
+                        <button class="btn packet-name" [class.active]="i === active" (click)="changeTab(i)">{{load.name}}</button>
+                    </li>
+                </ng-container>
+            </ul>
+            <div class="search-box">
+                <input type="text" name="filter-name" #filter (keyup)="search(filter.value)">
+            </div>
+        </div>
+        <ul class="lis-icon">
+            <ng-container *ngFor="let ic of data ">
+                <li class="icon-eml">
+                    <button class="btn btn-icon-picker" (click)="iconPanel.close(ic)"><i class="{{ic}}"></i>
+                    </button>
+                </li>
+            </ng-container>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-cancel" (click)="iconPanel.dismiss(false)"><i class="fa fa-ban" aria-hidden="true"></i>Hủy thao tác</button>
+    </div>
+</ng-template>

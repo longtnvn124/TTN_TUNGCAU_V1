@@ -1,0 +1,317 @@
+<div class="w-100 h-100 d-block" style="padding-right:15px">
+  <div class="lesson-layout" style="border:1px solid #ccc">
+    <div class="menu-maker d-flex flex-column">
+      <div style="margin: 5px; border: 1px solid #c8c8c8; padding: 5px;">
+        <div class="decuong-lesson"><span>Danh sách Chuyên đề</span></div>
+      </div>
+      <div style="flex: 1; overflow: auto;" (cdkDropListDropped)="onDragStartParent($event,listData)" cdkDropList
+           [cdkDropListData]="listData">
+        <div cdkDrag class="menu-maker-parent" *ngFor="let parent of listData">
+          <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+          <div class="menu-maker-edit-parent group-input"
+               [ngClass]="selectedChuyenMuc && parent.id === selectedChuyenMuc.id? 'lesson-is-setting': null">
+            <div class="group-input-option-button-left">
+              <button *ngIf="!parent['newInput']" container="body" type="button">
+                <i class="fi-rr-menu-burger"></i>
+              </button>
+              <button *ngIf="parent['newInput']"><i class="fi-rr-add"></i></button>
+            </div>
+            <input
+              [focusMe]="checkOrderingFocus === parent.ordering && checkParentFocus === parent.parent_id? true : false"
+              #menuItem (keyup.enter)="onCreateMenuItem(menuItem.value,parent)" type="text" name=""
+              [value]="parent.title" placeholder="Nhập, sửa tên chuyên đề và nhấn enter để lưu">
+            <div *ngIf="!parent['newInput'] " class="group-input-option-button-right">
+              <button *ngIf="parent['children'] && parent['children'][0]['newInput']"
+                      class="btn btn-menu-maker-danger" (click)="deleteLesson(parent)">
+                <i class="fa fa-trash-o"></i>
+              </button>
+
+              <button (click)="setActiceParent(parent)" container="body" placement="right"
+                      [ngbTooltip]="parent['status_check']? 'Đã kích hoạt':'Chưa kích hoạt'"
+                      [ngClass]="parent['status_check']? 'status-is-active' : 'status-is-deactive'"><i
+                class="fa fa-circle font-size-12px activeActionBaihoc"></i></button>
+              <button cdkDragHandle style="cursor: all-scroll;" class="btn status-is-deactive">
+                <i style="color: #333;" class="fa fa-arrows"></i>
+              </button>
+
+            </div>
+          </div>
+          <div (cdkDropListDropped)="onDragStartChild($event,parent['children'])" cdkDropList
+               [cdkDropListData]="parent['children']" *ngIf="parent['children']" class="menu-maker-childrens">
+            <div cdkDrag
+                 [ngClass]="selectedChuyenMuc && children.id === selectedChuyenMuc.id? 'lesson-is-setting': null"
+                 class="menu-maker-edit-children group-input" *ngFor="let children of parent['children']">
+              <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+              <div class="group-input-option-button-left">
+                <button *ngIf="!children['newInput']" container="body" type="button"
+                        tooltipClass="btn-type-lesson-tooltip" (click)="onChangeTypeLesson(children)"
+                        placement="right" [ngbTooltip]="children.type === 'LESSON'? 'LESSON':'TEST'">
+                  <i [ngClass]="children.type == 'LESSON'? 'fi-rr-file' : 'fi-rr-clock' "></i>
+
+                </button>
+                <button *ngIf="children['newInput']"><i class="fi-rr-add"></i></button>
+              </div>
+              <input
+                [focusMe]="checkOrderingFocus === children.ordering && checkParentFocus === children.parent_id? true : false"
+                #menuItem (keyup.enter)="onCreateMenuItem(menuItem.value,children)" type="text" name=""
+                [value]="children.title" placeholder="Nhập, sửa tên bài giảng và nhấn enter để lưu">
+              <div *ngIf="!children['newInput']" class="group-input-option-button-right">
+                <button *ngIf="!children['readonly']" class="btn btn-menu-maker-danger"
+                        (click)="deleteLesson(children)">
+                  <i class="fa fa-trash-o"></i>
+                </button>
+                <button *ngIf="!children['readonly']" class="btn btn-menu-maker-setting"
+                        (click)="settingLesson(children)">
+                  <i class="fa fa-pencil"></i>
+                </button>
+                <button (click)="setActiceLesson(children)" container="body" placement="left"
+                        [ngbTooltip]="children.status? 'Đã kích hoạt':'Chưa kích hoạt'"
+                        [ngClass]="children.status? 'status-is-active' : 'status-is-deactive'"><i
+                  class="fa fa-circle font-size-12px activeActionBaihoc"></i></button>
+                <button cdkDragHandle style="cursor: all-scroll;" class="btn status-is-deactive">
+                  <i style="color: #333;" class="fa fa-arrows"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="btn-bottom-container">
+        <button pButton pRipple [disabled]="!isChangeOrdering" (click)="saveOrdering()"
+                class="btn ovic-over-right-section__foot-btn btn-primary" icon="pi pi-save" iconPos="left"
+                label="Lưu lại thứ tự chuyên đề"></button>
+      </div>
+    </div>
+    <div *ngIf="!isSettings" class="form-setting-lesson h-100 w-100"
+         style="border-left:1px solid #ccc; display: flex; justify-content: center; align-items: center; font-size: 18px; color: #333;">
+      <span style="font-size: 15px;">Vui lòng chọn chuyên đề</span>
+    </div>
+    <div *ngIf="isSettings" class="form-setting-lesson h-100 w-100"
+         style="display: flex; flex-direction: column; padding: 0px">
+      <div style="flex: 1;overflow: auto; line-height: 1.25;padding: 5px;
+    height: 100%;
+    border-left: 1px solid #ccc;" class="ovic-vertical__inputs">
+        <div style="padding: 5px;height: 100%;">
+          <form style="height: 100%;" [formGroup]="formChuyenDe">
+            <p-tabView [activeIndex]="activeIndex" class="tabview-custom">
+              <p-tabPanel header="Text">
+                <p-editor #edtitor [editor]="edtitor" [curentFormControl]="f['desc']" [Resize_img]="true" class="w-100"
+                          formControlName="desc" placeholder="Nội dung..." [style]="{ 'min-height': '250px'}" [modules]="module_quill"
+                >
+                  <p-header>
+                          <span class="ql-formats">
+                              <select class="ql-header" title="Thẻ tiêu đề">
+                                  <option selected>Chữ thường </option>
+                                  <option value="1">Tiêu đề 1</option>
+                                  <option value="2">Tiêu đề 2</option>
+                                  <option value="3">Tiêu đề 3</option>
+                                  <option value="4">Tiêu đề 4</option>
+                                  <option value="5">Tiêu đề 5</option>
+                                  <option value="6">Tiêu đề 6</option>
+                              </select>
+                               <select id="--ql-size" class="ql-size" title="Kích thước chữ">
+                                  <option value="small">Cỡ nhỏ</option>
+                                  <option value="false" selected>Cỡ thường</option>
+                                  <option value="large">Cỡ vừa</option>
+                                  <option value="huge">Cỡ lớn</option>
+                              </select>
+                          </span>
+                    <span class="ql-formats">
+                              <button class="ql-bold" title="Kiểu chữ đậm"></button>
+                              <button class="ql-italic" title="Kiểu chữ nghiêng"></button>
+                              <button class="ql-underline" title="Kiểu chữ ghạch chân"></button>
+                              <button class="ql-strike" title="Kiểu chữ ghạch ngang"></button>
+                          </span>
+                    <span class="ql-formats">
+                              <select class="ql-align" title="Căn lề">
+                                  <option selected></option>
+                                  <option value="center"></option>
+                                  <option value="right"></option>
+                                  <option value="justify"></option>
+                              </select>
+                              <select class="ql-color" title="Màu chữ"><option selected="selected"></option><option
+                                value="#e60000"></option><option value="#ff9900"></option><option
+                                value="#ffff00"></option><option
+                                value="#008a00"></option><option value="#0066cc"></option><option
+                                value="#9933ff"></option><option
+                                value="#ffffff"></option><option value="#facccc"></option><option
+                                value="#ffebcc"></option><option
+                                value="#ffffcc"></option><option value="#cce8cc"></option><option
+                                value="#cce0f5"></option><option
+                                value="#ebd6ff"></option><option value="#bbbbbb"></option><option
+                                value="#f06666"></option><option
+                                value="#ffc266"></option><option value="#ffff66"></option><option
+                                value="#66b966"></option><option
+                                value="#66a3e0"></option><option value="#c285ff"></option><option
+                                value="#888888"></option><option
+                                value="#a10000"></option><option value="#b26b00"></option><option
+                                value="#b2b200"></option><option
+                                value="#006100"></option><option value="#0047b2"></option><option
+                                value="#6b24b2"></option><option
+                                value="#444444"></option><option value="#5c0000"></option><option
+                                value="#663d00"></option><option
+                                value="#666600"></option><option value="#003700"></option><option
+                                value="#002966"></option><option
+                                value="#3d1466"></option></select>
+                              <select class="ql-background" title="Màu chữ"><option selected="selected"></option><option
+                                value="#e60000"></option><option value="#ff9900"></option><option
+                                value="#ffff00"></option><option
+                                value="#008a00"></option><option value="#0066cc"></option><option
+                                value="#9933ff"></option><option
+                                value="#ffffff"></option><option value="#facccc"></option><option
+                                value="#ffebcc"></option><option
+                                value="#ffffcc"></option><option value="#cce8cc"></option><option
+                                value="#cce0f5"></option><option
+                                value="#ebd6ff"></option><option value="#bbbbbb"></option><option
+                                value="#f06666"></option><option
+                                value="#ffc266"></option><option value="#ffff66"></option><option
+                                value="#66b966"></option><option
+                                value="#66a3e0"></option><option value="#c285ff"></option><option
+                                value="#888888"></option><option
+                                value="#a10000"></option><option value="#b26b00"></option><option
+                                value="#b2b200"></option><option
+                                value="#006100"></option><option value="#0047b2"></option><option
+                                value="#6b24b2"></option><option
+                                value="#444444"></option><option value="#5c0000"></option><option
+                                value="#663d00"></option><option
+                                value="#666600"></option><option value="#003700"></option><option
+                                value="#002966"></option><option
+                                value="#3d1466"></option></select>
+                          </span>
+                    <span class="ql-formats">
+                              <button class="ql-list" value="ordered" title="Danh sách số"></button>
+                              <button class="ql-list" value="bullet" title="Danh sách chấm"></button>
+                              <button class="ql-indent q1-box" value="+1" title="Thụt đầu dòng"></button>
+                              <button class="ql-indent q2-box last" value="-1" title="Giảm thụt đầu dòng"></button>
+                          </span>
+                    <span class="ql-formats">
+
+                              <button class="ql-image" aria-label="image" title="Chèn ảnh"></button>
+                              <button class="ql-blockquote" aria-label="blockquote" title="Trích dẫn"></button>
+                              <button class="ql-code-block" aria-label="code-block" title="code-block"></button>
+                          </span>
+                  </p-header>
+                </p-editor>
+              </p-tabPanel>
+              <p-tabPanel header="Video">
+                <div class="row form-row form-row-flex-row">
+                  <div class="col-12"
+                       style="color: red; padding: 10px; font-size: 14px; background-color: #f2d06642; line-height: 1.5;">
+                    <label style="color: red;">Lưu ý:</label>
+                    <div style="display: flex; flex-direction: column;">
+                      <span>- Chỉ cho phép video có định dạng là: mp4, avi</span>
+                      <span>- Dung lượng tối đa của mỗi video là 3GB</span>
+                      <span>- Độ phân giải cho mỗi video tối thiểu là 720p</span>
+                      <span>- Trường hợp có Youtube link sẽ đc ưu tiên</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row form-row form-row-flex-row">
+                  <div class="col-12 ovic-vertical__inputs--layout-2">
+                    <div class="form-row">
+                      <label>Phân loại</label>
+                      <div class="classify-container w-100">
+                        <div class="mt-2">
+                          <button (click)="changeVideoType(1)"
+                                  [class]="videoTypeCr === 1 ? 'p-button-primary' : 'ovic-button-none-selected'" pButton
+                                  pRipple
+                                  class="p-button-rounded mr-2" icon="pi pi-youtube" label="Youtube link"></button>
+                          <button (click)="changeVideoType(0)"
+                                  [class]="videoTypeCr === 0 ? 'p-button-primary' : 'ovic-button-none-selected'" pButton
+                                  pRipple
+                                  class="p-button-rounded" icon="pi pi-video" label="Video tải lên"></button>
+
+                        </div>
+
+                        <ng-container [ngSwitch]="videoTypeCr">
+                          <ng-container *ngIf="videoTypeCr === 0">
+                            <div class="row form-row form-row-flex-row">
+                              <div class="col-12">
+                                <label>Video:</label>
+                                <app-file-list-local class="w-100 ovic-vertical__file-list" [permission]="filePermission"
+                                                     [formField]="f['video']" [multiple]="true" [accept]="['.mp4','.avi']"
+                                                     [state]="1"></app-file-list-local>
+                              </div>
+                            </div>
+                          </ng-container>
+                          <ng-container *ngIf="videoTypeCr === 1">
+                              <div class="row mt-2">
+                                <div class="col-12">
+                                  <p class="form-row">
+                                    <label > Youtube link</label>
+                                    <input pRipple pInputText placeholder="Vui lòng nhập link ở đây." formControlName="yt_link" (input)="videoLinkOnChange($event.target['value'])" >
+                                  </p>
+                                </div>
+                              </div>
+                              <div *ngIf="videoTypeCr === 1 && yt_link_cr !== '' " class="row mt-1">
+                                <div class="col-12 ">
+                                  <div class="video-priview-frame">
+                                    <iframe [src]="yt_link_cr | ovicSafeResourceUrl"  >
+                                    </iframe>
+                                  </div>
+
+                                </div>
+                              </div>
+                          </ng-container>
+                        </ng-container>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              </p-tabPanel>
+              <p-tabPanel header="Tài liệu khác">
+                <div class="row form-row form-row-flex-row">
+                  <div class="col-12">
+                    <div style="margin-top: 20px;margin-bottom:10px; font-weight: 600;">File tài liệu (Chỉ cho phép tệp
+                      pdf):
+                    </div>
+                    <app-file-list-local class="w-100 ovic-vertical__file-list" [permission]="filePermission"
+                                         [accept]="['.pdf']"
+                                         [formField]="f['documents']" [multiple]="true"
+                                         [state]="1"></app-file-list-local>
+                  </div>
+                </div>
+
+              </p-tabPanel>
+              <p-tabPanel header="Scorm">
+                <div class="row form-row form-row-flex-row">
+                  <div class="col-12">
+                    <div style="margin-top: 20px;margin-bottom:10px; font-weight: 600;">File Scorm nén (Chỉ cho phép tệp zip):</div>
+                    <app-file-list-local class="w-100 ovic-vertical__file-list" [permission]="filePermission"
+                                         [formField]="f['file_scorm']" [multiple]="false" [accept]="['.zip']"
+                                         [chuyendeId]="selectedChuyenMuc.id"
+                                         [state]="1"></app-file-list-local>
+                  </div>
+                </div>
+              </p-tabPanel>
+
+            </p-tabView>
+          </form>
+        </div>
+      </div>
+      <div class="ovic-dynamic-right-section__foot"
+           style="border-top: 1px solid #c8c8c8; display: flex; align-items: center; justify-content: flex-end; padding: 5px; border-left: 1px solid #c8c8c8;">
+
+        <button pRipple pButton label="Cập nhật" icon="pi pi-save" class="p-button-success mr-1"
+                (click)="processAddForm(true,false,false)"></button>
+        <button pButton pRipple label="Đóng" icon="pi pi-ban" class="p-button-secondary" (click)="closeForm()"></button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #templateWaiting let-c="close" let-d="dismiss">
+    <div class="popup-waiting-loading">
+      <label>Vui lòng chờ...</label>
+      <div class="tn-import-student-progressbar">
+<!--        <mat-progress-bar  mode="indeterminate" [value]="progressValue"></mat-progress-bar>-->
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
+    </div>
+  </ng-template>
+
+</div>

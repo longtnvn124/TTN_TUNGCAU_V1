@@ -1,0 +1,117 @@
+
+<div class="w-100" style="min-height:calc(100vh - 134px)">
+  <div class="container" style="padding-top: 80px">
+    <div class="header-custom">
+      <p class="nhanvat-title"> Nhân vật lịch sử </p>
+      <div>
+        <button pButton pRipple class="p-button-secondary mr-2" icon="pi pi-angle-left" (click)="btn_backInfo()"
+        ></button>
+        <button pButton pRipple class="p-button-secondary " icon="pi pi-angle-right" (click)="btn_nextInfo()"></button>
+      </div>
+    </div>
+    <div class="ngulieuso__container my-3 h-100 w-100">
+      <ng-container [ngSwitch]="mode">
+        <ng-container *ngSwitchDefault>
+          <div *ngIf="listData.length ?? 0 > 0,else notData" class="row row-cols-2 h-full" style="margin-left: -5px;
+    margin-right: -5px;">
+            <div class=" flex-wrap col-sm-6 col-md-4 col-lg-3 p-2" *ngFor="let item of listData">
+              <div class="w-full inline-block shadow-6 bg-white border ovic--parent-image position-relative"
+                   style="border-radius:4px">
+                <div class='head-card_hover w-100 bg-image hover-zoom' (click)="btnSelectItem(item)" style="cursor: pointer;">
+                  <div class="position-relative w-100 st-image img-child-max-width" style="overflow: hidden">
+                    <img class="w-100 h-100 ovic-img-zoom"
+                         [src]="item.files ? item['image_convenrted'] : 'assets/images/placeholder.jpg'" alt="">
+                  </div>
+                  <div class="m-2">
+                    <div
+                      class="headding-card text-xl font-weight-bold text-capitalize text-center align-items-center text_hover text-primary"
+                      style="font-size: 16px; white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                      {{item.bietdanh}}
+                    </div>
+                    <div class="text-lg font-medium border-top-1 text-center">
+                      <p class="font-weight-normal d-sm-inline-block mb-0" style="font-size: 13px">
+                        {{item.nam}}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #notData>
+            <div class="d-flex justify-content-center align-items-center mx-1" style="font-size:14px">Không có dữ liệu</div>
+          </ng-template>
+
+
+
+        </ng-container>
+        <ng-container *ngSwitchCase="'INFO'">
+          <div class="width-max-500px row row-cols-1 mx-0 my-5 h-100 nhanvat__info">
+            <div class="col-4 h-100">
+              <div *ngIf="dataSelect['image_convenrted'] ,else imgPlachoder"
+                   class="position-relative w-100 st-image img-child-max-width">
+                <img [src]="dataSelect['image_convenrted']">
+              </div>
+              <ng-template #imgPlachoder>
+                <div class="position-relative w-100 st-image img-child-max-width">
+                  <img src="./assets/images/placeholder.jpg">
+                </div>
+              </ng-template>
+              <div class="mt-3 ml-3">
+                <div class="mt-2 font-weight-normal" style="font-size: 16px"><b>Biệt danh : </b> <span
+                  class="text-capitalize"> {{dataSelect.bietdanh}}</span></div>
+                <div class="mt-2 font-weight-normal" style="font-size: 16px"><b>Tên thật:</b> <span
+                  class="text-capitalize"> {{dataSelect.ten}}</span></div>
+                <div class="mt-2 font-weight-normal" style="font-size: 16px"><b>Năm sinh - Năm mất:</b> <span
+                  class=""> {{dataSelect.nam}}</span></div>
+                <div class="mt-2 font-weight-normal" style="font-size: 16px"><b>Giới tính:</b> <span
+                  class=""> {{dataSelect['__gioitinh_converted']}}</span></div>
+              </div>
+            </div>
+            <div class="col-8 border-left scroll-ctn-right">
+              <div class="mt-2 font-weight-normal" style="font-size: 16px"><b>Thông tin chi tiết:</b>
+                <br><span class="ql-editor" [innerHTML]="dataSelect.mota | htmlDecode |ovicSafeHtml"></span>
+              </div>
+            </div>
+          </div>
+          <div class="w-100 h-100 width-min-500px">
+            <div class="d-flex justify-content-center align-items-center flex-column">
+              <div *ngIf="dataSelect['image_convenrted'] ,else imgPlachoder"
+                   class="position-relative w-100 st-image img-child-max-width">
+                <img [src]="dataSelect['image_convenrted']">
+              </div>
+              <ng-template #imgPlachoder>
+                <div class="position-relative w-100 st-image img-child-max-width">
+                  <img src="./assets/images/placeholder.jpg">
+                </div>
+              </ng-template>
+
+            </div>
+            <div class="">
+              <div class="m-3">
+                <div class="mt-2 font-weight-normal" style="font-size: 16px"><b>Biệt danh : </b> <span
+                  class="text-capitalize"> {{dataSelect.bietdanh}}</span></div>
+                <div class="mt-2 font-weight-normal" style="font-size: 16px"><b>Tên thật:</b> <span
+                  class="text-capitalize"> {{dataSelect.ten}}</span></div>
+                <div class="mt-2 font-weight-normal" style="font-size: 16px"><b>Năm sinh - Năm mất:</b> <span
+                  class=""> {{dataSelect.nam}}</span></div>
+                <div class="mt-2 font-weight-normal" style="font-size: 16px"><b>Giới tính:</b> <span
+                  class=""> {{dataSelect['__gioitinh_converted']}}</span>
+                </div>
+                <div class="mt-2 font-weight-normal text-justify" style="font-size: 16px"><b>Thông tin chi tiết:</b>
+                  <br><span [innerHTML]="dataSelect.mota | htmlDecode"></span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </ng-container>
+      </ng-container>
+
+    </div>
+
+  </div>
+</div>
+
+

@@ -1,0 +1,30 @@
+<div class="single-notification">
+    <ng-container *ngIf="!isError && data">
+        <div class="single-notification__head">
+            <div class="single-notification__head__wrap-avatar">
+                <img class="single-notification__head__avatar" [src]="author.avatar" alt="">
+            </div>
+            <div class="single-notification__head__info">
+                <b class="single-notification__head__info__author">{{author.name}}</b>
+                <span class="single-notification__head__info__email">{{author.email}}</span>
+            </div>
+            <button pButton pRipple type="button" icon="pi pi-angle-double-right" class="p-button-rounded p-button-secondary p-button-outlined" (click)="backToList()" style="opacity:.6;"></button>
+        </div>
+        <div class="single-notification__body">
+            <h4 class="single-notification__body__n-title">{{data.title}}</h4>
+            <div class="single-notification__body__message-content" [innerHTML]="data.message"></div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="!isError && isEmptyData">
+        <div class="single-notification__wrap-note">
+            <p class="alert alert-warning" role="alert">Thông báo không tồn tại hoặc đã bị xóa</p>
+            <button class="p-button" pRipple pButton label="Quay lại danh sách thông báo" icon="pi pi-list" (click)="backToList()"></button>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="isError">
+        <div class="single-notification__wrap-note">
+            <p class="alert alert-danger" role="alert">Đã có lỗi trong quá trình tải dữ liệu, vui lòng chọn 'Reload' để tải lại dữ liệu</p>
+            <button class="p-button" pRipple pButton label="Reload" icon="pi pi-refresh" (click)="reloadData()"></button>
+        </div>
+    </ng-container>
+</div>

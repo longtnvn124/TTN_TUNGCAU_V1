@@ -1,0 +1,228 @@
+.tbl-file-list-local__table table thead {
+	background-color: #e6e6e6;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.tbl-file-list-local__table table,
+.tbl-file-list-local__table table th,
+.tbl-file-list-local__table table td {
+	border: 1px solid #cccccc;
+}
+
+.tbl-file-list-local__table table th,
+.tbl-file-list-local__table table td {
+	padding: 5px;
+}
+
+.tbl-file-list-local__table table tbody {
+	font-size: 14px;
+	line-height: 1.5;
+	background-color: #ffffff;
+}
+
+.tbl-file-list-local__table__btn-add-first {
+	color: #666666;
+	background-color: #ffffff;
+	border: 1px solid #ccc;
+	font-size: 0;
+	line-height: 0;
+	padding: 14px 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	outline: none !important;
+	box-shadow: none !important;
+	position: relative;
+	border-radius: 0;
+}
+
+.tbl-file-list-local__table__btn-add-first > span {
+	font-size: 10px;
+	line-height: 12px;
+	min-width: 16px;
+	height: 16px;
+	background-color: #56c97c;
+	text-align: center;
+	color: #fff;
+	border-radius: 999px;
+	padding: 2px;
+	display: inline-block;
+	position: absolute;
+	top: calc(50% - 15px);
+	left: calc(50% + 2px);
+	font-weight: 500;
+}
+
+.tbl-file-list-local__table__btn-add-first:hover {
+	color: #eeeeee;
+	background-color: #459e59;
+	border-color: #459e59;
+}
+
+/*.tbl-file-list-local__table__btn-add-first:hover > span {
+	background-color: #ffffff;
+	color: #333333;
+}*/
+
+.tbl-file-list-local__table__btn-add-first i {
+	font-size: 16px;
+	color: inherit;
+}
+
+.tbl-file-list-local__menu {
+	display: flex;
+	flex-direction: column;
+	width: 280px;
+	min-height: 65px;
+}
+
+.tbl-file-list-local__menu__head {
+	display: flex;
+	align-items: center;
+	color: #fff;
+	border-bottom: 1px solid #ededed;
+	padding: 5px;
+	background-color: var(--blue-700);
+}
+
+.tbl-file-list-local__menu__head__title__btn {
+	width: 22px;
+	height: 22px;
+	border-radius: 999px;
+	outline: none !important;
+	box-shadow: none !important;
+	padding: 0;
+}
+
+.tbl-file-list-local__menu__head__title__btn + .tbl-file-list-local__menu__head__title__btn {
+	margin-left: 5px;
+}
+
+.tbl-file-list-local__menu__head__title {
+	font-size: 13px;
+	font-weight: 500;
+	margin: 0 auto 0 0;
+	user-select: none;
+	padding: 0 5px;
+	line-height: 1;
+}
+
+.tbl-file-list-local__menu__body {
+	min-height: 32px;
+}
+
+.ovic-reorder-item__inner {
+	padding: 10px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	box-sizing: border-box;
+	cursor: pointer;
+	background: transparent;
+	font-size: 14px;
+	width: 100%;
+}
+
+.tbl-file-list-local__menu__body__list__elm {
+	border-bottom: dashed 1px #cccccc;
+	display: block;
+}
+
+.tbl-file-list-local__menu__body__list__elm:last-child {
+	border-bottom: none;
+}
+
+.ovic-reorder-item__empty-mes {
+	padding: 10px;
+	margin: 0;
+	text-align: center;
+	font-size: 15px;
+}
+
+.tbl-file-list-local__menu__body__list {
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+}
+
+.ovic-reorder__icon {
+	width: 30px;
+	font-size: 0;
+	line-height: 0;
+	align-self: flex-start;
+	padding: 2px 0 0;
+}
+
+.ovic-reorder__icon i {
+	font-size: 21px;
+}
+
+.ovic-reorder__info {
+	flex: 1 1;
+	font-size: 13px;
+	line-height: 1;
+	color: #666666;
+	position: relative;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	word-break: break-word;
+	width: calc(100% - 30px);
+	max-width: calc(100% - 30px);
+}
+
+.ovic-reorder__file-name {
+	color: #333333;
+	display: block;
+	margin-bottom: 3px;
+	max-width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	word-break: break-word;
+	font-size: 14px;
+}
+
+.ovic-reorder__info .p-button {
+	width: 22px;
+	height: 22px;
+	padding: 0;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	outline: none;
+	box-shadow: none;
+	position: absolute;
+	z-index: 10;
+	right: 0;
+	top: 4px;
+}
+
+.--has-download-permission,
+.--has-delete-permission {
+	padding-right: 22px;
+}
+
+.--has-download-permission.--has-delete-permission {
+	padding-right: 46px;
+}
+
+.--has-download-permission.--has-delete-permission .p-button-danger {
+	right: 24px;
+}
+
+.prevent-user-from-uploading:hover,
+.prevent-user-from-uploading::selection,
+.prevent-user-from-uploading {
+	background-color: #efefef !important;
+	border-color: #dbdbdb !important;
+	color: #888888 !important;
+	outline: none !important;
+	box-shadow: none !important;
+}

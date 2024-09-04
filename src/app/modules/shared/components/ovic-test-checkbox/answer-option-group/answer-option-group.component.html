@@ -1,0 +1,61 @@
+<div class="answer-option-group">
+
+  <ng-container *ngFor="let option of _question.answer_option; index as i">
+<!--    <div class="answer-option-group__answer">-->
+<!--      <div class="answer-correct">-->
+<!--        <ng-container *ngIf="type_answer === 'checkbox' else radio">-->
+<!--                <button pButton pRipple [icon]="_question.answer_correct.includes(option.id.toString()) ? 'pi pi-check-square' : 'pi pi-stop'"-->
+<!--                       [ngClass]=" _question.answer_correct.includes(option.id.toString()) ? 'p-button-primary' : 'p-button-secondary'"-->
+<!--                        class="answer-option-group__answer__button p-button-text p-button-primary"-->
+<!--                        (click)="selectItem(option.id)"></button>-->
+<!--        </ng-container>-->
+<!--        <ng-template #radio>-->
+<!--          <button pButton pRipple [icon]="_question.answer_correct.includes(option.id.toString()) ? 'pi pi-circle-fill' : 'pi pi-circle'"-->
+<!--                  [ngClass]=" _question.answer_correct.includes(option.id.toString()) ? 'p-button-primary' : 'p-button-secondary'"-->
+<!--                  class="answer-option-group__answer__button p-button-text p-button-primary"-->
+<!--                  (click)="selectItem(option.id)"></button>-->
+<!--        </ng-template>-->
+<!--      </div>-->
+
+<!--      <input class="" type="text" [placeholder]="'Câu trả lời ' + (i+1)" [(ngModel)]="option.value"  autocomplete="off">-->
+
+<!--      <div class="answer-delete">-->
+<!--        <i class="pi pi-trash p-button-danger" (click)="deleteItem(option.id)"></i>-->
+<!--      </div>-->
+<!--    </div>-->
+    <div class="answer-option-group__answer-v2">
+      <div class="answer-option__header">
+              <div class="answer-correct">
+                <ng-container *ngIf="type_answer === 'checkbox' else radio">
+                        <button pButton pRipple [icon]="_question.answer_correct.includes(option.id.toString()) ? 'pi pi-check-square' : 'pi pi-stop'"
+                               [ngClass]=" _question.answer_correct.includes(option.id.toString()) ? 'p-button-primary' : 'p-button-secondary'"
+                                class="answer-option-group__answer__button p-button-text p-button-primary"
+                                (click)="selectItem(option.id)"></button>
+                </ng-container>
+                <ng-template #radio>
+                  <button pButton pRipple [icon]="_question.answer_correct.includes(option.id.toString()) ? 'pi pi-circle-fill' : 'pi pi-circle'"
+                          [ngClass]=" _question.answer_correct.includes(option.id.toString()) ? 'p-button-primary' : 'p-button-secondary'"
+                          class="answer-option-group__answer__button p-button-text p-button-primary"
+                          (click)="selectItem(option.id)"></button>
+                </ng-template>
+              </div>
+      </div>
+      <div class="answer-option__body">
+        <p-editor [(ngModel)]="option.value" [placeholder]="'Câu trả lời ' + (i+1)"></p-editor>
+      </div>
+      <div class="answer-delete">
+        <button pButton pRipple class="p-button-text p-button-danger" icon="pi pi-trash" (click)="deleteItem(option.id)"></button>
+      </div>
+    </div>
+
+
+
+
+  </ng-container>
+
+  <button pRipple pButton class="btn-add-answer p-button-secondary" icon="pi pi-plus" label="Thêm phương án trả lời"
+          (click)="addMoreAnswer()"></button>
+</div>
+
+<!--<input type="file" #fileInput (change)="uploadFile($event)" hidden="true" >-->
+

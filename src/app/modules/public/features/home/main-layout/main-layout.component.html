@@ -1,0 +1,98 @@
+<div *ngIf="!unLesson" class="header" id="header">
+  <div class="w-100 h-100 d-block">
+    <div class="row d-flex h-100 justify-content-between align-items-center" style="padding: 6px 22px;">
+      <div style="padding-left:15px;cursor: pointer" class="header-logo" (click)="btn_GoHome()">
+        <a><img src="assets/images/quochuy.png"></a>
+        <h3 class="header-logo_title ml-2">Ban tuyên giáo Tỉnh UỶ</h3>
+      </div>
+      <div class="nav-menu-container">
+        <ul class="nav-menu">
+          <li class="btn-li-a btn-li-a-select" (click)="btn_gioithieu()"><a>Giới thiệu</a></li>
+          <li class="btn-li-a btn-li-a-select" (click)="btn_chuyenmuc()"><a>Chuyên mục</a></li>
+          <li class="btn-li-a btn-li-a-select" (click)="btn_31Chuyende()"><a>31 chuyên đề</a></li>
+          <li class="btn-li-a btn-li-a-select" (click)="btn_vr360()"><a>Vr 360</a></li>
+          <li class="btn-li-a btn-li-a-select" (click)="btn_sukien()"><a>Sự kiện</a></li>
+          <li class="btn-li-a btn-li-a-select" (click)="btn_nhanvat()"><a>Nhân vật lịch sử</a></li>
+          <li class="btn-li-a btn-li-a-select" (click)="btn_search()"><a>Tìm kiếm</a></li>
+          <li class="btn-li-a btn-li-a-select" (click)="btn_login()"><a>Đăng nhập</a></li>
+        </ul>
+      </div>
+      <div  class="nav-menu_btn" (click)="btnOpenMenu()">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+      </div>
+<!--      <div *ngIf="action_menu" class="nav-menu_btn nav-menu_btn-active" (click)="btnActionMenu()">-->
+<!--        <i class="fa fa-bars" aria-hidden="true"></i>-->
+<!--      </div>-->
+    </div>
+
+  </div>
+</div>
+
+<router-outlet ></router-outlet>
+
+
+<div *ngIf="!unLesson" class="footer_container" #footer>
+  <div class="footer-section">
+    <div class="container section-footer__container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 text-right footer-left">
+          <div class="d-inline-flex flex-column justify-content-center h-100">
+            <h3 class="footer__title text-center"> Ban Tuyên Giáo</h3>
+            <h3 class="footer__title"> Tỉnh uỷ Tỉnh Thái Nguyên</h3>
+          </div>
+        </div>
+        <div class=" col-md-6 footer-right">
+          <address class="footer__address">
+            <p>Địa chỉ: Số 28 - Đ.Phan Đình Phùng - TP.Thái Nguyên - T.Thái Nguyên</p>
+            <p>Email: vanthu.btgtu@thainguyen.gov.vn </p>
+            <p>Tel: 0208 3855.529 | Fax: 0208 3855529</p>
+          </address>
+        </div>
+      </div>
+
+    </div>
+    <div class="container d-flex align-items-center justify-content-center border-top mt-2" style="font-size: 12px">
+      Bản quyền thuộc Tỉnh uỷ tỉnh Thái Nguyên
+    </div>
+  </div>
+</div>
+
+
+<div class="ovic-side-navigation__left" [style.--side-navigation-offset-top]="navigationOffsetTop"
+     [style.--side-navigation-init-right]="initLeft" [style.--side-navigation-size]="menuSize"
+     [@navigationMenuEffect]="navigationMenuState">
+  <ng-container
+    *ngTemplateOutlet="sideNavigationMenuSettings ? sideNavigationMenuSettings.template : null"></ng-container>
+</div>
+<button [@overlayAnimations]="navigationMenuState" class="btn ovic-side-navigation__overlay"
+        (click)="closePanel(sideNavigationMenuSettings)"></button>
+
+<ng-template #menu>
+  <div class="closeMenu">
+    <button pButton pRipple icon="pi pi-times" class="p-button-danger border-radius-0" (click)="btnClose()"></button>
+  </div>
+  <div class=" menu-container">
+    <div class="menu-header" (click)="btn_GoHome()">
+      <div class="menu-header-logo">
+        <img src="assets/svg/bantuyengiao.svg" alt="">
+      </div>
+      <div class="menu-header-content">
+        <div class="menu-header-content_c1">UBND Tỉnh thái nguyên</div>
+        <div class="menu-header-content_c2">Ban Tuyên giao tỉnh uỷ</div>
+      </div>
+    </div>
+
+    <div class="menu-body">
+      <div class="menu-body_item" *ngFor="let item of menuData" (click)="btnClickMenu(item.id)">
+        <i class="menu-body_item-icon {{item.icon}}"></i>
+        <div class="menu-body_item-title">{{item.title}}</div>
+      </div>
+    </div>
+
+    <div class="menu-footer" (click)="btn_login()">
+      <i class="menu-footer_icon pi pi-sign-in"></i>
+      <div class="menu-footer_title">Đăng nhập</div>
+    </div>
+  </div>
+</ng-template>
+

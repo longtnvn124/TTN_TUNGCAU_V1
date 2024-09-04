@@ -1,0 +1,143 @@
+<div [ngClass]="padding_top=== true ? 'pd-top-70px' :''"
+  style="width:100%;min-height:var(--max-screen-height); ;font-size:16px;font-weight:700; background: #f3f3f3"
+  class="d-flex justify-content-center align-items-start">
+  <div class="container">
+    <div class="header-container">
+      <div class="header-container_item">BAN TUYÊN GIÁO TỈNH ỦY</div>
+    </div>
+    <div class="member-container">
+      <div class="-intro-x row row-cols-1" style="margin-left: -7px;margin-right: -7px;">
+        <div
+          class=" d-flex flex-wrap flex-row justify-content-between align-items-center col-sm-6 col-md-4 col-lg-3 p-2"
+          *ngFor="let item of members">
+          <div class="w-100 d-inline-block bg-white ovic--parent-image position-relative"
+               style="border-radius:4px;border: 1px solid #ccc;">
+            <div class='head-card_hover w-100 bg-image hover-zoom' style="cursor: pointer;">
+              <div class="position-relative w-100 st-image img-child-max-width member-content-img">
+                <img class="w-100 h-100 ovic-img-zoom"
+                     [src]="item.url ? item.url : 'assets/images/placeholder-2x3.jpg'"
+                     alt="" loading="lazy">
+              </div>
+              <div class="m-2" style="min-height:70px">
+                <div
+                  class="headding-card font-weight-bold text-center ngulieuso_item_title">
+                  {{item.title}}
+                </div>
+                <div class="desc-item">{{item.desc}}</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="info-container w-100 mt-5">
+      <div class="cocaunoidung">
+        <div style="text-align: center;"><b>CHỨC NĂNG, NHIỆM VỤ VÀ TỔ CHỨC BỘ MÁY</b><br>
+          <b>BAN TUYÊN GIÁO TỈNH ỦY</b><br>
+          &nbsp;
+        </div>
+
+        <div style="text-align: justify;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>Căn cứ Quy định số 04-QĐi/TW, ngày
+          25/7/2018 của Ban Bí thư Trung ương về “chức năng, nhiệm vụ, quyền hạn, tổ chức bộ máy cơ quan chuyên trách
+          tham mưu, giúp việc tỉnh ủy, thành ủy”, Ban Tuyên giáo Tỉnh ủy có chức năng, nhiệm vụ như sau:<br>
+          <b>1. Chức năng</b><br>
+          Ban Tuyên giáo Tỉnh ủy là cơ quan tham mưu của Tỉnh ủy mà trực tiếp, thường xuyên là Ban Thường vụ Tỉnh ủy và
+          Thường trực Tỉnh ủy về công tác xây dựng Đảng thuộc các lĩnh vực chính trị tư tưởng, tuyên truyền, lý luận
+          chính trị, báo chí, xuất bản, văn hóa, văn nghệ, khoa giáo, biên soạn lịch sử đảng bộ địa phương; là cơ quan
+          chuyên môn, nghiệp vụ về công tác tuyên giáo của Tỉnh ủy.<br>
+          <b>2. Nhiệm vụ</b><br>
+          <i>2.1. Nghiên cứu, đề xuất và thực hiện</i><br>
+          Nghiên cứu, theo dõi, tổng hợp tình hình tư tưởng trong cán bộ, đảng viên và nhân dân, dư luận xã hội, những
+          âm mưu, thủ đoạn chống phá của các thế lực thù địch trên lĩnh vực chính trị tư tưởng trên địa bàn tỉnh. Dự báo
+          những diễn biến, xu hướng chính trị tư tưởng có thể xảy ra, kịp thời báo cáo, kiến nghị với Tỉnh ủy, Ban
+          Thường vụ Tỉnh ủy về phương hướng, nhiệm vụ, nội dung, biện pháp giải quyết.<br>
+          Đánh giá hoạt động, nghiên cứu, đề xuất các đề án, nghị quyết, quyết định, chỉ thị, quy định, quy chế, cơ chế,
+          chính sách, giải pháp trong lĩnh vực tuyên giáo trình Tỉnh ủy, Ban Thường vụ Tỉnh ủy ban hành và tổ chức thực
+          hiện; sưu tầm, biên soạn lịch sử Đảng bộ tỉnh.<br>
+          Chỉ đạo nội dung giáo dục lý luận chủ nghĩa Mác - Lênin, tư tưởng Hồ Chí Minh trong hệ thống giáo dục, đoàn
+          thể chính trị - xã hội ở địa phương. Tổ chức tuyên truyền, giáo dục, phát huy truyền thống cách mạng của địa
+          phương, đất nước. Tổ chức nghiên cứu, tuyên truyền, quán triệt nghị quyết, quyết định, chỉ thị, quy định, quy
+          chế, kết luận của Đảng.<br>
+          Nghiên cứu, tham mưu Tỉnh ủy chỉ đạo, định hướng, hướng dẫn, kiểm tra, giám sát về chính trị, tư tưởng trong
+          hoạt động của các cơ quan báo chí, xuất bản, văn hóa, văn nghệ, cơ quan thông tin, tuyên truyền, các hội văn
+          học - nghệ thuật, hội nhà báo ở địa phương đảm bảo hoạt động đúng đường lối của Đảng, chính sách pháp luật của
+          Nhà nước. Khi cần thiết, chủ trì hoặc phối hợp kiểm tra về mặt quan điểm chính trị, tư tưởng các tác phẩm văn
+          học, nghệ thuật, báo chí, xuất bản... thuộc phạm vi phụ trách.<br>
+          Giúp Tỉnh ủy, Ban Thường vụ Tỉnh ủy chỉ đạo công tác chính trị, tư tưởng trong đội ngũ trí thức, nhà khoa học
+          và trong sinh viên, học sinh ở địa phương. Tổ chức và chỉ đạo hoạt động mạng lưới báo cáo viên, tuyên truyền
+          viên theo phân cấp.<br>
+          Tham gia với chính quyền địa phương trong việc vận dụng, thể chế các quy định của cấp trên về các lĩnh vực có
+          liên quan đến công tác tuyên giáo.<br>
+          Thực hiện việc báo cáo định kỳ và đột xuất với Ban Thường vụ Tỉnh ủy, Ban Tuyên giáo Trung ương theo quy định.<br>
+          Sơ kết, tổng kết về công tác tuyên giáo.<br>
+          <i>2.2. Hướng dẫn, kiểm tra, giám sát</i><br>
+          Hướng dẫn tổ chức nghiên cứu, tuyên truyền, quán triệt và kiểm tra, giám sát việc học tập, quán triệt nghị
+          quyết, quyết định, chỉ thị, quy định, quy chế, kết luận của Đảng. Kiểm tra, giám sát các tổ chức đảng, các
+          ban, sở, ngành, Mặt trận Tổ quốc và các đoàn thể chính trị - xã hội trong tỉnh về thực hiện các nghị quyết,
+          quyết định, chỉ thị, quy định, quy chế, kết luận của Trung ương, của Tỉnh ủy trong lĩnh vực tuyên giáo.<br>
+          Hướng dẫn tổ chức bồi dưỡng lý luận chính trị, thông tin thời sự, tuyên truyền chính sách theo các chương
+          trình, kế hoạch triển khai của Trung ương và Tỉnh ủy; bồi dưỡng và hướng dẫn nghiệp vụ công tác tuyên giáo cho
+          ban tuyên giáo cấp ủy cấp dưới, các đảng bộ cơ sở, Trường Chính trị tỉnh, trung tâm bồi dưỡng chính trị cấp
+          huyện.<br>
+          Hướng dẫn sưu tầm, nghiên cứu biên soạn lịch sử đảng bộ huyện, thị xã, thành phố thuộc tỉnh và đảng bộ xã,
+          phường, thị trấn.<br>
+          <i>2.3. Thẩm định, thẩm tra</i><br>
+          Đề án, văn bản của các cơ quan Đảng, Nhà nước, Mặt trận Tổ quốc và các đoàn thểchính trị - xã hội có liên quan
+          đến lĩnh vực tư tưởng - văn hóa, khoa giáo, lịch sử đảng bộ địa phương trước khi trình Tỉnh ủy, Ban Thường vụ
+          Tỉnh ủy, Thường trực Tỉnh ủy.<br>
+          <i>2.4. Phối hợp</i><br>
+          Với các cơ quan liên quan đề xuất về cơ chế, chính sách đào tạo, bồi dưỡng, bố trí, sử dụng, quản lý và đãi
+          ngộ đối với đội ngũ trí thức, nhà khoa học và văn nghệ sĩ ở địa phương; quản lý báo chí, xuất bản và xử lý
+          những sai phạm trong hoạt động báo chí, xuất bản.<br>
+          Với các cơ quan chức năng tham mưu Ban Thường vụ, Thường trực Tỉnh ủy lãnh đạo, chỉ đạo hoạt động của các cơ
+          quan trong khối tuyên giáo trực thuộc Tỉnh ủy.<br>
+          Với Ban Tổ chức Tỉnh ủy trong công tác cán bộ theo quy định của Ban Thường vụ Tỉnh ủy về phân cấp quản lý cán
+          bộ và giới thiệu cán bộ ứng cử; trong việc quản lý tổ chức bộ máy, biên chế và thực hiện chế độ, chính sách
+          đối với cán bộ, công chức, viên chức, người lao động của Ban Tuyên giáo Tỉnh ủy; đề xuất chủ trương đào tạo,
+          bồi dưỡng, sử dụng, quản lý, đãi ngộ nhân tài.<br>
+          Với ủy ban Kiểm tra Tỉnh ủy tham mưu, giúp Tỉnh ủy xây dựng và tổ chức thực hiện chương trình, kế hoạch kiểm
+          tra, giám sát hằng năm thuộc lĩnh vực tuyên giáo.<br>
+          Với Văn phòng Tỉnh ủy giúp Tỉnh ủy, Ban Thường vụ Tỉnh ủy theo dõi, kiểm tra, giám sát việc thực hiện quy chế
+          làm việc của Tỉnh ủy, Ban Thường vụ Tỉnh ủy.<br>
+          <i>2.5. Thực hiện một số nhiệm vụ khác do Ban Thường vụ Tỉnh ủy, Thường trực Tỉnh ủy giao.</i><br>
+          <b>3. Tổ chức bộ máy</b><br>
+          <i>3.1. Lãnh đạo Ban</i><br>
+          Đồng chí Vũ Duy Hoàng, Ủy viên Ban Thường vụ, Trưởng ban.<br>
+          Đồng chí Nguyễn Thị Mai, Uỷ viên Ban Chấp hành Đảng bộ tỉnh, Phó Trưởng ban Thường trực.<br>
+          Đồng chí Nguyễn Quốc Thái, Phó Trưởng ban.<br>
+          Đồng chí Nguyễn Xuân Quang, Phó Trưởng ban.<br>
+          <i>3.2. Các phòng trực thuộc</i><br>
+          - Phòng Tổng hợp.<br>
+          - Phòng Khoa giáo - Văn hóa Văn nghệ.<br>
+          - Phòng Lý luận chính trị và Lịch sử Đảng.<br>
+          - Phòng Thông tin - Tuyên truyền.<br>
+          <b>4. Tổ chức Đảng, đoàn thể</b><br>
+          <i>4.1. Chi bộ Ban Tuyên giáo Tỉnh ủy</i>&nbsp;là chi bộ cơ sở&nbsp;trực thuộc Đảng bộ Khối các cơ quan tỉnh.
+          Chi bộ có 25&nbsp;đảng viên, sinh hoạt tại 04 tổ đảng (Tổng hợp, Khoa giáo - Văn hóa Văn nghệ, Thông tin -
+          Tuyên truyền, Lý luận chính trị và Lịch sử Đảng). Ban Chấp hành Chi bộ Ban Tuyên giáo Tỉnh ủy gồm 05 đồng chí;
+          đồng chí Nguyễn Quốc Thái làm&nbsp;Bí thư Chi bộ.<br>
+          <i>4.2. Công đoàn Ban Tuyên giáo Tỉnh ủy</i>&nbsp;là Công đoàn cơ sở trực thuộc Công đoàn Viên chức tỉnh. Công
+          đoàn Ban có 24&nbsp;đoàn viên, sinh hoạt tại 04 tổ công đoàn (Tổng hợp, Khoa giáo - Văn hóa Văn nghệ, Thông
+          tin - Tuyên truyền, Lý luận chính trị và Lịch sử Đảng). Ban Chấp hành Công đoàn Ban Tuyên giáo Tỉnh ủy gồm 05
+          đồng chí; đồng chí Nguyễn Xuân Quang làm Chủ tịch Công đoàn.
+        </div>
+      </div>
+      <ul style="margin: 0;font-size: 15px;padding: 10px 0px 20px 0px;list-style:none;font-weight:400;">
+        <li>
+          <strong>Địa chỉ trụ sở:</strong> Số 28 Đường Phan Đình Phùng - TP.Thái Nguyên - Tỉnh Thái Nguyên
+        </li>
+        <li>
+          <strong>Điện thoại cơ quan:</strong> 0208 3855 529
+        </li>
+        <li>
+          <strong>Số fax:</strong> 0208 3855 529
+        </li>
+        <li>
+          <strong>Địa chỉ website:</strong> <a href="http://www.tuyengiaothainguyen.org.vn">www.tuyengiaothainguyen.org.vn</a>&nbsp;&nbsp;
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

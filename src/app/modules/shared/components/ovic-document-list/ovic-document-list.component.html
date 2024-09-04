@@ -1,0 +1,17 @@
+<div class="ovic-document-list__wrap ovic-document-list-version-{{version}}" [ngClass]="cssClasses" *ngIf="!disableWhenDataEmpty || (disableWhenDataEmpty && docs && docs.length) ">
+    <h4 class="ovic-document-list__title" *ngIf="listTitle">{{listTitle}}</h4>
+    <ul class="ovic-document-list__file-list {{cssWrapListClasses}}" *ngIf="docs && docs.length">
+        <li class="ovic-document-list__file-elm {{animationElementsClass}}" *ngFor="let f of docs; let i = index " [ngClass]="f['active'] && !noActiveSelected ? 'file-active' : null " [class.hint-file]="f['__elm_hint']">
+            <button type="button" class="ovic-document-list__info" (click)="changeFile(f,i)">
+                <span class="ovic-document-list__file-icon ovic-{{f.type}}-icon"></span>
+                <span class="ovic-document-list__file-name">{{f.fileName}}</span>
+            </button>
+            <button class="ovic-document-list__download-icon" *ngIf="f.download" type="button" (click)="downloadDocument(f)">
+                <i class="fa" [ngClass]="f['downloading'] ? 'fa-spinner fa-pulse fa-fw':'fa-download'" aria-hidden="true"></i> tải xuống
+            </button>
+        </li>
+    </ul>
+    <div class="ovic-document-list__empty-mes" *ngIf="!docs || !docs.length">
+        <p class="ovic-document-list__empty-text">{{_emptyMess}}</p>
+    </div>
+</div>

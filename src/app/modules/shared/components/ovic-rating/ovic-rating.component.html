@@ -1,0 +1,10 @@
+<div class="ovic-rating-box">
+    <div class="rating-panel">
+        <ul class="ov-rating-list" [ngClass]="{ 'changed' : _activeElm !== ''  }">
+            <li class="ov-rate-elm" [ngClass]="{ 'active' : _activeElm === option.value  }" *ngFor="let option of settings ">
+                <span (click)="active(option)" class="bg-color" [ngStyle]="{'background-color': option.color}"></span>
+                <span class="label">{{option.label}}</span>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,202 @@
+.ovic-recorder {
+    display: flex;
+    width: 100%;
+    justify-content: left;
+    align-items: center;
+    border: 1px solid #dcdcdc;
+    padding: 20px;
+    background: #fff;
+    flex-wrap: wrap;
+}
+
+.ovic-recorder__result {
+    margin-top: 10px;
+}
+
+.ovic-recorder__btn {
+    background-color: #f9b75f;
+    border-radius: 999px;
+    outline: none;
+    box-shadow: none;
+    border: none;
+    padding: 15px;
+    font-size: 0;
+    line-height: 1;
+}
+
+.ovic-recorder__btn svg {
+    width: 20px;
+    height: 20px;
+    fill: #f6f6f6;
+}
+
+.ovic-recorder__lbl-timer {
+    font-size: 17px;
+    font-weight: 500;
+    padding: 10px;
+    color: #444444;
+}
+
+.btn-is-recording:hover,
+.btn-is-recording {
+    position: relative;
+    background-color: #e44040;
+}
+
+.btn-is-recording:hover svg,
+.btn-is-recording svg {
+    fill: #fff;
+    position: relative;
+    z-index: 5;
+}
+
+.btn-is-recording::before {
+    content: '';
+    display: block;
+    position: absolute;
+    background-color: #e44040;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    animation: live 2s ease-in-out -1s infinite;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    margin: -15px 0 0 -15px;
+}
+
+@-webkit-keyframes live {
+    0% {
+        -webkit-transform: scale(1, 1);
+        transform: scale(1, 1);
+    }
+    100% {
+        -webkit-transform: scale(3.5, 3.5);
+        transform: scale(3.5, 3.5);
+        background-color: rgba(255, 0, 0, 0);
+    }
+}
+
+@keyframes live {
+    0% {
+        -webkit-transform: scale(1, 1);
+        transform: scale(1, 1);
+    }
+    100% {
+        -webkit-transform: scale(3.5, 3.5);
+        transform: scale(3.5, 3.5);
+        background-color: rgba(255, 0, 0, 0);
+    }
+}
+
+.ovic-recorder__equalizer-inner {
+    display: flex;
+    align-items: center;
+    padding: 20px 2px;
+    background-color: #cecece;
+    flex: 1;
+    position: relative;
+}
+
+.ovic-recorder__equalizer-inner::after{
+    content: '';
+    display: block;
+    height: 1px;
+    top: 50%;
+    left: 5px;
+    right: 5px;
+    background-color: #f4f4f4;
+    position: absolute;
+}
+
+.ovic-recorder__loader-container {
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+    width: 100%;
+}
+
+.ovic-recorder__loader-container > div {
+    position: relative;
+    display: inline-block;
+    height: 1px;
+    width: 2px;
+    margin: 0 1px;
+    background-color: #f4f4f4;
+    transition: height .1s ease-out 0s;
+}
+
+.ovic-recorder__loader-container.showed > div {
+    animation: load 4s ease-in-out infinite;
+    height: 100%;
+}
+
+.ovic-recorder__loader-container.showed .ovic-recorder__rectangle-2 {
+    animation-delay: 0.1s;
+}
+
+.ovic-recorder__loader-container.showed .ovic-recorder__rectangle-3 {
+    animation-delay: 0.2s;
+}
+
+.ovic-recorder__loader-container.showed .ovic-recorder__rectangle-4 {
+    animation-delay: 0.3s;
+}
+
+.ovic-recorder__loader-container.showed .ovic-recorder__rectangle-5 {
+    animation-delay: 0.4s;
+}
+
+.ovic-recorder__loader-container.showed .ovic-recorder__rectangle-6 {
+    animation-delay: 0.5s;
+}
+
+.ovic-recorder__loader-container.showed .ovic-recorder__rectangle-7 {
+    animation-delay: 0.6s;
+}
+
+.ovic-recorder__loader-container.showed .ovic-recorder__rectangle-8 {
+    animation-delay: 0.7s;
+}
+
+.ovic-recorder__loader-container.showed .ovic-recorder__rectangle-9 {
+    animation-delay: 0.8s;
+}
+
+.ovic-recorder__loader-container.showed .ovic-recorder__rectangle-10 {
+    animation-delay: 0.9s;
+}
+
+.ovic-recorder__loader-container.showed .ovic-recorder__rectangle-11 {
+    animation-delay: 1s;
+}
+
+@keyframes load {
+    0%,
+    100% {
+        transform: scaleY(1);
+        /*background: #7B16D9;*/
+    }
+    16.67% {
+        transform: scaleY(3);
+        /*background: #d916c1;*/
+    }
+    33.33% {
+        transform: scaleY(1);
+        /*background: #378ed6;*/
+    }
+    50% {
+        transform: scaleY(3);
+        /*background: #d54c45;*/
+    }
+    66.67% {
+        transform: scaleY(1);
+        /*background: #d54d44;*/
+    }
+    83.34% {
+        transform: scaleY(3);
+        /*background: #FF6600;*/
+    }
+}

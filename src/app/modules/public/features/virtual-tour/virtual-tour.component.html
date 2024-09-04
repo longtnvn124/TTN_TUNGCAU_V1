@@ -1,0 +1,9 @@
+
+
+<div class="w-100 h-100" *ngIf="ngulieu_type===0">
+  <ovic-media-vr [showOnly]="true" [_ngulieu]="ngulieuStart" [isHome]="true" [device]="device" class="w-100 h-100"></ovic-media-vr>
+
+</div>
+<div class="w-100 h-100" *ngIf="ngulieu_type===1">
+  <ovic-media-vr-product [_ngulieu]="ngulieuStart" [isHome]="true" [device]="device" class="w-100 h-100 d-block"></ovic-media-vr-product>
+</div>

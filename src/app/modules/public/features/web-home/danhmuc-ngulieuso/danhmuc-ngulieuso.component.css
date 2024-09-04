@@ -1,0 +1,23 @@
+.ngulieuso__title h3{
+  color:#3A4E42;
+  font-weight:400;
+  font-size:18px;
+}
+.ngulieuso_item_title {
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #3f604d;
+}
+
+.data-mobile-item-right_tag span:nth-child(odd){
+  background: #9dbafd;
+}
+.data-mobile-item-right_tag span:nth-child(even){
+  margin:0 4px;
+  background: #e1c5ff;
+}
+.backgroud-btn-tag{
+  background: #ffc384 !important
+}

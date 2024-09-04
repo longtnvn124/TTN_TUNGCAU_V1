@@ -1,0 +1,25 @@
+<div class="w-100 " style="min-height: calc(100vh - 0px - 134px);
+    padding-top: 74px;">
+  <div class="container">
+    <div class="search-nav d-flex justify-content-center align-items-center w-100" >
+      <input type="text" pInputText class="input-search-content" placeholder="Tìm kiếm" [(ngModel)]="textSearch"
+             (ngModelChange)="selectInput($event)"/>
+      <p-dropdown [options]="loai" class="search-dropdown" placeholder="Chọn..." optionValue="value" optionLabel="label" style="width:165px;"
+                  (onChange)="selectDropdown($event)"></p-dropdown>
+      <!--    <button pRipple pButton label="Tìm kiếm" class="btn-search" (click)="selectSearch()"></button>-->
+    </div>
+
+
+    <div class="search-container">
+      <ng-container *ngIf="loaiSelect=== 0,else haveData">
+        <div style="font-size: 14px;">Không có dữ liệu</div>
+      </ng-container>
+      <ng-template #haveData>
+        <app-nhanvat *ngIf="loaiSelect===1" [search]="textSearch" [selectItem]="true"></app-nhanvat>
+        <app-sukien-tonghop *ngIf="loaiSelect===2" [search]="textSearch" [selectItem]="true"></app-sukien-tonghop>
+        <danhmuc-ngulieuso *ngIf="loaiSelect===3" [search]="textSearch" [selectItem]="true"></danhmuc-ngulieuso>
+      </ng-template>
+    </div>
+  </div>
+
+</div>

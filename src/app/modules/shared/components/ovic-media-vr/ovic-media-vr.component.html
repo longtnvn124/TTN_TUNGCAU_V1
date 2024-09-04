@@ -1,0 +1,507 @@
+<div #tooltip class="tooltip d-flex justify-content-center align-items-center flex-column ">
+  <img src="" alt="" style="width:250px" loading="lazy" #imgtooltip>
+  <div class="p-1" #titletooltip></div>
+</div>
+
+<div #container class="container-vr ctn_body">
+  <div class="onRight-bottom">
+    <button *ngIf="isHome" [pTooltip]="'Trở lại trang chử'" pButton pRipple icon="pi pi-home"
+            class="btn-round p-button-secondary m-2 " style="background: #eb4c1a;border: #eb4c1a;"
+            (click)="gobackhome()"></button>
+    <button [pTooltip]="'Hướng dẫn'" pButton pRipple icon="pi pi-info-circle" class="btn-round p-button-secondary m-2 "
+            (click)="btnHelp()"></button>
+    <!--    <button pButton pRipple icon="pi pi-map" class="btn-round p-button-secondary m-2 " (click)="btnviewMap()"></button>-->
+    <button [pTooltip]="'Play/Pause'" *ngIf="isVideo" pButton pRipple [icon]="isVideoPlay ?'pi pi-pause' :'pi pi-play' "
+            class="btn-round p-button-success m-2 "
+            (click)="btnPlayVideo()"></button>
+    <button [pTooltip]="'Bật, tắt tiếng'" *ngIf="audio" pButton pRipple
+            [icon]="audio.paused ? 'pi pi-volume-off':'pi pi-volume-down'"
+            class="btn-round --surface-section m-2 "
+            (click)="btnPlayAudio()"></button>
+    <button [pTooltip]="'Tự động quay'" pButton pRipple [icon]="rotate ? 'pi pi-spin pi-sync':'pi pi-refresh'"
+            class="btn-round p-button-warning m-2 "
+            (click)="btnplayRotate()"></button>
+  </div>
+
+  <div *ngIf="isStartvr" class="btn-backStart" (click)="loadStart()">
+    <svg class="ovic-img-zoom" xmlns="http://www.w3.org/2000/svg" id="arrow-circle-down" viewBox="0 0 24 24" width="512"
+         height="512">
+      <g id="_01_align_center" data-name=" 01 align center">
+        <path
+          d="M11.3,20.878,1.414,10.994,0,12.408l9.885,9.885a3,3,0,0,0,4.242,0L24.019,12.4l-1.413-1.413-9.893,9.892A1,1,0,0,1,11.3,20.878Z"/>
+        <path d="M12.006,11.586,1.422,1,.006,2.416,11.3,13.707a1,1,0,0,0,1.414,0l11.29-11.29L22.589,1Z"/>
+      </g>
+    </svg>
+  </div>
+
+
+  <ng-template #templateWaiting class="ctm-waitting-popup"  let-d="dismiss">
+    <div class="popup-waiting-loading">
+
+      <div class="d-flex justify-content-center align-items-center  tn-import-student-progressbar">
+        <i class="pi pi-sync pi-spin" style="font-size: 24px;color:#fff"></i>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+<p-contextMenu [target]="container" [model]="items" appendTo="body" *ngIf="!showOnly"></p-contextMenu>
+
+<ng-template #fromUpdate>
+  <div class="ovic-side-navigation-content h-100">
+    <div class="ovic-side-navigation-content__head">
+      <h4 class="ovic-side-navigation-content__head__title">{{formState ? formState.formTitle : ''}}</h4>
+      <button (click)="closeForm()" pButton pRipple type="button" icon="pi pi-times"
+              class="p-button-rounded p-button-danger p-button-text close ovic-side-navigation-content__head__btn-close"></button>
+    </div>
+    <div class="ovic-side-navigation-content__body ovic-scroll-style">
+      <div class="ovic-vertical__inputs ovic-vertical__inputs--layout-2">
+        <form [formGroup]="formSave" autocomplete="off">
+          <div class="row h-100">
+            <div style=" padding:5px; width:50%">
+              <div class="row">
+                <div class="col-12">
+                  <p class="form-row">
+                    <label>Tên vị trí <span class="ovic-mark">*</span></label>
+                    <input type="text" placeholder="Tên vị trí..." formControlName="title"
+                           autocomplete="off">
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <p class="form-row">
+                    <label>Loại điểm truy cập <span class="ovic-mark">*</span></label>
+                    <p-dropdown placeholder="Chọn..." class="w-100" [options]="typeOptions" optionLabel="label"
+                                optionValue="value" formControlName='type'></p-dropdown>
+                  </p>
+                </div>
+                <div class="col-6">
+                  <p class="form-row">
+                    <label>Icon<span class="ovic-mark">*</span></label>
+                    <p-dropdown [options]="iconList" optionLabel="name" formControlName="icon" optionValue="path"
+                                class="w-100" placeholder="chọn...">
+                    </p-dropdown>
+                  </p>
+
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12">
+                  <p class="form-row">
+                    <label>Điểm truy cập Vr 360<span class="ovic-mark ">*</span> <span class="ovic-mark text-ovic-mark">(hỗ trợ định dạng file: '.jpg','.jpeg','.png','.mp4','avi')</span> </label>
+                    <app-file-list-local class="w-100 ovic-vertical__file-list" [permission]="filePermission"
+                                         [formField]="f['file_media']" [multiple]="false" [accept]="['.jpg','.jpeg','.png','.mp4','avi']"
+                                         [state]="1"></app-file-list-local>
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <p class="form-row">
+                    <label>File thuyết minh  <span class="ovic-mark text-ovic-mark">(Chỉ hỗ trợ định dạng file: ".mp3")</span> </label>
+                    <app-file-list-local class="w-100 ovic-vertical__file-list" [permission]="filePermission"
+                                         [formField]="f['file_audio']" [multiple]="false" [accept]="['.mp3']"
+                                         [state]="1"></app-file-list-local>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div style=" padding:5px; width:50%">
+              <div class="row">
+                <div class="col-12">
+                  <p class="form-row">
+                    <label>Mô tả</label>
+                    <!--                  <textarea formControlName="mota" placeholder="Mô tả..." autocomplete="off" cols="30"-->
+                    <!--                            rows="5"></textarea>-->
+
+                    <p-editor [curentFormControl]="f['mota']" #edtitor [editor]="edtitor" [Resize_img]="true"
+                              class="w-100"
+                              formControlName="mota" placeholder="Nội dung..." [style]="{ 'min-height': '250px'}">
+                      <p-header>
+                          <span class="ql-formats">
+                              <select class="ql-header" title="Thẻ tiêu đề">
+                                  <option selected>Chữ thường </option>
+                                  <option value="1">Tiêu đề 1</option>
+                                  <option value="2">Tiêu đề 2</option>
+                                  <option value="3">Tiêu đề 3</option>
+                                  <option value="4">Tiêu đề 4</option>
+                                  <option value="5">Tiêu đề 5</option>
+                                  <option value="6">Tiêu đề 6</option>
+                              </select>
+                               <select id="--ql-size" class="ql-size" title="Kích thước chữ">
+                                  <option value="small">Cỡ nhỏ</option>
+                                  <option value="false" selected>Cỡ thường</option>
+                                  <option value="large">Cỡ vừa</option>
+                                  <option value="huge">Cỡ lớn</option>
+                              </select>
+                          </span>
+                        <span class="ql-formats">
+                              <button class="ql-bold" title="Kiểu chữ đậm"></button>
+                              <button class="ql-italic" title="Kiểu chữ nghiêng"></button>
+                              <button class="ql-underline" title="Kiểu chữ ghạch chân"></button>
+                              <button class="ql-strike" title="Kiểu chữ ghạch ngang"></button>
+                          </span>
+                        <span class="ql-formats">
+                              <select class="ql-align" title="Căn lề">
+                                  <option selected></option>
+                                  <option value="center"></option>
+                                  <option value="right"></option>
+                                  <option value="justify"></option>
+                              </select>
+                              <select class="ql-color" title="Màu chữ"><option selected="selected"></option><option
+                                value="#e60000"></option><option value="#ff9900"></option><option
+                                value="#ffff00"></option><option
+                                value="#008a00"></option><option value="#0066cc"></option><option
+                                value="#9933ff"></option><option
+                                value="#ffffff"></option><option value="#facccc"></option><option
+                                value="#ffebcc"></option><option
+                                value="#ffffcc"></option><option value="#cce8cc"></option><option
+                                value="#cce0f5"></option><option
+                                value="#ebd6ff"></option><option value="#bbbbbb"></option><option
+                                value="#f06666"></option><option
+                                value="#ffc266"></option><option value="#ffff66"></option><option
+                                value="#66b966"></option><option
+                                value="#66a3e0"></option><option value="#c285ff"></option><option
+                                value="#888888"></option><option
+                                value="#a10000"></option><option value="#b26b00"></option><option
+                                value="#b2b200"></option><option
+                                value="#006100"></option><option value="#0047b2"></option><option
+                                value="#6b24b2"></option><option
+                                value="#444444"></option><option value="#5c0000"></option><option
+                                value="#663d00"></option><option
+                                value="#666600"></option><option value="#003700"></option><option
+                                value="#002966"></option><option
+                                value="#3d1466"></option></select>
+                              <select class="ql-background" title="Màu chữ"><option selected="selected"></option><option
+                                value="#e60000"></option><option value="#ff9900"></option><option
+                                value="#ffff00"></option><option
+                                value="#008a00"></option><option value="#0066cc"></option><option
+                                value="#9933ff"></option><option
+                                value="#ffffff"></option><option value="#facccc"></option><option
+                                value="#ffebcc"></option><option
+                                value="#ffffcc"></option><option value="#cce8cc"></option><option
+                                value="#cce0f5"></option><option
+                                value="#ebd6ff"></option><option value="#bbbbbb"></option><option
+                                value="#f06666"></option><option
+                                value="#ffc266"></option><option value="#ffff66"></option><option
+                                value="#66b966"></option><option
+                                value="#66a3e0"></option><option value="#c285ff"></option><option
+                                value="#888888"></option><option
+                                value="#a10000"></option><option value="#b26b00"></option><option
+                                value="#b2b200"></option><option
+                                value="#006100"></option><option value="#0047b2"></option><option
+                                value="#6b24b2"></option><option
+                                value="#444444"></option><option value="#5c0000"></option><option
+                                value="#663d00"></option><option
+                                value="#666600"></option><option value="#003700"></option><option
+                                value="#002966"></option><option
+                                value="#3d1466"></option></select>
+                          </span>
+                        <span class="ql-formats">
+                              <button class="ql-list" value="ordered" title="Danh sách số"></button>
+                              <button class="ql-list" value="bullet" title="Danh sách chấm"></button>
+                              <button class="ql-indent q1-box" value="+1" title="Thụt đầu dòng"></button>
+                              <button class="ql-indent q2-box last" value="-1" title="Giảm thụt đầu dòng"></button>
+                          </span>
+                        <span class="ql-formats">
+
+                              <button class="ql-image" aria-label="image" title="Chèn ảnh"></button>
+                              <button class="ql-blockquote" aria-label="blockquote" title="Trích dẫn"></button>
+                              <button class="ql-code-block" aria-label="code-block" title="code-block"></button>
+                          </span>
+                      </p-header>
+                    </p-editor>
+
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="ovic-side-navigation-content__foot">
+      <span class="ovic-side-navigation-content__foot__notice mr-auto"><mark>(*)</mark> bắt buộc phải nhập</span>
+      <button pButton pRipple type="button" label="{{titleBtn}}" icon="pi pi-save" (click)="saveForm()"
+              class="p-button-success"></button>
+      <button pButton pRipple type="button" label="Đóng" class="p-button-secondary ml-3" icon="pi pi-times"
+              (click)="closeForm()"></button>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-container *ngIf="!isSmallScreen,else isSmall">
+  <p-dialog header="Hướng dẫn sử dụng" [(visible)]="visibleHelp" [modal]="true" [style]="{ width: '650px'}"
+            styleClass="p-0"
+            [draggable]="false" [resizable]="false">
+    <div class="d-flex justify-content-center flex-column p-2 hd-dl-info w-100">
+      <div class="hd-dl-info-item ">
+        <svg xmlns="http://www.w3.org/2000/svg" id="Capa_1" enable-background="new 0 0 511.998 511.998" height="512"
+             viewBox="0 0 511.998 511.998" width="512">
+          <g>
+            <path
+              d="m208.923 45.771c8.284 0 15-6.716 15-15v-15.771c0-8.284-6.716-15-15-15s-15 6.716-15 15v15.771c0 8.285 6.716 15 15 15z"/>
+            <path
+              d="m284.153 76.934c3.839 0 7.678-1.465 10.606-4.394l11.152-11.152c5.858-5.857 5.858-15.355 0-21.213-5.857-5.857-15.355-5.857-21.213 0l-11.152 11.152c-5.858 5.857-5.858 15.355 0 21.213 2.93 2.929 6.768 4.394 10.607 4.394z"/>
+            <path
+              d="m300.315 137.164c0 8.284 6.716 15 15 15h15.771c8.284 0 15-6.716 15-15s-6.716-15-15-15h-15.771c-8.284 0-15 6.716-15 15z"/>
+            <path
+              d="m117.529 137.164c0-8.284-6.716-15-15-15h-15.771c-8.284 0-15 6.716-15 15s6.716 15 15 15h15.771c8.284 0 15-6.716 15-15z"/>
+            <path
+              d="m123.085 72.54c2.929 2.929 6.768 4.394 10.606 4.394s7.678-1.465 10.606-4.394c5.858-5.857 5.858-15.355 0-21.213l-11.152-11.152c-5.857-5.857-15.355-5.857-21.213 0s-5.858 15.355 0 21.213z"/>
+            <path
+              d="m394.32 222.999c-7.714 0-14.989 1.913-21.377 5.29-7.767-14.373-22.977-24.16-40.429-24.16-7.714 0-14.989 1.913-21.376 5.29-7.765-14.373-22.969-24.159-40.415-24.159-5.589 0-10.947 1.004-15.905 2.841l-.001-73.006c-.002-25.301-20.59-45.885-45.895-45.885-25.311 0-45.901 20.591-45.901 45.9l.003 144.009h-6.378c-25.306 0-45.896 20.596-45.896 45.911l-.002 31.233c-.003 47.07 18.447 92.999 50.828 127.029v33.705c0 8.284 6.716 15 15 15h208.662c8.284 0 15-6.716 15-15v-34.752c25.833-34.523 40.002-76.976 40.002-120.149v-73.178c0-25.319-20.599-45.919-45.92-45.919zm15.92 119.098c0 38.216-13.058 75.77-36.767 105.743-2.096 2.649-3.235 5.928-3.235 9.306v24.853h-178.662v-24.853c0-4.034-1.625-7.898-4.508-10.72-29.439-28.814-46.323-68.967-46.32-110.16l.002-31.233c.001-8.774 7.132-15.913 15.896-15.913h21.378c3.979 0 7.794-1.58 10.606-4.394 2.813-2.813 4.394-6.629 4.394-10.606l-.003-159.009c0-8.768 7.134-15.9 15.901-15.9 8.764 0 15.894 7.127 15.895 15.887l.003 148.43c0 8.284 6.716 15 15 15 8.283 0 14.999-6.716 15-14.999l.002-32.366c0-8.768 7.134-15.901 15.901-15.901 8.77 0 15.903 7.141 15.903 15.918v51.218c0 8.284 6.716 15 15 15s15-6.716 15-15v-32.379c0-8.761 7.127-15.888 15.888-15.888 8.777 0 15.919 7.142 15.919 15.92v60.649c0 8.284 6.716 15 15 15s15-6.716 15-15v-41.814c0-8.76 7.127-15.887 15.887-15.887 8.778 0 15.92 7.142 15.92 15.92z"/>
+          </g>
+        </svg>
+        <div class="hd-dl-info_title">
+          Người dùng sử dụng chuột(máy tính) hoặc chạm vào màn hình(điện thoại) để điều hướng xoay góc nhìn trong không
+          gian 3D
+        </div>
+      </div>
+      <div class="bd-dl-info mt-2">
+        <table>
+          <tr>
+            <td>
+              <div class="bd-dl-info_item">
+
+                <div class="bd-dl-info_item-icon">
+                  <button pButton pRipple icon="pi pi-play" class='btn-round p-button-secondary'></button>
+                </div>
+                <div class="bd-dl-info_item-title">
+                  Chạm để xem video 3D
+                </div>
+
+              </div>
+            </td>
+            <td>
+              <div class="bd-dl-info_item">
+                <div class="bd-dl-info_item-icon">
+                  <img src="/assets/icon-png/pin.png" alt="">
+                </div>
+                <div class="bd-dl-info_item-title">
+                  Chạm để hiển thị vị trí mới
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="bd-dl-info_item">
+                <div class="bd-dl-info_item-icon">
+                  <button pButton pRipple icon="pi pi pi-volume-off" class="btn-round "></button>
+                </div>
+                <div class="bd-dl-info_item-title">
+                  Chạm để bật thuyết minh
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="bd-dl-info_item">
+                <div class="bd-dl-info_item-icon">
+                  <img src="/assets/icon-png/infomation.png" alt="">
+                </div>
+                <div class="bd-dl-info_item-title">
+                  Chạm để hiển thị thông tin
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="bd-dl-info_item">
+                <div class="bd-dl-info_item-icon">
+                  <button pButton pRipple icon="pi pi-refresh" class="btn-round p-button-warning"></button>
+                </div>
+                <div class="bd-dl-info_item-title">
+                  chạm để bật tự động quay
+                </div>
+              </div>
+            </td>
+            <td>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div>
+
+    </div>
+  </p-dialog>
+  <p-dialog header="Thông tin chi tiết" [(visible)]="visibleInfo" [modal]="true" [style]="{ width: '60vw' }"
+            [draggable]="false" [resizable]="false" class="m-0">
+    <div class="row row-cols-1">
+      <div class="col-lg-6 ctn-left d-block">
+        <ng-container *ngIf="datainfo">
+          <div *ngIf="datainfo['_type_media'] === 'video',else viewImg" class="w-100 text-center">
+            <video class="datainfo-body__img" controls>
+              <source [src]="datainfo['_file_media'] ? datainfo['_file_media'] : 'assets/images/placeholder-3x2.jpg'"
+                      type="video/mp4">
+            </video>
+          </div>
+          <ng-template #viewImg>
+            <div class="w-100 text-center">
+              <img [src]="datainfo['_file_media'] ? datainfo['_file_media'] : 'assets/images/placeholder-3x2.jpg'"
+                   class="datainfo-body__img">
+            </div>
+          </ng-template>
+          <div class="d-flex justify-content-center align-items-center" *ngIf="datainfo.file_audio[0] ">
+            <audio controls>
+              <source [src]="datainfo['_file_audio']?datainfo['_file_audio']:''" [type]="datainfo['_type_file_audio']? datainfo['_type_file_audio']: 'audio/mpeg'">
+            </audio>
+          </div>
+        </ng-container>
+      </div>
+      <div class="col-lg-6 ctn-right">
+        <ng-container *ngIf="datainfo">
+          <div class="datainfo-title">
+            <p class="datainfo-title__p m-auto">{{datainfo.title}}</p>
+          </div>
+          <div class="datainfo-body mt-1">
+            <div class="datainfo-body__dec">Mô tả:
+              <div  [innerHTML]="datainfo.mota |htmlDecode"></div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </p-dialog>
+</ng-container>
+
+
+<ng-template #isSmall>
+  <p-dialog header="Hướng dẫn sử dụng" [(visible)]="visibleHelp" [modal]="true" [style]="{ width: '94%' }"
+            [draggable]="false" [resizable]="false" class="m-0">
+    <div class="d-flex justify-content-center flex-column p-2 hd-dl-info w-100">
+      <div class="hd-dl-info-item ">
+        <svg xmlns="http://www.w3.org/2000/svg" id="Capa_1" enable-background="new 0 0 511.998 511.998" height="512"
+             viewBox="0 0 511.998 511.998" width="512">
+          <g>
+            <path
+              d="m208.923 45.771c8.284 0 15-6.716 15-15v-15.771c0-8.284-6.716-15-15-15s-15 6.716-15 15v15.771c0 8.285 6.716 15 15 15z"/>
+            <path
+              d="m284.153 76.934c3.839 0 7.678-1.465 10.606-4.394l11.152-11.152c5.858-5.857 5.858-15.355 0-21.213-5.857-5.857-15.355-5.857-21.213 0l-11.152 11.152c-5.858 5.857-5.858 15.355 0 21.213 2.93 2.929 6.768 4.394 10.607 4.394z"/>
+            <path
+              d="m300.315 137.164c0 8.284 6.716 15 15 15h15.771c8.284 0 15-6.716 15-15s-6.716-15-15-15h-15.771c-8.284 0-15 6.716-15 15z"/>
+            <path
+              d="m117.529 137.164c0-8.284-6.716-15-15-15h-15.771c-8.284 0-15 6.716-15 15s6.716 15 15 15h15.771c8.284 0 15-6.716 15-15z"/>
+            <path
+              d="m123.085 72.54c2.929 2.929 6.768 4.394 10.606 4.394s7.678-1.465 10.606-4.394c5.858-5.857 5.858-15.355 0-21.213l-11.152-11.152c-5.857-5.857-15.355-5.857-21.213 0s-5.858 15.355 0 21.213z"/>
+            <path
+              d="m394.32 222.999c-7.714 0-14.989 1.913-21.377 5.29-7.767-14.373-22.977-24.16-40.429-24.16-7.714 0-14.989 1.913-21.376 5.29-7.765-14.373-22.969-24.159-40.415-24.159-5.589 0-10.947 1.004-15.905 2.841l-.001-73.006c-.002-25.301-20.59-45.885-45.895-45.885-25.311 0-45.901 20.591-45.901 45.9l.003 144.009h-6.378c-25.306 0-45.896 20.596-45.896 45.911l-.002 31.233c-.003 47.07 18.447 92.999 50.828 127.029v33.705c0 8.284 6.716 15 15 15h208.662c8.284 0 15-6.716 15-15v-34.752c25.833-34.523 40.002-76.976 40.002-120.149v-73.178c0-25.319-20.599-45.919-45.92-45.919zm15.92 119.098c0 38.216-13.058 75.77-36.767 105.743-2.096 2.649-3.235 5.928-3.235 9.306v24.853h-178.662v-24.853c0-4.034-1.625-7.898-4.508-10.72-29.439-28.814-46.323-68.967-46.32-110.16l.002-31.233c.001-8.774 7.132-15.913 15.896-15.913h21.378c3.979 0 7.794-1.58 10.606-4.394 2.813-2.813 4.394-6.629 4.394-10.606l-.003-159.009c0-8.768 7.134-15.9 15.901-15.9 8.764 0 15.894 7.127 15.895 15.887l.003 148.43c0 8.284 6.716 15 15 15 8.283 0 14.999-6.716 15-14.999l.002-32.366c0-8.768 7.134-15.901 15.901-15.901 8.77 0 15.903 7.141 15.903 15.918v51.218c0 8.284 6.716 15 15 15s15-6.716 15-15v-32.379c0-8.761 7.127-15.888 15.888-15.888 8.777 0 15.919 7.142 15.919 15.92v60.649c0 8.284 6.716 15 15 15s15-6.716 15-15v-41.814c0-8.76 7.127-15.887 15.887-15.887 8.778 0 15.92 7.142 15.92 15.92z"/>
+          </g>
+        </svg>
+        <div class="hd-dl-info_title">
+          Người dùng sử dụng chuột(máy tính) hoặc chạm vào màn hình(điện thoại) để điều hướng xoay góc nhìn trong không
+          gian 3D
+        </div>
+      </div>
+      <div class="bd-dl-info mt-2">
+        <div class="d-flex flex-column w-100 justify-content-center pl-3 ">
+          <div class="bd-dl-info_item">
+
+            <div class="bd-dl-info_item-icon">
+              <button pButton pRipple icon="pi pi-play" class='btn-round p-button-secondary'></button>
+            </div>
+            <div class="bd-dl-info_item-title">
+              Chạm để xem video 3D
+            </div>
+
+          </div>
+
+
+          <div class="bd-dl-info_item">
+            <div class="bd-dl-info_item-icon">
+              <img src="/assets/icon-png/pin.png" alt="">
+            </div>
+            <div class="bd-dl-info_item-title">
+              Chạm để hiển thị vị trí mới
+            </div>
+          </div>
+
+
+          <div class="bd-dl-info_item">
+            <div class="bd-dl-info_item-icon">
+              <button pButton pRipple icon="pi pi pi-volume-off" class="btn-round "></button>
+            </div>
+            <div class="bd-dl-info_item-title">
+              Chạm để bật thuyết minh
+            </div>
+          </div>
+
+          <div class="bd-dl-info_item">
+            <div class="bd-dl-info_item-icon">
+              <img src="/assets/icon-png/infomation.png" alt="">
+            </div>
+            <div class="bd-dl-info_item-title">
+              Chạm để hiển thị thông tin
+            </div>
+          </div>
+
+          <div class="bd-dl-info_item">
+            <div class="bd-dl-info_item-icon">
+              <button pButton pRipple icon="pi pi-refresh" class="btn-round p-button-warning"></button>
+            </div>
+            <div class="bd-dl-info_item-title">
+              chạm để bật tự động quay
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+
+    </div>
+  </p-dialog>
+
+  <p-dialog header="Thông tin chi tiết" [(visible)]="visibleInfo" [modal]="true" [style]="{ width: '94%' }"
+            [draggable]="false" [resizable]="false" class="m-0">
+    <div class="row row-cols-1">
+      <div class="col-lg-5 ctn-left d-block">
+        <ng-container *ngIf="datainfo">
+          <div *ngIf="datainfo['_type_media'] === 'video',else viewImg" class="w-100 text-center">
+            <video class="datainfo-body__img" controls>
+              <source [src]="datainfo['_file_media'] ? datainfo['_file_media'] : 'assets/images/placeholder-3x2.jpg'"
+                      type="video/mp4">
+            </video>
+          </div>
+          <ng-template #viewImg>
+            <div id="media" class="w-100 text-center">
+              <img [src]="datainfo['_file_media'] ? datainfo['_file_media'] : 'assets/images/placeholder-3x2.jpg'" alt=""
+                   class="datainfo-body__img">
+            </div>
+          </ng-template>
+          <div class="d-flex justify-content-center align-items-center" *ngIf="datainfo.file_audio[0] ">
+            <audio controls>
+              <source [src]="datainfo['_file_audio']?datainfo['_file_audio']:''" [type]="datainfo['_type_file_audio']? datainfo['_type_file_audio']: 'audio/mpeg'">
+            </audio>
+          </div>
+        </ng-container>
+      </div>
+      <div class="col-lg-7 ctn-right">
+        <ng-container *ngIf="datainfo">
+          <div class="datainfo-title">
+            <p class="datainfo-title__p m-auto">{{datainfo.title}}</p>
+          </div>
+          <div class="datainfo-body mt-1">
+            <div class="datainfo-body__dec">Mô tả:
+              <div  [innerHTML]="datainfo.mota |htmlDecode"></div>
+            </div>
+          </div>
+
+        </ng-container>
+      </div>
+    </div>
+  </p-dialog>
+</ng-template>
+
+
+<ng-container *ngIf="showMap">
+  <div class="map-Resize">
+    <ovic-map [points]="dataPointsChild"></ovic-map>
+  </div>
+</ng-container>
+
+

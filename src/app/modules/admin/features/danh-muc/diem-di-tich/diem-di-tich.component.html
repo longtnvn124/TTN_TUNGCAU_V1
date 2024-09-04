@@ -1,0 +1,221 @@
+<div class="row">
+  <div class="col-12" [class.ovic-is-loading]="isLoading">
+    <div class="ovic-load-init-fail alert alert-danger --fs-14" *ngIf="loadInitFail; else tableData">
+      Đã có lỗi trong quá trình tải dữ liệu
+      <button class="btn btn-primary border-circle --fs-13 ml-2" (click)="loadInit()">Reload</button>
+    </div>
+    <ng-template #tableData>
+      <ovic-table emptyMessage="Danh sách trống" [index]="index" [data]="listData"
+                  styleClass="tbl-danh-sach-tap-the head-input-size--normal head-input-size--250px" dataKey="id"
+                  rowHover="true"
+                  [rows]="15" tableName="Danh sách di tích, bảo tàng văn hoá địa phương" [tblStructure]="tblStructure"
+                  (onButtonClick)="handleClickOnTable($event)" [enableSearch]="true" [enableSearchLocal]="false"
+                  (onSearch)="onSearch($event)" [searchDebounceTime]="800" [headerButtons]="headButtons"></ovic-table>
+      <p-paginator class="p-paginator--custom" [showCurrentPageReport]="true" [rows]="rows"
+                   [totalRecords]="recordsTotal" [pageLinkSize]="5" (onPageChange)="paginate($event)"></p-paginator>
+    </ng-template>
+  </div>
+</div>
+
+
+<!--<input type="file" #fileChooser hidden="true" (change)="onInputAvatar($event , fileChooser)">-->
+<ng-template #fromUpdate>
+  <div class="ovic-side-navigation-content">
+    <div class="ovic-side-navigation-content__head">
+      <h4 class="ovic-side-navigation-content__head__title">{{formActive ? formActive.title : ''}}</h4>
+      <button (click)="closeForm()" pButton pRipple type="button" icon="pi pi-times"
+              class="p-button-rounded p-button-danger p-button-text close ovic-side-navigation-content__head__btn-close"></button>
+    </div>
+    <div class="ovic-side-navigation-content__body ovic-scroll-style">
+      <div class="ovic-vertical__inputs ovic-vertical__inputs--layout-2">
+        <form [formGroup]="formSave" autocomplete="off">
+          <div class="d-block w-100" style="height: calc(100vh - 60px - 60px - 20px);">
+            <p-splitter [style]="{'height': '100%'}" [panelSizes]="[35,65]">
+                <ng-template pTemplate>
+                  <div class="w-100 d-block">
+                    <div class="row m-0">
+                      <div class="col-12">
+                        <p class="form-row">
+                          <label>Tên di tích <span class="ovic-mark">*</span></label>
+                          <input type="text" placeholder="Tên di tích..." formControlName="ten" autocomplete="off">
+                        </p>
+                      </div>
+                    </div>
+                    <div class="row m-0">
+                      <div class="col-12">
+                        <p class="form-row">
+                          <label >Trạng thái <span class="ovic-mark">*</span></label>
+                          <p-dropdown placeholder="Chọn..." class="w-100" [options]="statusList" optionLabel="label"
+                                      optionValue="value" [showClear]="true"
+                                      formControlName='status'></p-dropdown>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="row m-0">
+                      <div class="col-12">
+                        <p class="form-row">
+                          <label >Toạ độ bản đồ</label>
+                          <input type="text" placeholder="21.577689169078518, 105.8162135320907..." formControlName="toado" autocomplete="off">
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate>
+                  <div class="row m-0">
+                    <div class="col-12">
+                      <p class="form-row">
+                        <label>Mô tả </label>
+                        <p-editor [curentFormControl]="f['mota']" #edtitor [editor]="edtitor" [Resize_img]="true" [modules]="module_quill"
+                                  class="w-100" formControlName="mota" placeholder="Nội dung..."
+                                  [style]="{ 'min-height': '300px'}">
+                          <p-header>
+                          <span class="ql-formats">
+                              <select class="ql-header" title="Thẻ tiêu đề">
+                                  <option selected>Chữ thường </option>
+                                  <option value="1">Tiêu đề 1</option>
+                                  <option value="2">Tiêu đề 2</option>
+                                  <option value="3">Tiêu đề 3</option>
+                                  <option value="4">Tiêu đề 4</option>
+                                  <option value="5">Tiêu đề 5</option>
+                                  <option value="6">Tiêu đề 6</option>
+                              </select>
+                               <select id="--ql-size" class="ql-size" title="Kích thước chữ">
+                                  <option value="small">Cỡ nhỏ</option>
+                                  <option value="false" selected>Cỡ thường</option>
+                                  <option value="large">Cỡ vừa</option>
+                                  <option value="huge">Cỡ lớn</option>
+                              </select>
+                          </span>
+                            <span class="ql-formats">
+                              <button class="ql-bold" title="Kiểu chữ đậm"></button>
+                              <button class="ql-italic" title="Kiểu chữ nghiêng"></button>
+                              <button class="ql-underline" title="Kiểu chữ ghạch chân"></button>
+                              <button class="ql-strike" title="Kiểu chữ ghạch ngang"></button>
+                          </span>
+                            <span class="ql-formats">
+                              <select class="ql-align" title="Căn lề">
+                                  <option selected></option>
+                                  <option value="center"></option>
+                                  <option value="right"></option>
+                                  <option value="justify"></option>
+                              </select>
+                              <select class="ql-color" title="Màu chữ"><option selected="selected"></option><option
+                                value="#e60000"></option><option value="#ff9900"></option><option
+                                value="#ffff00"></option><option
+                                value="#008a00"></option><option value="#0066cc"></option><option
+                                value="#9933ff"></option><option
+                                value="#ffffff"></option><option value="#facccc"></option><option
+                                value="#ffebcc"></option><option
+                                value="#ffffcc"></option><option value="#cce8cc"></option><option
+                                value="#cce0f5"></option><option
+                                value="#ebd6ff"></option><option value="#bbbbbb"></option><option
+                                value="#f06666"></option><option
+                                value="#ffc266"></option><option value="#ffff66"></option><option
+                                value="#66b966"></option><option
+                                value="#66a3e0"></option><option value="#c285ff"></option><option
+                                value="#888888"></option><option
+                                value="#a10000"></option><option value="#b26b00"></option><option
+                                value="#b2b200"></option><option
+                                value="#006100"></option><option value="#0047b2"></option><option
+                                value="#6b24b2"></option><option
+                                value="#444444"></option><option value="#5c0000"></option><option
+                                value="#663d00"></option><option
+                                value="#666600"></option><option value="#003700"></option><option
+                                value="#002966"></option><option
+                                value="#3d1466"></option></select>
+                              <select class="ql-background" title="Màu chữ"><option selected="selected"></option><option
+                                value="#e60000"></option><option value="#ff9900"></option><option
+                                value="#ffff00"></option><option
+                                value="#008a00"></option><option value="#0066cc"></option><option
+                                value="#9933ff"></option><option
+                                value="#ffffff"></option><option value="#facccc"></option><option
+                                value="#ffebcc"></option><option
+                                value="#ffffcc"></option><option value="#cce8cc"></option><option
+                                value="#cce0f5"></option><option
+                                value="#ebd6ff"></option><option value="#bbbbbb"></option><option
+                                value="#f06666"></option><option
+                                value="#ffc266"></option><option value="#ffff66"></option><option
+                                value="#66b966"></option><option
+                                value="#66a3e0"></option><option value="#c285ff"></option><option
+                                value="#888888"></option><option
+                                value="#a10000"></option><option value="#b26b00"></option><option
+                                value="#b2b200"></option><option
+                                value="#006100"></option><option value="#0047b2"></option><option
+                                value="#6b24b2"></option><option
+                                value="#444444"></option><option value="#5c0000"></option><option
+                                value="#663d00"></option><option
+                                value="#666600"></option><option value="#003700"></option><option
+                                value="#002966"></option><option
+                                value="#3d1466"></option></select>
+                          </span>
+                            <span class="ql-formats">
+                              <button class="ql-list" value="ordered" title="Danh sách số"></button>
+                              <button class="ql-list" value="bullet" title="Danh sách chấm"></button>
+                              <button class="ql-indent q1-box" value="+1" title="Thụt đầu dòng"></button>
+                              <button class="ql-indent q2-box last" value="-1" title="Giảm thụt đầu dòng"></button>
+                          </span>
+                            <span class="ql-formats">
+
+                              <button class="ql-image" aria-label="image" title="Chèn ảnh"></button>
+                              <button class="ql-blockquote" aria-label="blockquote" title="Trích dẫn"></button>
+                              <button class="ql-code-block" aria-label="code-block" title="code-block"></button>
+                          </span>
+                          </p-header>
+                        </p-editor>
+
+                      </p>
+                    </div>
+                  </div>
+                </ng-template>
+              </p-splitter>
+          </div>
+
+
+
+
+        </form>
+      </div>
+    </div>
+    <div class="ovic-side-navigation-content__foot">
+      <span class="ovic-side-navigation-content__foot__notice mr-auto"><mark>(*)</mark> bắt buộc phải nhập</span>
+      <button pButton pRipple type="button" [label]="btn_checkAdd" icon="pi pi-save" (click)="saveForm()"
+              class="p-button-success"></button>
+      <button pButton pRipple type="button" label="Đóng" class="p-button-secondary ml-3" icon="pi pi-times"
+              (click)="closeForm()"></button>
+    </div>
+  </div>
+</ng-template>
+
+<p-dialog header="Thông tin chi tiết" [(visible)]="visible" [modal]="true" [style]="{ width: '70vw' }"
+          [draggable]="false" [resizable]="false" class="m-0">
+  <div class="w-100 d-flex">
+
+    <div class="ctn-right">
+      <ng-container *ngIf="dataInformation">
+        <div class="datainfo-title">
+          <div *ngIf="dataInformation['__fileMedia_converted']" class="w-100 mx-auto d-flex justify-content-center">
+            <img src="{{dataInformation['__fileMedia_converted']}}" class="datainfo-body__img">
+          </div>
+          <p class="datainfo-title__p m-auto">{{dataInformation.ten}}</p>
+        </div>
+        <div class="datainfo-body mt-1">
+          <div class="datainfo-body__dec" [innerHtml]=" dataInformation.mota | htmlDecode"></div>
+        </div>
+
+      </ng-container>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog  header="Bản đồ" [(visible)]="visibleMap" [modal]="true" [style]="{ width: '50vw','height':'400px' }" (onMaximize)="btnReload()"
+          [draggable]="false" [resizable]="false" class="ditichMap" [maximizable]="true" (onShow)="onShow =true" (onHide)="onShow=false">
+        <ng-container *ngIf="dataBinding && onShow,else notData">
+          <ovic-map class="w-100 h-100" [site]="dataBinding" [reSizeMap]="onResizeMap" ></ovic-map>
+        </ng-container>
+        <ng-template #notData>
+          <div class="w-100 h-100 d-flex justify-content-center align-items-center">
+              <h3 class="">Không có dữ liệu</h3>
+          </div>
+        </ng-template>
+</p-dialog>

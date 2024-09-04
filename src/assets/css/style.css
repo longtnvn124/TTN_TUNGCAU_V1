@@ -1,0 +1,149 @@
+.tbl-file-list-local__menu__head__title__btn .pi {
+	font-size: 12px;
+}
+
+body .ovic-showcase__element-wrap-inside:hover {
+	background-color: var(--table-hind-color);
+}
+
+body .ovic-showcase {
+	margin-bottom: 0 !important;
+}
+
+.p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):hover {
+	background-color: var(--table-hind-color);
+}
+
+/***********************************************
+* style user select
+************************************************/
+.user-info-component {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	background-color: rgba(255, 255, 255, .5);
+	padding: 2px;
+	box-shadow: 0 0 1px 0 #aaaaaa;
+	width: 100%;
+}
+
+.user-info-component__media {
+	width: 34px;
+	height: 34px;
+	min-width: 34px;
+	max-width: 34px;
+	margin: 0;
+	box-shadow: none;
+	border: none;
+	padding: 0;
+	border-radius: 0;
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.user-info-component__media__image {
+	display: block;
+	margin: 0;
+	padding: 0;
+	font-size: 0;
+	line-height: 0;
+	width: 30px;
+	max-width: 30px;
+	height: 30px;
+	max-height: 30px;
+	object-fit: cover;
+	border-radius: 0;
+}
+
+.user-info-component__media svg {
+	display: block;
+	margin: 0;
+	border-right: 1px solid #dddddd;
+	font-size: 0;
+	line-height: 0;
+	width: 30px;
+	height: 30px;
+	fill: #666666;
+	padding: 4px;
+}
+
+.user-info-component__info {
+	flex: 1 1 auto;
+	padding: 2px 0 2px 3px;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	align-self: flex-start;
+	justify-content: flex-start;
+	line-height: 1;
+}
+
+.mat-menu-select-user {
+	border-radius: 0 !important;
+	min-height: 30px !important;
+	background-color: #ffffff;
+	min-width: 200px !important;
+	margin-right: -5px;
+}
+
+.mat-menu-select-user .mat-menu-content {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.mat-menu-select-user .mat-menu-item {
+	padding: 0 !important;
+	height: auto;
+	line-height: 0;
+}
+
+.mat-menu-select-user .mat-menu-item + .mat-menu-item {
+	border-top: 1px solid #d6d6d6;
+}
+
+.user-info-component__info__email {
+	font-size: 14px;
+	color: #666666;
+	font-weight: 400;
+	margin: 2px 0 0;
+	line-height: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 162px;
+	display: block;
+}
+
+.user-info-component__info__name {
+	font-size: 14px;
+	line-height: 1.1;
+	font-weight: 500;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 162px;
+	display: block;
+}
+
+.user-info-component .default-empty-user {
+	display: flex;
+	align-items: center;
+	height: 30px;
+}
+
+.test-member__from__col input.p-inputmask{
+	border: none !important;
+	box-shadow: none !important;
+	outline: none !important;
+	background-color: #fff;
+	font-size: 15px;
+	color: #333333;
+	width: 100%;
+	padding: 0 5px;
+	height: 28px;
+	line-height: 28px;
+}
+.modal-content{
+  padding: 10px;
+  border-radius: 4px;
+}

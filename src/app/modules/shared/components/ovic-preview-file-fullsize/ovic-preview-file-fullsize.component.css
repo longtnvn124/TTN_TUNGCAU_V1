@@ -1,0 +1,84 @@
+.--style--options {
+    opacity: 0;
+    position: fixed;
+    height: 0;
+    width: 0;
+    left: -1100%;
+    top: -100%;
+    z-index: -100;
+}
+
+.ovic-preview-file-full-size__panel {
+    position: fixed;
+    z-index: 1000;
+    background-color: #ffffff;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+plyr[plyrType="audio"] {
+    max-width: 480px;
+    width: calc(100% - 20px);
+}
+
+.pdf-doc-control {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    border-top: 1px solid #e2e1e1;
+    width: 100%;
+}
+
+.pdf-doc-control .btn {
+    font-size: 16px;
+    line-height: 1;
+    display: inline-block;
+    color: #ffffff;
+    padding: 11px;
+    border-radius: 0;
+    background-color: var(--main-color-5);
+    border: none !important;
+    margin: 0;
+    width: 38px;
+    text-align: center;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.pdf-doc-control > div + button,
+.pdf-doc-control > button + div,
+.pdf-doc-control > button + button {
+    margin-left: 10px;
+}
+
+.pdf-doc-control input {
+    display: inline-block;
+    width: 50px;
+    padding: 0 5px;
+    text-align: center;
+    outline: none !important;
+    box-shadow: none !important;
+    border: 1px solid var(--main-color-5);
+    border-radius: 0;
+    line-height: 36px;
+    font-size: 14px;
+}
+
+.pdf-doc-control .btn i {
+    line-height: 0;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.pdf-doc-control__element {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 49px;
+}

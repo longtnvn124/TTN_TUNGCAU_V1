@@ -1,0 +1,8 @@
+<div class="ovic-document-viewer {{addClass}}" [ngClass]="isLoading ? 'ovic-is-loading' : null" [style.width]="frameWidth" [style.height]="frameHeight">
+    <figure *ngIf="data.type === 'image' && urlObject "><img [src]="urlObject | ovicSafeUrl" alt="{{data.fileName}}">
+    </figure>
+    <ovic-video-player [data]="ovicMedia" [autoResponsive]="true" *ngIf="data.type === 'video'"></ovic-video-player>
+    <ovic-audio-player [data]="ovicMedia" *ngIf="data.type === 'audio'"></ovic-audio-player>
+    <p class="ovic-document-viewer__error-message" *ngIf="error">{{errMessage}}</p>
+    <ngx-doc-viewer *ngIf="['docx','pptx','ppt','pdf','xlsx'].includes(data.type) && urlObject " [url]="urlObject" [viewer]="_viewer" [style.width]="frameWidth" [style.height]="frameHeight" (loaded)="disableLazy()"></ngx-doc-viewer>
+</div>

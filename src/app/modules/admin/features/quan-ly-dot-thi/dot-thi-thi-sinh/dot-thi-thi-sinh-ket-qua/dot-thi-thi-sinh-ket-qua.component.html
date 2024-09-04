@@ -1,0 +1,82 @@
+<div *ngIf="viewLazy, else data" class="w-100 h-100 d-flex justify-content-center align-items-center">
+  <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+</div>
+
+<ng-template #data>
+  <p-splitter [style]="{'height': '100%'}" [panelSizes]="[65,35]">
+    <ng-template pTemplate>
+      <div class="w-100 ovic-side-navigation-content__body --no-footer ovic-scroll-style ">
+        <ovic-table emptyMessage="Danh sách trống" [index]="index" [data]="shiftTest"
+                    styleClass="tbl-danh-sach-tap-the head-input-size--normal head-input-size--250px overflow-hidden" dataKey="id"
+                    rowHover="true"
+                    [rows]="rows" tableName="Danh sách thí sinh dự thi" [tblStructure]="tblStructureShiftTest"
+                    (onButtonClick)="handleClickOnTableShiftTest($event)" [enableSearch]="true" (onSearch)="onSearch($event)"
+                    [enableSearchLocal]="false" [headerButtons]="headButtons"
+                    [searchDebounceTime]="800"
+        ></ovic-table>
+<!--        (onSearch)="onSearch($event)"-->
+        <!--        headerButtons]="headButtons"-->
+        <p-paginator class="p-paginator--custom" [showCurrentPageReport]="true" [rows]="rows"
+                     [totalRecords]="recordsTotal" [pageLinkSize]="5" (onPageChange)="paginate($event)"></p-paginator>
+      </div>
+    </ng-template>
+    <ng-template pTemplate>
+      <div class="w-100 ovic-scroll-style per-contaier-right">
+        <ng-container  [ngSwitch]="viewDetail">
+          <ng-container *ngSwitchCase="'default'">
+            <div class="d-flex justify-content-center align-items-center h-100">
+              <p class="font-weight-bold text-primary" style="font-size: 16px">Vui lòng chọn thí sinh</p>
+            </div>
+          </ng-container>
+          <ng-container *ngSwitchCase=" 'question'">
+            <div class="d-flex justify-content-center align-items-center h-100">
+              <div class="h-100" style="width:100%;max-width:900px;">
+                <div class="exam-container">
+                  <div class="exam-container__item " *ngFor="let question of nganhangCauhoi, index as i">
+                    <div class="exam-container__item-label mb-2">Câu {{i + 1}}: <span
+                      [innerHTML]="question.title |htmlDecode"></span></div>
+                    <groups-radio [options]="question.answer_options" [correctAnswer]="question['__correct_answer']"
+                                  inputType="checkbox" [default]="question['__per_select_question']"
+                                  [freeze]="true" [options_sty]="question['options_sty']" ></groups-radio>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </ng-container>
+          <ng-container *ngSwitchCase="'tracking'">
+            <div class="d-flex justify-content-center align-content-center h-100">
+              <div class=" h-100" style="width:100%;max-width:900px;">
+                <div class="contestant-tracking" *ngIf=" dataTracking && dataTracking.length >0 ,else notTracking ">
+                  <div class="contestant-tracking__item" *ngFor="let itemTracking of dataTracking ">
+                    <div class="contestant-tracking__item-btn">
+                      <button pButton pRipple class="p-button-icon p-button-rounded {{itemTracking['_class']}}" icon="{{itemTracking['_icon']}}"></button>
+                    </div>
+                    <div class="contestant-tracking__item-context">
+                      <p class="contestant-tracking__item-context-content" >{{itemTracking.content_changes}}</p>
+                      <p class="contestant-tracking__item-context-time">{{itemTracking['_date_chagnes']}}</p>
+                    </div>
+                  </div>
+                </div>
+                <ng-template #notTracking>
+                  <div class="contestant-tracking" style="height: calc(100vh - 60px - 60px - 20px);"> <div class=" w-100 h-100 d-flex justify-content-center align-items-center">Hệ thống không ghi nhận theo dõi bài làm của thí sinh</div></div>
+                </ng-template>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    </ng-template>
+  </p-splitter>
+
+</ng-template>
+
+
+  <ng-template #templateWaiting let-c="close" let-d="dismiss">
+    <div class="popup-waiting-loading thissinh-export">
+      <label>Đang chuẩn bị dữ liệu...</label>
+      <div class="tn-import-student-progressbar">
+        <mat-progress-bar mode="buffer" ></mat-progress-bar>
+      </div>
+    </div>
+  </ng-template>

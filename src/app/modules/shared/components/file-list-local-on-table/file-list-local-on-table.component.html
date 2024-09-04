@@ -1,0 +1,44 @@
+<div class="tbl-file-list-local" [matMenuTriggerFor]="appMenu">
+    <button *ngIf="(_fileList.length || permission['canUpload']) ; else disableButton" class="tbl-file-list-local__table__btn-add-first btn" (click)="btnToggleClick($event)" [class.prevent-user-from-uploading]="!permission['canUpload']">
+        <i *ngIf="!_fileList.length; else showUploadedFileDetail" class="fi fa fa-paperclip" aria-hidden="true"></i>
+        <ng-template #showUploadedFileDetail>
+            <span>{{ _fileList.length}}</span>
+            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+        </ng-template>
+    </button>
+    <ng-template #disableButton>
+        <button class="tbl-file-list-local__table__btn-add-first btn prevent-user-from-uploading btn--cursor-text" (click)="btnStopPropagation($event)">
+            <i class="fa fa-paperclip" aria-hidden="true"></i>
+        </button>
+    </ng-template>
+</div>
+<input type="file" [accept]="_accept" [multiple]="multiple" class="d-none" (change)="onChangesFileChooser($event)" #fileChooser/>
+<mat-menu #appMenu="matMenu" class="mat-menu-p-0 border-radius-0" xPosition="before">
+    <div class="tbl-file-list-local__menu" (click)="$event.stopPropagation();">
+        <div class="tbl-file-list-local__menu__head">
+            <h4 class="tbl-file-list-local__menu__head__title">File đính kèm <span>{{ fileList.length}}</span></h4>
+            <button *ngIf="permission['canUpload']" pButton pRipple type="button" icon="pi pi-plus" class="p-button-primary tbl-file-list-local__menu__head__title__btn" (click)="btnAddMoreFiles($event)"></button>
+            <button pButton pRipple type="button" icon="pi pi-times" class="p-button-danger tbl-file-list-local__menu__head__title__btn" (click)="btnCloseMenu($event)"></button>
+        </div>
+        <div class="tbl-file-list-local__menu__body">
+            <ul class="tbl-file-list-local__menu__body__list" *ngIf="fileList && fileList.length">
+                <ng-container *ngFor="let file of fileList">
+                    <!--avoid in case [null]-->
+                    <li class="tbl-file-list-local__menu__body__list__elm" *ngIf="file">
+                        <div class="ovic-reorder-item__inner" (click)="btnOpenFile($event,file)">
+                            <div class="ovic-reorder__icon ovic-file-color">
+                                <i [ngClass]="file | ovicFileIcon" aria-hidden="true"></i>
+                            </div>
+                            <div class="ovic-reorder__info" [class.--has-download-permission]="permission['canDownload']" [class.--has-delete-permission]="permission['canDelete']">
+                                <span class="ovic-reorder__file-name">{{ file.title ? file.title : file.name }}</span>
+                                <div class="ovic-reorder__file-size">{{file[ 'file_size' ]}}</div>
+                                <button pButton pRipple type="button" icon="pi pi-times" class="p-button p-button-text p-button-danger p-button-rounded" *ngIf="permission['canDelete']" (click)="btnDeleteFile($event,file)"></button>
+                                <button pButton pRipple type="button" icon="pi pi-download" class="p-button p-button-text p-button-plain p-button-rounded" *ngIf="permission['canDownload']" (click)="btnDownloadFile($event,file)"></button>
+                            </div>
+                        </div>
+                    </li>
+                </ng-container>
+            </ul>
+        </div>
+    </div>
+</mat-menu>

@@ -1,0 +1,61 @@
+<div class="container-search">
+
+
+  <div class="search-content-container">
+    <ng-container *ngIf="!textSearch,else haveData">
+      <div class="d-flex w-100 h-100 justify-content-center align-items-center"
+           style="font-size: 14px;  background: #e1e9e7;font-weight: 500;">
+        <img class="mobile-bg-search" src="assets/images/mobile-icon/search-bg.png" alt="">
+      </div>
+    </ng-container>
+    <ng-template #haveData>
+      <div class="header-search-container ">
+        <div class="header-search">
+          <div class="header-search-left">Tìm kiếm: <span>{{textSearch}}</span></div>
+          <div class="header-search-right">
+            <i [ngClass]="loaiSelectFilter !==0 ?'pi pi-filter-fill' :'pi pi-filter'" (click)="btnFilter()"></i>
+
+          </div>
+
+        </div>
+
+        <div *ngIf="loaiSelectFilter ===0">
+          <app-nhanvat [search]="textSearch" [selectItem]="true" [device]="'MOBILE'"></app-nhanvat>
+          <app-sukien-tonghop [search]="textSearch" [selectItem]="true" [device]="'MOBILE'"></app-sukien-tonghop>
+          <danhmuc-ngulieuso [search]="textSearch" [selectItem]="true" [device]="'MOBILE'"></danhmuc-ngulieuso>
+        </div>
+        <div *ngIf="loaiSelectFilter ===1">
+          <app-nhanvat [search]="textSearch" [selectItem]="true" [device]="'MOBILE'"></app-nhanvat>
+        </div>
+        <div *ngIf="loaiSelectFilter ===2">
+          <app-sukien-tonghop [search]="textSearch" [selectItem]="true" [device]="'MOBILE'"></app-sukien-tonghop>
+
+        </div>
+        <div *ngIf="loaiSelectFilter ===3">
+          <danhmuc-ngulieuso [search]="textSearch" [selectItem]="true" [device]="'MOBILE'"></danhmuc-ngulieuso>
+        </div>
+
+      </div>
+    </ng-template>
+  </div>
+
+
+</div>
+
+
+<p-sidebar [(visible)]="filterbottom" class="mobile-filter-bottom" position="bottom" [style]="{height:'180px'} "
+           [baseZIndex]="10000">
+  <div class="filter-drop-bottom w-100 h-100 " style="background: #fff;
+    padding: 2px 10px;
+    font-size: 16px;">
+    <div [ngClass]="loaiSelectFilter === item.id ?'filter-drop-item-active':''" *ngFor="let item of phanloaiFilter" (click)="btnselectFliter(item.id)" class="filter-drop-bottom_item ">
+      <i class="{{item.icon}} pl-2"></i>
+      <div class="pl-2" style="font-size: 15px;font-weight: 400;"> {{item.value}}</div>
+    </div>
+
+  </div>
+</p-sidebar>
+
+
+
+

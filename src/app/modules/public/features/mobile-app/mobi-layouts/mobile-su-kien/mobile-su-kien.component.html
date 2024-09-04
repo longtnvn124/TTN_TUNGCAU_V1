@@ -1,0 +1,54 @@
+<div class="sk-container w-100">
+  <div class="w-100 h-100">
+    <ng-container [ngSwitch]="mode">
+      <ng-container *ngSwitchDefault>
+        <div class="row row-cols-2 pt-2 mx-0">
+          <div
+            class="d-flex flex-wrap flex-row justify-content-between align-items-center col-sm-6 col-md-4 col-lg-3 p-2"
+            *ngFor="let item of listData" (click)="selectSukien(item.id)">
+            <div class="w-100 d-inline-block shadow-sm bg-white border ovic--parent-image position-relative"
+                 style="border-radius:4px">
+              <div class='head-card_hover w-100 bg-image hover-zoom' style="cursor: pointer;">
+                <div class="position-relative w-100 st-image img-child-max-width" style="overflow: hidden">
+                  <img class="w-100 h-100 ovic-img-zoom"
+                       [src]="item['_bg_link'] !='' ? item['_bg_link'] : 'assets/images/placeholder-3x2.jpg'" alt="">
+                </div>
+                <div class="m-2">
+                  <div
+                    class="headding-card text_hover ngulieuso_item_title">
+                    {{item.title}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </ng-container>
+      <ng-container *ngSwitchCase="'INFO'">
+        <div class="d-flex flex-column justify-content-center align-items-center" *ngIf="sukienActive">
+          <div class="sukien_title">{{sukienActive.title}}</div>
+          <div class="my-3">
+
+            <button class="btn-bd-rd-50" pButton pRipple icon="pi pi-play" (click)="playAudio(1)"></button>
+            <button class="btn-bd-rd-50 ml-1 p-button-warning" pButton pRipple icon="pi pi-pause"
+                    (click)="playAudio(0)"></button>
+          </div>
+
+          <div class="sukien_desc mobile-select-sukien_desc" [innerHTML]="sukienActive.mota | htmlDecode">
+          </div>
+        </div>
+        <div class="sukien_desc mpx-1" *ngIf="sukienActive">
+          <div class="px-1" *ngIf="sukienActive['_diemditich_convented'] ?? 0>0">Diễn ra tại: <span
+            *ngFor="let item of sukienActive['_diemditich_convented']">{{item}}, </span></div>
+          <div class="px-1" *ngIf="sukienActive['_nhanvat_convented'] ?? 0>0">Nhân vật lịch sử: <span
+            *ngFor="let item of sukienActive['_nhanvat_convented']">{{item}}, </span></div>
+        </div>
+
+      </ng-container>
+    </ng-container>
+
+  </div>
+
+</div>
+

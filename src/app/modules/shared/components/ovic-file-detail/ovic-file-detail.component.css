@@ -1,0 +1,64 @@
+.modal-header {
+    padding: 0 0 0 15px;
+    border-radius: 0;
+    align-items: center;
+}
+
+.file-detail__panel-title {
+    line-height: 17px;
+    font-size: 16px;
+}
+
+.modal-header .close {
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    line-height: 0;
+    font-size: 0;
+    font-weight: 100;
+    opacity: 1;
+    color: #555555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-header .close svg {
+    width: 13px;
+    height: 13px;
+    fill: currentColor;
+}
+
+.modal-header .close:hover {
+    color: #ffffff;
+    background-color: #d93333;
+}
+
+.ov-file-running-detail__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ov-file-running-detail__elm {
+    font-size: 14px;
+    font-weight: 400;
+    display: flex;
+    color: #444444;
+    flex-wrap: nowrap;
+    word-break: break-all;
+    line-height: 1.3;
+    padding: 5px 0;
+}
+
+.ov-file-running-detail__title {
+    display: inline-block;
+    width: 85px;
+    color: #666666;
+    font-weight: 400;
+}
+
+.ov-file-running-detail__value {
+    margin: 0;
+    flex: 1 1;
+}

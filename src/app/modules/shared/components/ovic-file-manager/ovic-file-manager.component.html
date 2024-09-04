@@ -1,0 +1,143 @@
+<div class="ovic-media-files">
+    <div class="files-list">
+        <div class="single-file" *ngFor="let file of chosenFiles">
+            <img src="../../../../../assets/images/dnd/ic-file.svg" width="34px" alt="file">
+            <div class="info">
+                <h4 class="name">{{ file.title ? file.title : file.name }}</h4>
+                <p class="size">{{ fileService.formatBytes(file?.size) }}</p>
+            </div>
+            <button type="button" (click)="deleteChosenFiles(file.id)" class="btn-delete">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </button>
+        </div>
+        <button type="button" class="btn btn-outline-success call-file-picker" (click)="openPanel(changeFilePanel)" [innerHTML]="buttonLabel"></button>
+    </div>
+</div>
+
+<ng-template let-c="close" let-d="dismiss" #changeFilePanel>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-title">Chọn files</h4>
+        <button type="button" class="close" aria-describedby="modal-title" (click)="d(true)"><span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body ovic-modal-body ovic-file-manager-body">
+        <div class="ovic-file-manager-flex d-flex">
+            <div class="ovic-tree-folders">
+                <div class="ofm-head">
+                    <div class="btns col">
+                        <button type="button" class="btn btn-outline-primary" (click)="showUploadPanel(templateUpload)">
+                            <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+                            Chọn file từ máy tính
+                        </button>
+                        <button type="button" class="btn btn-outline-info" (click)="loadData()">
+                            <i class="fa fa-refresh" aria-hidden="true" style="margin: 0"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="ovic-date-body">
+                    <ul class="ovic-folder-tree">
+                        <li class="oft-elm oft-elm-year" data-id="{{mn.slug}}" *ngFor="let mn of menus; let i=index">
+                        <span class="oft-elm-menu-title" (click)="activeChildMenu(mn.slug,null)">
+                            <i class="pi" [ngClass]="mn.isOpened? 'pi-caret-down': 'pi-caret-right'"></i>
+                            <i class="pi ui-treenode-icon" [ngClass]="mn.isOpened ? 'pi-folder-open' : 'pi-folder'"></i>{{mn.label}}
+                        </span>
+                            <ul class="ovic-folder-tree tree-child" *ngIf="mn.isOpened">
+                                <li class="oft-elm oft-elm-year" id="{{child.slug}}" *ngFor="let child of mn.children">
+                                <span class="oft-elm-menu-title" (click)="activeChildMenu(child.slug,i)">
+                                    <i class="pi" [ngClass]="child.isOpened? 'pi-caret-down': 'pi-caret-right'"></i>
+                                    <i class="pi ui-treenode-icon" [ngClass]="child.isOpened ? 'pi-folder-open' : 'pi-folder'"></i>{{child.label}}
+                                </span>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="ovic-file-manager-content">
+                <div class="ofm-head d-flex">
+                    <div class="wrap-search col">
+                        <input #seachText
+                               type="text"
+                               class="head-search ovic-text-placeholder"
+                               placeholder="Nhập tên file"
+                               (focusout)="changeSearchFilter(seachText)"
+                               (keydown.tab)="changeSearchFilter(seachText)"
+                               (keyup.enter)="changeSearchFilter(seachText)"
+                        >
+                    </div>
+                    <ul class="wrap-nav col text-right">
+                        <li>
+                            <button type="button" [ngClass]=" gridModeActive ? 'ovic-nav-page grid-icon active':'ovic-nav-page grid-icon'" (click)="changeView(true)">
+                                <i class="fa fa-th-large" aria-hidden="true"></i>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" [ngClass]=" gridModeActive ? 'ovic-nav-page list-icon' : 'ovic-nav-page list-icon active'" (click)="changeView(false)">
+                                <i class="fa fa-bars" aria-hidden="true"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="ovic-file-managers {{ gridModeActive ? 'grid-view-mode' : 'list-view-mode' }} {{ isMultipleMode ? 'has-chosen-file-list' : 'has-no-chosen-file'}}">
+                    <ul class="ul-ovic-lib" *ngIf="library">
+                        <li class="li-ovic-lib" [id]="f.id" *ngFor="let f of library; let i=index">
+                            <button class="btn-ovic-lib" (click)="chooseFile(f.id)">
+                                <img class="ov-a-file-icon" [attr.src]="imgRepresent(f.type)" alt="" width="64" height="64">
+                                <span class="ov-a-file-name">{{ f.title ? f.title : f.name }}</span>
+                                <span class="ov-a-file-size">{{fileService.formatBytes(f.size)}}</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="ofm-result-files" [ngClass]="gridModeActive ? 'grid-view-mode':'list-view-mode'"
+                     *ngIf="isMultipleMode">
+                    <div class="ovic-chosen-files">
+                        <h3 class="ovic-chosen-files-title">Danh sách file đã chọn</h3>
+                        <ul class="ovic-chosen-file-list" *ngIf="chosenFiles.length">
+                            <li class="ovic-chosen-file-elm" data-fileId="f.id"
+                                *ngFor="let f of chosenFiles; let i=index">
+                                <div class="btn-ovic-lib">
+                                    <img class="ov-a-file-icon" [attr.src]="imgRepresent(f.type)" alt="" width="64" height="64">
+                                    <span class="ov-a-file-name">{{ f.title ? f.title : f.name }}</span>
+                                    <span class="ov-a-file-size">{{fileService.formatBytes(f.size)}}</span>
+                                    <span class="btn btn-remove-file" (click)="removeFromChosenFiles(f.id)">&times;</span>
+                                </div>
+                            </li>
+                        </ul>
+                        <p class="empty-file" *ngIf="chosenFiles.length === 0 ">Danh sách trống</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="returnData(chosenFiles)">
+            <i class="fa fa-floppy-o" aria-hidden="true"></i>Lưu lại
+        </button>
+        <button type="button" class="btn btn-cancel" (click)="d(true)">
+            <i class="fa fa-ban" aria-hidden="true"></i>Hủy thao tác
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #templateUpload let-c="close">
+    <button class="close-upload-file-panel" (click)="c(true)"><span aria-hidden="true">&times;</span></button>
+    <div class="ovic-file-manager-upload-area">
+        <div class="ovic-file-manager-container" ovicDropAndDrag (fileDropped)="onFileDropped($event)">
+            <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target['files'])"/>
+            <img src="../../../../../assets/images/dnd/ic-upload-file.svg" alt="">
+            <h3>Kéo thả files vào đây<br>Hoặc</h3>
+            <label for="fileDropRef">Click để nhập</label>
+        </div>
+        <div class="upload-processing-files" *ngIf="fileStore.length">
+            <div class="single-file" *ngFor="let file of fileStore ; let i = index">
+                <img src="../../../../../assets/images/dnd/ic-file.svg" width="45px" alt="file">
+                <div class="info">
+                    <h4 class="name">{{ file.title ? file.title : file.name }}</h4>
+                    <p class="size">{{ fileService.formatBytes(file?.size) }}</p>
+                    <ovic-progress [progress]="file?.progress"></ovic-progress>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,194 @@
+
+      <div class="container-content d-block">
+        <p-splitter [style]="{'height': '100%'}" [panelSizes]="[35,65]">
+          <ng-template pTemplate>
+            <div class="left-content w-100">
+              <div class="left-header">{{contentHeader}}</div>
+              <div class="left-body">
+                <div class="ctn-question w-100 h-100">
+                  <div class="ovic-side-navigation-content__body p-0 ovic-scroll-style">
+                    <div class="ovic-vertical__inputs ovic-vertical__inputs--layout-2">
+                      <form [formGroup]="formSave" autocomplete="off">
+                        <div class="row">
+
+                          <div class="col-12">
+                            <div class="form-row">
+                              <label>Nội dung câu hỏi <span class="ovic-mark">*</span></label>
+                              <p-editor #edtitor [editor]="edtitor" [curentFormControl]="f['title']" [Resize_img]="true"
+                                        class="w-100" formControlName="title" placeholder="Nội dung..."  [modules]="module_quill"
+                                        [style]="{ 'min-height': '240px'}">
+                                <p-header>
+                          <span class="ql-formats">
+                              <select class="ql-header" title="Thẻ tiêu đề">
+                                  <option selected>Chữ thường </option>
+                                  <option value="1">Tiêu đề 1</option>
+                                  <option value="2">Tiêu đề 2</option>
+                                  <option value="3">Tiêu đề 3</option>
+                                  <option value="4">Tiêu đề 4</option>
+                                  <option value="5">Tiêu đề 5</option>
+                                  <option value="6">Tiêu đề 6</option>
+                              </select>
+                               <select id="--ql-size" class="ql-size" title="Kích thước chữ">
+                                  <option value="small">Cỡ nhỏ</option>
+                                  <option value="false" selected>Cỡ thường</option>
+                                  <option value="large">Cỡ vừa</option>
+                                  <option value="huge">Cỡ lớn</option>
+                              </select>
+                          </span>
+                                  <span class="ql-formats">
+                              <button class="ql-bold" title="Kiểu chữ đậm"></button>
+                              <button class="ql-italic" title="Kiểu chữ nghiêng"></button>
+                              <button class="ql-underline" title="Kiểu chữ ghạch chân"></button>
+                              <button class="ql-strike" title="Kiểu chữ ghạch ngang"></button>
+                          </span>
+                                  <span class="ql-formats">
+                              <select class="ql-align" title="Căn lề">
+                                  <option selected></option>
+                                  <option value="center"></option>
+                                  <option value="right"></option>
+                                  <option value="justify"></option>
+                              </select>
+                          </span>
+                                  <span class="ql-formats">
+                              <button class="ql-list" value="ordered" title="Danh sách số"></button>
+                              <button class="ql-list" value="bullet" title="Danh sách chấm"></button>
+                              <button class="ql-indent q1-box" value="+1" title="Thụt đầu dòng"></button>
+                              <button class="ql-indent q2-box last" value="-1" title="Giảm thụt đầu dòng"></button>
+                          </span>
+                                  <span class="ql-formats">
+
+                              <button class="ql-image" aria-label="image" title="Chèn ảnh"></button>
+                              <button class="ql-video" aria-label="video" title="Chèn video"></button>
+                              <button class="ql-blockquote" aria-label="blockquote" title="Trích dẫn"></button>
+                              <button class="ql-code-block" aria-label="code-block" title="code-block"></button>
+                          </span>
+                                </p-header>
+                              </p-editor>
+
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <app-answer-option-group class="h-100 mt-1 d-block"
+                                                     [_formControl]="formSave.get('answer_options')"
+                                                     [correctAnswerControl]="f['correct_answer']"></app-answer-option-group>
+                          </div>
+                          <div class="col-12">
+                            <div class="form-row">
+                              <label> Tuỳ chọn hiện thị </label>
+                              <div class="classify-container-v1 w-100">
+                                <p class="label-view"> Đinh dạng hiển thị đáp án </p>
+                                <div class="btn-views my-2">
+                                  <button pButton pRipple (click)="changeOptionsStyle(1)" [class]="optionsStyCr ===1 ? 'p-button-primary' : 'ovic-button-none-selected'"
+                                          class="p-button-rounded mr-1" icon="pi pi-list" label="1 Cột "></button>
+                                  <button pButton pRipple (click)="changeOptionsStyle(2)" [class]="optionsStyCr ===2 ? 'p-button-primary' : 'ovic-button-none-selected'"
+                                          class="p-button-rounded mr-1" icon="pi pi-th-large" label="2 Cột "></button>
+                                  <button pButton pRipple (click)="changeOptionsStyle(3)" [class]="optionsStyCr ===3 ? 'p-button-primary' : 'ovic-button-none-selected'"
+                                          class="p-button-rounded" icon="pi pi-ellipsis-h" label="3 Cột"></button>
+                                </div>
+
+                                <p class="label-view"> Hiển thị đáp án trả lời </p>
+                                <div class="view-checkbox">
+                                  <p-checkbox formControlName="random_question" [binary]="true" inputId="binary"></p-checkbox>
+                                  <p>Random đáp án</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="left-footer w-100">
+                <button *ngIf="contentHeader ==='Thêm mới câu hỏi'" pButton pRipple icon="pi pi-check-square"
+                        label="Lưu lại" class="p-button-success mr-1 "
+                        (click)="saveForm()"></button>
+                <button *ngIf="contentHeader ==='Cập nhật câu hỏi'" pButton pRipple icon="pi pi-check-square"
+                        label="Cập nhật" class="p-button-success mr-1 "
+                        (click)="saveEdit()"></button>
+                <button pButton pRipple icon="pi pi-times" label="Reset form" class="disabled"
+                        [ngClass]="f['title'].valid || f['answer_options'].valid ? 'p-button-danger':'p-disabled p-button-secondary' "
+                        (click)="resetForm()"></button>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template pTemplate>
+            <div class="right-content ovic-scroll-style w-100 p-1">
+              <div class="container">
+                <div class="w-100">
+                  <span class="p-input-icon-left w-100">
+                      <i class="pi pi-search"></i>
+
+                      <input type="text" placeholder="Tìm kiếm..." class="input-search pi pi-search"
+                             [(ngModel)]="search" (ngModelChange)=onSearchQuestion($event)>
+                  </span>
+
+                  <div class="row mt-2">
+                    <div class="col-12" *ngIf="dataQuestion.length ??0 >0,else notData">
+                      <div *ngFor="let item of dataQuestion, index as i" class='mb-3'>
+                        <div class="ctn-question border">
+                          <div class="ctn-question__left">
+
+                            <div class="w-100 h-100">
+                              <div class="ctn-question__title ">
+                                <div class="ctn-question__title-top">
+                                  <div class="ctn-question__title-top-left">
+                                    <span class="mr-2">Câu {{i + 1}} :</span>
+                                    <button pTooltip="Cập nhật câu hỏi " pButton pRipple icon="pi pi-file-edit" class="p-button-warning "
+                                            (click)="btnEdit(item)"></button>
+                                    <button pTooltip="Xoá câu hỏi" pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2"
+                                            (click)="btnDelete(item)"></button>
+                                  </div>
+                                  <div class="ctn-question__title-top-right">
+                                      <i [ngClass]="item.random_question ===1 ? 'pi pi-check-square icon-success' : 'pi pi-stop icon-warning'"></i>
+                                      <span>Đảo đáp án trả lời </span>
+                                  </div>
+
+                                </div>
+                                <div class="ctn-question__title-bottom">
+                                  <div [innerHTML]="item.title |htmlDecode"></div>
+
+                                </div>
+                                <!--                                <p class="mb-0" style="width: 100%;line-height: 37px;">Câu {{i + 1}} : <span-->
+                                <!--                                  class="d-inline" [innerHTML]="item.title |htmlDecode"> </span></p>-->
+                                <!--                                <div class="hover-title -intro-x" style="width:100px">-->
+                                <!--                                  -->
+                                <!--                                </div>-->
+                              </div>
+                              <div class="answer-style">
+                                <div *ngFor="let answer of item['_data_answer_questions'], let i=index "
+                                     [ngClass]="verticalMode ? 'ovic-radios__elm' : ''.concat('ovic-radios__elm ','layout-',item.options_sty.toString(),'-columns')">
+
+                                  <div *ngIf="answer.type_input===0"
+                                       class="ctn-question__answer-item ov-btn-radio ov-btn-radio-type--checkbox"
+                                       [ngClass]="item.correct_answer.includes(answer.id) ? 'avtive-bg':''"><span class="ov-prefix"></span>
+                                    {{answer.value}}</div>
+                                  <div *ngIf="answer.type_input===1"
+                                       class="ctn-question__answer-item ov-btn-radio ov-btn-radio-type--checkbox"
+                                       [ngClass]="item.correct_answer.includes(answer.id) ? 'avtive-bg':''">
+                                    <span class="ov-prefix"></span>
+                                    <img style="height:200px"
+                                         [src]="answer['_url_file'] ? answer['_url_file'] : 'src/assets/images/placeholder-3x2.jpg' "
+                                         alt="">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <ng-template #notData>
+                      <div class="d-flex justify-content-center align-items-center mt-4 w-100" style="font-size:16px">Không
+                        tìm thấy câu hỏi
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </p-splitter>
+      </div>
+

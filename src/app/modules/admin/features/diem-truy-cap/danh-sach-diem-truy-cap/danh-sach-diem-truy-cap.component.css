@@ -1,0 +1,15 @@
+.ds-diem-truy-cap__content {
+  /*height: calc(100% - 60px);*/
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+}
+.btn-exit{
+  position:absolute;
+  left: 30px;
+  top:30px;
+}
+
+
+

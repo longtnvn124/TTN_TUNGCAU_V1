@@ -1,0 +1,182 @@
+<div class="row">
+  <div class="col-12 ovic-ui-table" [class.ovic-is-loading]="isLoading">
+    <div class="ovic-load-init-fail alert alert-danger --fs-14" *ngIf="loadInitFail; else tableData">
+      Đã có lỗi trong quá trình tải dữ liệu
+      <button class="btn btn-primary border-circle --fs-13 ml-2" (click)="loadInit()">Reload</button>
+    </div>
+    <ng-template #tableData>
+      <div class="p-datatable-header" style="border-bottom:1px solid #CCC;">
+        <h3 class="tbl-title ">Danh sách đợt thi</h3>
+        <div class="search-block ui-table-globalfilter-container ">
+          <div class="d-flex align-items-center">
+            <div class="ovic-vertical__inputs ovic-vertical__inputs--layout-2">
+              <div class="d-flex">
+                <div class="search-block__elm ml-2">
+                      <span class="p-input-icon-right">
+                        <i class="pi pi-search"></i>
+                        <input type="text" pInputText style="height:42px" placeholder="Tìm kiếm" (input)="changeInput($event.target['value'])"/>
+                      </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p-table [value]="listData" [showCurrentPageReport]="false"
+               [tableStyle]="{ 'min-width': '100px' }">
+        <ng-template pTemplate="header">
+          <tr >
+            <th class="ovic-w-50px text-center">TT</th>
+            <th class="text-left">Tên đợt thi</th>
+            <th class=" text-left text-center">Thời gian thi</th>
+            <th class="ovic-w-180px text-center">Ngân hàng đề sử dụng</th>
+            <th class="ovic-w-110px text-center">Trạng thái</th>
+            <th class="ovic-w-150px text-center">Thao tác</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">Không có dữ liệu</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td class="ovic-w-50px text-center">{{item['indexTable']}}</td>
+            <td>
+              <div class="d-block --fs-14 font-weight-bold">{{item['title']}}</div>
+            </td>
+
+            <td class="ovic-w-260px">
+              <div class="d-block --fs-14" [innerHTML]="item['__time_converted']"></div>
+            </td>
+            <td class="ovic-w-100px">
+              <div class="d-block --fs-14 text-center" [innerHTML]="item['__bank_coverted']"></div>
+            </td>
+            <td class="ovic-w-100px">
+              <div class="d-block --fs-14" [innerHTML]="item['__status_converted']"></div>
+            </td>
+            <td class="ovic-w-100px text-center">
+              <div class="d-block --fs-14">
+                <button [pTooltip]="'Danh sách thí sinh'" [tooltipPosition]="'top'" pButton pRipple class="btn-custom-size-30x30 p-button-warning mr-2"
+                        icon="pi pi-users" (click)="btnDataThisinh(item)" ></button>
+                <button [pTooltip]="'Thống kê '" [tooltipPosition]="'top'" icon="pi pi-chart-line" pButton pRipple class="btn-custom-size-30x30 p-button-success" (click)="btnViewStatistical(item)" ></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+      <p-paginator class="p-paginator--custom" [showCurrentPageReport]="true" [rows]="rows"
+                   [totalRecords]="recordsTotal" [pageLinkSize]="5" (onPageChange)="paginate($event)"></p-paginator>
+    </ng-template>
+  </div>
+</div>
+
+
+<ng-template #testTaker>
+  <div class="ovic-side-navigation-content">
+    <div class="ovic-side-navigation-content__head">
+      <h4 class="ovic-side-navigation-content__head__title">Danh sách thí sinh </h4>
+      <button (click)="closeForm()" pButton pRipple type="button" icon="pi pi-times"
+              class="p-button-rounded p-button-danger p-button-text close ovic-side-navigation-content__head__btn-close"></button>
+    </div>
+    <div class="ovic-side-navigation-content__body p-0 --no-footer">
+      <div class="w-100 h-100 d-block">
+<!--        <dot-thi-thong-ke class="w-100 h-100" [shiftId]="shiftIdParram"></dot-thi-thong-ke>-->
+        <dot-thi-thi-sinh-ket-qua *ngIf="shiftIdParram" [_shift_id]="shiftIdParram"></dot-thi-thi-sinh-ket-qua>
+
+      </div>
+    </div>
+  </div>
+<!--  <div class="ovic-side-navigation-content ovic-navigation ">-->
+<!--    <div class="ovic-side-navigation-content__head">-->
+<!--      <h4 class="ovic-side-navigation-content__head__title">Danh sách thí sinh</h4>-->
+<!--      <button (click)="closeForm()" pButton pRipple type="button" icon="pi pi-times"-->
+<!--              class="p-button-rounded p-button-danger p-button-text close ovic-side-navigation-content__head__btn-close"></button>-->
+<!--    </div>-->
+<!--    <div class="ovic-side-navigation-content__body ovic-scroll-style h-100 p-0">-->
+<!--      <p-splitter [style]="{'height': '100%'}" [panelSizes]="[65,35]">-->
+<!--        <ng-template pTemplate>-->
+<!--          <div class="w-100 ovic-side-navigation-content__body ovic-scroll-style ">-->
+<!--            <ovic-table emptyMessage="Danh sách trống" [index]="index" [data]="dataUsers"-->
+<!--                        styleClass="tbl-danh-sach-tap-the head-input-size&#45;&#45;normal head-input-size&#45;&#45;250px overflow-hidden" dataKey="id"-->
+<!--                        rowHover="true"-->
+<!--                        [rows]="15" tableName="Danh sách thí sinh dự thi" [tblStructure]="tblStructureShiftTest"-->
+<!--                        (onButtonClick)="handleClickOnTableShiftTest($event)" [enableSearch]="false"-->
+<!--                        [enableSearchLocal]="false" [headerButtons]="headButtons"-->
+<!--                        [searchDebounceTime]="800"></ovic-table>-->
+<!--          </div>-->
+<!--        </ng-template>-->
+<!--        <ng-template pTemplate>-->
+<!--          <div class="w-100 ovic-scroll-style per-contaier-right">-->
+<!--            <ng-container  [ngSwitch]="viewDetail">-->
+<!--              <ng-container *ngSwitchCase="'default'">-->
+<!--                <div class="d-flex justify-content-center align-items-center h-100">-->
+<!--                  <p class="font-weight-bold text-primary" style="font-size: 16px">Vui lòng chọn thí sinh</p>-->
+<!--                </div>-->
+<!--              </ng-container>-->
+<!--              <ng-container *ngSwitchCase=" 'question'">-->
+<!--                <div class="d-flex justify-content-center align-items-center h-100">-->
+<!--                  <div class="h-100" style="width:100%;max-width:900px;">-->
+<!--                    <div class="exam-container">-->
+<!--                      <div class="exam-container__item " *ngFor="let question of nganhangCauhoi, index as i">-->
+<!--                        <div class="exam-container__item-label mb-2">Câu {{i + 1}}: <span-->
+<!--                          [innerHTML]="question.title |htmlDecode"></span></div>-->
+<!--                        <groups-radio [options]="question.answer_options" [correctAnswer]="question['__correct_answer']"-->
+<!--                                      inputType="checkbox" [default]="question['__per_select_question']"-->
+<!--                                      [freeze]="true" [options_sty]="question['options_sty']" ></groups-radio>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+
+<!--              </ng-container>-->
+<!--              <ng-container *ngSwitchCase="'tracking'">-->
+<!--                <div class="d-flex justify-content-center align-content-center h-100">-->
+<!--                  <div class=" h-100" style="width:100%;max-width:900px;">-->
+<!--                    <div class="contestant-tracking" *ngIf=" dataTracking && dataTracking.length >0 ,else notTracking ">-->
+<!--                      <div class="contestant-tracking__item" *ngFor="let itemTracking of dataTracking ">-->
+<!--                        <div class="contestant-tracking__item-btn">-->
+<!--                          <button pButton pRipple class="p-button-icon p-button-rounded {{itemTracking['_class']}}" icon="{{itemTracking['_icon']}}"></button>-->
+<!--                        </div>-->
+<!--                        <div class="contestant-tracking__item-context">-->
+<!--                          <p class="contestant-tracking__item-context-content" >{{itemTracking.content_changes}}</p>-->
+<!--                          <p class="contestant-tracking__item-context-time">{{itemTracking['_date_chagnes']}}</p>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <ng-template #notTracking>-->
+<!--                      <div class="contestant-tracking" style="height: calc(100vh - 60px - 60px - 20px);"> <div class=" w-100 h-100 d-flex justify-content-center align-items-center">Hệ thống không ghi nhận theo dõi bài làm của thí sinh</div></div>-->
+<!--                    </ng-template>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </ng-container>-->
+<!--            </ng-container>-->
+<!--          </div>-->
+<!--        </ng-template>-->
+<!--      </p-splitter>-->
+<!--      &lt;!&ndash;      <div class="per-container  h-100">&ndash;&gt;-->
+<!--      &lt;!&ndash;        &ndash;&gt;-->
+<!--      &lt;!&ndash;      </div>&ndash;&gt;-->
+<!--    </div>-->
+<!--    <div class="ovic-side-navigation-content__foot">-->
+<!--      <button pButton pRipple icon="pi pi-times" label="Đóng" class="p-button-secondary" (click)="closeForm()"></button>-->
+<!--    </div>-->
+<!--  </div>-->
+</ng-template>
+
+<ng-template #statistical>
+  <div class="ovic-side-navigation-content">
+    <div class="ovic-side-navigation-content__head">
+      <h4 class="ovic-side-navigation-content__head__title">Thống kê dữ liệu </h4>
+      <button (click)="closeForm()" pButton pRipple type="button" icon="pi pi-times"
+              class="p-button-rounded p-button-danger p-button-text close ovic-side-navigation-content__head__btn-close"></button>
+    </div>
+    <div class="ovic-side-navigation-content__body p-0 --no-footer">
+      <div class="w-100 h-100 d-block">
+                <dot-thi-thong-ke class="w-100 h-100" [shiftId]="shiftIdParram"></dot-thi-thong-ke>
+      </div>
+    </div>
+  </div>
+</ng-template>

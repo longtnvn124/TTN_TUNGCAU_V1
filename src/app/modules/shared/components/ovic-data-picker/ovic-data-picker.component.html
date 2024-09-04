@@ -1,0 +1,132 @@
+<div class="ovic-data-picker">
+    <button type="button" class="ovic-btn-picker" (click)="openPicker(pickerTemplateRef)">
+        <span class="ovic-dtpk-result">{{placeholder}}</span>
+    </button>
+</div>
+
+<ng-template #pickerTemplateRef let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-title">{{fomrTitle}}</h4>
+        <button type="button" class="close" aria-describedby="modal-title" (click)="closeForm()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body ovic-modal-body">
+        <p-table #tbl [value]="options" [paginator]="true" [rows]="5" [responsive]="true" [rowHover]="true" styleClass="ovic-data-picker-tbl {{styleClass}}" [globalFilterFields]="filters">
+            <ng-template pTemplate="caption" [ngIf]="enableSearch">
+                <div class="ovic-data-picker-wrap-main-caption">
+                    <ng-container *ngIf="groups.length>1">
+                        <ul class="list-change">
+                            <li *ngFor="let tab of groups ; let i=index;" class="elm-tab" [ngClass]="{active : tabActive === tab.slug }" (click)="changeTabActive(tab.slug)">
+                                <span>Chọn {{tab.title}}</span></li>
+                        </ul>
+                    </ng-container>
+                    <h3 class="ovic-f-title" *ngIf="groups.length<=1">{{fomrTitle}}</h3>
+                    <input type="text" pInputText size="50" placeholder="Tìm kiếm" (input)="tbl.filterGlobal($event.target['value'], 'contains')">
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+
+                    <th style="padding: 0; text-align: center; width: 30px;">TT</th>
+                    <th *ngFor="let col of columns" [style.width]="col.width" class="{{col.classes}}">
+                        {{col.header}}
+                    </th>
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-option let-rowIndex="rowIndex">
+                <tr (click)="clickOnRow(option[fieldId])" class="ovic-data-picker-row" [ngClass]="{selected : option.selected}">
+                    <td style="padding: 0; text-align: center; width: 30px;">{{rowIndex + 1 }}</td>
+                    <td *ngFor="let col of columns" [style.width]="col.width" class="{{col.classes}}">
+                        <span *ngIf="col.field.length==1">
+                            <ng-container *ngIf="col.dataType==='text'">
+                                {{option[ col.field[ 0 ] ]}}
+                            </ng-container>
+                            <ng-container *ngIf="col.dataType==='reference'">
+                                {{ dataRef[ col.data ] ? dataRef[ col.data ][ option[ col.field[ 0 ] ] ] : '' }}
+                            </ng-container>
+
+                        </span>
+                        <span *ngIf="col.field.length>1">
+                            <ng-container *ngFor="let elm of col.field; let i = index">
+                                {{ i > 0 ? col.separator : '' }} {{option[ elm ]}}
+                            </ng-container>
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <ng-container *ngFor="let list of groups ; let i=index;">
+            <hr class="mt-4 mb-4">
+            <div class="ovic-data-picker-tbl ui-table ui-widget ui-table-responsive" [ngClass]="{ 'tbl-active' : list.slug === tabActive }">
+                <div class="ui-table-caption ui-widget-header">
+                    <div class="ovic-data-picker-wrap-caption">
+                        <h3 class="tbl-title">{{list.title}}</h3>
+                    </div>
+                </div>
+                <div class="ui-table-wrapper">
+                    <table role="grid">
+                        <thead class="ui-table-thead">
+                        <tr>
+                            <th style="padding: 0; text-align: center; width: 30px;"></th>
+                            <th *ngFor="let col of columns" [style.width]="col.width" class="{{col.classes}}">
+                                {{col.header}}
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="ui-table-tbody">
+                        <tr *ngFor="let d of listResult[list.slug] ; let idx=index; ">
+                            <td style="padding: 0; text-align: center; width: 30px;">
+                                <button class="btn-remove" (click)="removeElementFrom( list.slug , idx )">
+                                    <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                            <ng-container *ngIf="d[fieldId] === 0">
+                                <td [attr.colspan]="columns.length"><span>{{d[ 'name' ]}}</span></td>
+                            </ng-container>
+
+                            <ng-container *ngIf="d[fieldId] !== 0">
+                                <td *ngFor="let col of columns" [style.width]="col.width" class="{{col.classes}}">
+                                         <span *ngIf="col.field.length==1">
+                                            <ng-container *ngIf="col.dataType==='text'">
+                                                {{d[ col.field[ 0 ] ]}}
+                                            </ng-container>
+                                            <ng-container *ngIf="col.dataType==='reference'">
+                                                {{ dataRef[ col.data ] ? dataRef[ col.data ][ d[ col.field[ 0 ] ] ] : '' }}
+                                            </ng-container>
+                                        </span>
+                                    <span *ngIf="col.field.length>1">
+                                            <ng-container *ngFor="let elm of col.field; let i = index">
+                                                {{ i > 0 ? col.separator : '' }} {{options[ elm ]}}
+                                            </ng-container>
+                                        </span>
+                                </td>
+                            </ng-container>
+                        </tr>
+                        <tr *ngIf="!list.acceptAddedOutOfList && listResult[list.slug] && listResult[list.slug].length < list.limit">
+                            <td style="padding: 0; text-align: center; width: 30px;">
+                                <button class="btn-added" (click)="addCustomElementToList( list.slug , inputRef)">
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+                            </td>
+                            <td [attr.colspan]="columns.length">
+                                <input type="text" name="dbc" class="input-text-field" #inputRef placeholder="{{list.inputPlaceholder}}" (keydown.enter)="addCustomElementToList( list.slug , inputRef)">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </ng-container>
+        <div class="clearfix w-100 mt-4"></div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="process()">
+            <i class="fa fa-floppy-o" aria-hidden="true"></i>Lưu lại
+        </button>
+        <button type="button" class="btn btn-cancel" (click)="closeForm()">
+            <i class="fa fa-ban" aria-hidden="true"></i>Hủy thao tác
+        </button>
+    </div>
+</ng-template>

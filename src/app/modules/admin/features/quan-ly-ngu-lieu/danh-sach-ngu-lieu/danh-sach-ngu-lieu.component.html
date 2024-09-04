@@ -1,0 +1,236 @@
+<ng-container [ngSwitch]="mode" class="h-100,w-100">
+  <ng-container *ngSwitchDefault>
+    <div class="row h-100">
+      <div class="col-12 ovic-ui-table" [class.ovic-is-loading]="isLoading">
+        <div class="ovic-load-init-fail alert alert-danger --fs-14" *ngIf="loadInitFail; else tableData">
+          Đã có lỗi trong quá trình tải dữ liệu
+          <button class="btn btn-primary border-circle --fs-13 ml-2" (click)="loadInit()">Reload</button>
+        </div>
+        <ng-template #tableData>
+          <div class="p-datatable-header">
+            <h3 class="tbl-title ng-star-inserted">Danh sách ngữ liệu</h3>
+            <div class="search-block ui-table-globalfilter-container ng-star-inserted">
+              <div class="d-flex align-items-center">
+                <div class="ovic-vertical__inputs ovic-vertical__inputs--layout-2">
+                  <div class="d-flex">
+                    <div class="search-block__elm filter-by-group-control ml-3">
+                      <p-dropdown [options]="dataLoaingulieu" styleClass="ovic-dropdown-style w-100 dropdown--narrow-angle"
+                                  placeholder="Loại ngữ liệu" optionLabel="ten"
+                                  optionValue="kyhieu" (onChange)="changeFilterLoaiNguLieu($event)" [showClear]="true"
+                                  [style]="{'min-width':'200px'}"
+                      ></p-dropdown>
+                    </div>
+                    <div class="search-block__elm filter-by-group-control ml-3">
+                      <p-dropdown [options]="dataLinhvuc" styleClass="ovic-dropdown-style w-100 dropdown--narrow-angle"
+                                  placeholder="Lĩnh vực" optionLabel="ten"
+                                  optionValue="id" (onChange)="changeFilter($event)" [showClear]="true"
+                                  [style]="{'min-width':'200px'}"
+                      ></p-dropdown>
+                    </div>
+                    <div class="search-block__elm ml-2">
+                      <span class="p-input-icon-right">
+                        <i class="pi pi-search"></i>
+                        <input type="text" pInputText style="height:42px" placeholder="Tìm kiếm"
+                               [(ngModel)]="filterData.search" (ngModelChange)="changeInput($event)"/>
+                      </span>
+                    </div>
+                    <div class="ml-2">
+                      <p-button icon="pi pi-plus" label="Thêm mới ngữ liệu" (click)="btnAddNew()"
+                                [style]="{'height':'42px'}"></p-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p-table [value]="listData" [showCurrentPageReport]="false"
+                   [tableStyle]="{ 'min-width': '100px' }">
+            <ng-template pTemplate="header">
+              <tr>
+                <th class="ovic-w-50px text-center">#</th>
+                <th class="text-left">Tiêu đề ngữ liệu</th>
+                <th class="ovic-w-180px text-left p-1">Lĩnh vực</th>
+                <th class="ovic-w-250px text-left">Loại ngữ liệu</th>
+                <th class="ovic-w-180px text-center">Thao tác</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="6">Không có dữ liệu</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item>
+              <tr>
+                <td class="ovic-w-50px text-center">{{item['indexTable']}}</td>
+                <td>
+                  <div class="d-block --fs-14">{{item['title']}}</div>
+                </td>
+
+                <td class="ovic-w-100px">
+                  <div class="d-block --fs-14" [innerHTML]="item['linhvuc_converted']"></div>
+                </td>
+                <td class="ovic-w-100px">
+                  <div class="d-block --fs-14" [innerHTML]="item['loaingulieu_converted']"></div>
+                </td>
+                <td class="ovic-w-100px text-center">
+                  <div class="d-block --fs-14">
+                    <p-button class="btn-p-10px" styleClass="" icon="pi pi-info-circle"
+                              (click)="btnInformation(item)"></p-button>
+                    <p-button class="btn-p-10px mx-2" styleClass=" p-button-warning" icon="pi pi-pencil"
+                              (click)="btnEdit(item)"></p-button>
+                    <p-button class="btn-p-10px" styleClass=" p-button-danger" icon="pi pi-trash"
+                              (click)="btnDelete(item)"></p-button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <p-paginator class="p-paginator--custom" [showCurrentPageReport]="true" [rows]="rows"
+                       [totalRecords]="recordsTotal" [pageLinkSize]="5" (onPageChange)="paginate($event)"></p-paginator>
+        </ng-template>
+
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="'MEDIAVR'" class="p-0 w-100 h-100">
+    <div class="w-100 h-100">
+      <div class="btn-exit" (click)="btnExit()">
+        <button pRipple pButton label="Thoát" icon="pi pi-sign-out" class="p-button-secondary"></button>
+      </div>
+<!--      <media-vr-manager [ngulieu]="objectVR" [showOnly]="true" class="w-100 h-100"></media-vr-manager>-->
+    </div>
+
+  </ng-container>
+</ng-container>
+
+
+<ng-template #fromUpdate>
+  <div class="ovic-side-navigation-content">
+    <div class="ovic-side-navigation-content__head">
+      <h4 class="ovic-side-navigation-content__head__title">{{formActive ? formActive.title : ''}}</h4>
+      <button (click)="closeForm()" pButton pRipple type="button" icon="pi pi-times"
+              class="p-button-rounded p-button-danger p-button-text close ovic-side-navigation-content__head__btn-close"></button>
+    </div>
+    <div class="ovic-side-navigation-content__body ovic-scroll-style">
+      <div class="ovic-vertical__inputs ovic-vertical__inputs--layout-2">
+        <form [formGroup]="formSave" autocomplete="off">
+          <div class="row">
+            <div class="col-12">
+              <p class="form-row">
+                <label>Tiêu đề ngữ liệu<span class="ovic-mark">*</span></label>
+                <input pRipple type="text" placeholder="Tiêu đề..." formControlName="title"
+                       autocomplete="off">
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <p class="form-row">
+                <label>Lĩnh vực<span class="ovic-mark">*</span></label>
+                <p-dropdown [options]="dataLinhvuc" optionLabel="ten" formControlName="linhvuc" optionValue="id"
+                            [showClear]="true"
+                            class="w-100" placeholder="chọn...">
+                </p-dropdown>
+              </p>
+
+            </div>
+            <div class="col-6">
+              <p class="form-row">
+                <label>Chuyên mục<span class="ovic-mark">*</span></label>
+                <p-dropdown [options]="dataChuyemuc" optionLabel="ten" formControlName="chuyenmuc" optionValue="ten"
+                            [showClear]="true"
+                            class="w-100" placeholder="chọn...">
+                </p-dropdown>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <p class="form-row">
+                <label>Loại ngữ liệu <span class="ovic-mark">*</span></label>
+                <p-dropdown [options]="dataLoaingulieu" optionLabel="ten" formControlName="loaingulieu"
+                            optionValue="kyhieu"
+                            [showClear]="true"
+                            class="w-100" placeholder="chọn...">
+                </p-dropdown>
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <p class="form-row">
+                <label>Nội dung </label>
+                <textarea formControlName="mota" placeholder="Nội dung..." autocomplete="off" cols="30"
+                          rows="5"></textarea>
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <p class="form-row">
+                <label>File Media <span class="ovic-mark">*</span></label>
+                <app-file-list-local class="w-100 ovic-vertical__file-list" [permission]="filePermission"
+                                     [formField]="f['file_media']" [multiple]="false"
+                                     [state]="1"></app-file-list-local>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="ovic-side-navigation-content__foot">
+      <span class="ovic-side-navigation-content__foot__notice mr-auto"><mark>(*)</mark> bắt buộc phải nhập</span>
+      <button pButton pRipple type="button" icon="pi pi-save" (click)="saveForm()" label="Cập nhật"
+              class="p-button-success"></button>
+      <button pButton pRipple type="button" label="Đóng" class="p-button-secondary ml-3" icon="pi pi-times"
+              (click)="closeForm()"></button>
+    </div>
+  </div>
+</ng-template>
+
+<p-dialog header="Thông tin ngữ liệu" [(visible)]="visible" [modal]="true" [style]="{ width: '30vw' }"
+          [draggable]="false" [resizable]="false">
+  <div *ngIf="ngulieuInfo" class="w-100 h-100">
+    <div class="d-flex justify-content-center mb-4 border-bottom">
+      <h3>{{ngulieuInfo.title}}</h3>
+    </div>
+    <div class="d-flex justify-content-start">
+
+      <!--        image || video-->
+      <div *ngIf="ngulieuInfo.loaingulieu === 'image' ">
+        <img [src]="ngulieuInfo['__media_link'] ?ngulieuInfo['__media_link'] : 'assets/images/placeholder-3x2.jpg'" class="url-css" alt="">
+      </div>
+      <div *ngIf="ngulieuInfo.loaingulieu === 'video'">
+        <div *ngIf="ngulieuInfo['__media_link'],else placeholder">
+          <video controls autoplay class="url-css">
+            <source src="{{ngulieuInfo['__media_link']}}"  type="video/mp4">
+          </video>
+        </div>
+        <ng-template #placeholder>
+          <img src="assets/images/placeholder-3x2.jpg" class="url-css" alt="">
+        </ng-template>
+      </div>
+
+      <div class="ml-3">
+        <div class="mb-2" style="font-size: 14px; font-weight: bold"> Mô tả:<span
+          class="font-weight-normal">{{ngulieuInfo.mota}}</span></div>
+        <div class="mb-2" style="font-size: 14px; font-weight: bold"> Lĩnh vực: <span
+          class="font-weight-normal">{{ngulieuInfo['linhvuc_converted']}}</span></div>
+        <div class="mb-2" style="font-size: 14px; font-weight: bold"> Loại ngữ liệu: <span
+          class="font-weight-normal">{{ngulieuInfo['loaingulieu_converted']}}</span></div>
+        <div class="mb-2" style="font-size: 14px; font-weight: bold"> File đính kèm:
+          <div class="d-inline-block" *ngFor="let item of ngulieuInfo.file_media">
+            <span class="font-weight-normal">{{item.title}}</span><a href="{{ngulieuInfo['__media_link']}}"> <i
+            class="ml-2 pi pi-download"></i></a>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</p-dialog>

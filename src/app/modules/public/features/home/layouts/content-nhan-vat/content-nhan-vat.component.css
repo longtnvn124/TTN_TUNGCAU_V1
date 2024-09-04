@@ -1,0 +1,80 @@
+.header-container {
+  height: 60px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.header-container {
+  height: 60px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.tbl-title {
+  margin: auto;
+  font-size: 20px;
+}
+
+.st-image {
+  display: flex;
+  justify-content: center;
+  /*padding-top: 10px;*/
+  width: 100%;
+}
+
+.btn-ctm {
+  border: 1px solid #e0e0e0;
+  min-height: 42px;
+}
+
+/*.head-card_hover:hover {*/
+/*  background-color: #fff;*/
+/*  opacity: 0.3;*/
+/*}*/
+
+.txt-label-nomal {
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.scroll-ctn-right {
+  width: 100%;
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+
+/*=============================================*/
+.width-min-500px{
+  display: none;
+}
+@media(width <= 500px){
+  .width-max-500px{
+    display: none;
+  }
+  .width-min-500px{
+    display: block;
+    padding-top: 18px;
+  }
+}
+
+
+.header-custom {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1e7e34;
+}
+.nhanvat-title{
+  padding: 0;
+  margin: 0;
+  font-size:20px;
+  font-weight:700;
+}

@@ -1,0 +1,115 @@
+<div class="ovic-settings-systems">
+  <div class="ovic-settings-systems__head">
+    <h3 class="ovic-settings-systems__head__title">Hệ thống TTN</h3>
+    <span class="ovic-settings-systems__head__version">V1.0.0</span>
+    <div class="ovic-settings-systems__head__tabs">
+      <button class="btn ovic-settings-systems__head__tabs__button" [class.active]="tabActive === 'information'"
+              (click)="changeTabActive('information')">Thông tin
+      </button>
+      <button class="btn ovic-settings-systems__head__tabs__button" [class.active]="tabActive === 'settings'"
+              (click)="changeTabActive('settings')">Cài đặt
+      </button>
+      <button class="btn ovic-settings-systems__head__tabs__button" [class.active]="tabActive === 'changelog'"
+              (click)="changeTabActive('changelog')">Change log
+      </button>
+    </div>
+  </div>
+  <div class="ovic-settings-systems__body ovic-scroll-style">
+    <!-- tab information -->
+    <div class="ovic-settings-systems__body__tab-content" [class.ovic-is-loading]="isLoading"
+         *ngIf="tabActive==='information'">
+      <div class="ovic-settings-systems__body__tab-content ng-star-inserted">
+        <div class="row">
+          <div class="col-12"><h5 class="mt-4 text-primary">Hệ thống hỗ trợ quản lý Di tích lịch sử địa phương</h5>
+            <ul class="list-unstyled list--font-normal mt-3">
+              <li class="text-muted ml-3"><b><i class="pi pi-home mr-2"></i></b>Phường Tân Thịnh, TP. Thái Nguyên</li>
+              <li class="text-muted ml-3"><b><i class="pi pi-phone mr-2"></i></b>0208 3904 355</li>
+              <li class="text-muted ml-3"><b><i class="pi pi-envelope mr-2"></i></b>vanthu.btgtu@thainguyen.gov.vn </li>
+              <li class="text-muted ml-3"><b><i class="pi pi-globe mr-2"></i></b>http://www.tnu.edu.vn/</li>
+            </ul>
+          </div>
+          <div class="col-12"><h5 class="--fs-15 text-secondary mt-4">Xây
+            dựng bởi Trung tâm Phát triển phần mềm, Trường Đại học Công nghệ thông tin và Truyền thông</h5>
+            <ul class="list-unstyled list--font-normal mt-3">
+              <li class="text-muted ml-3"><b><i class="pi pi-phone mr-2"></i></b>0855 891 892</li>
+              <li class="text-muted ml-3"><b><i class="pi pi-envelope mr-2"></i></b>ttpm@ictu.vn</li>
+              <li class="text-muted ml-3"><b><i class="pi pi-globe mr-2"></i></b>https://ictu.vn</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- tab settings -->
+    <div class="ovic-settings-systems__body__tab-content" [class.ovic-is-loading]="isLoading"
+         *ngIf="tabActive==='settings'">
+      <div class="row">
+        <div class="col-12 col-sm-6 col-md-3 mb-3">
+          <div class="ovic-vertical__inputs ovic-vertical__inputs--layout-2">
+            <p class="form-row">
+              <label>Hiệu ứng chuyển cảnh</label>
+              <p-dropdown class="input-element ovic-dropdown-style" [filter]="true" [options]="routingAnimationOptions"
+                          [(ngModel)]="routingAnimationActive" optionLabel="label" optionValue="value"></p-dropdown>
+            </p>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3 mb-3">
+          <div class="ovic-vertical__inputs ovic-vertical__inputs--layout-2">
+            <p class="form-row">
+              <label>Số phần tử trên bảng</label>
+              <p-dropdown class="input-element ovic-dropdown-style" [filter]="true" [options]="rowsOptions"
+                          [(ngModel)]="rowActive" optionLabel="label" optionValue="value"></p-dropdown>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-auto">
+        <div class="col-12">
+          <div class="d-flex justify-content-end align-items-center group-buttons">
+            <button pButton pRipple type="button" label="Mặc định" class="p-button-secondary ml-3" icon="pi pi-spinner"
+                    (click)="resetSettings()"></button>
+            <button pButton pRipple type="button" label="Lưu lại" class="p-button-success ml-3" icon="pi pi-save"
+                    (click)="saveSettings()"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- tab changelog -->
+    <div class="ovic-settings-systems__body__tab-content" [class.ovic-is-loading]="isLoading"
+         *ngIf="tabActive==='changelog'">
+      <div class="row justify-content-center">
+        <div class="col-12">
+          <h5 class="mt-4">
+            <span class="p-2 text-success"> Version 1.0.0</span> - 1th Oct 2023 </h5>
+          <ul class="list-unstyled mt-3">
+            <li class="text-muted ml-3">
+              <i class="mdi mdi-circle-medium mr-2"></i>Latest Update Bootstrap v4.5
+            </li>
+            <li class="text-muted ml-3">
+              <i class="mdi mdi-circle-medium mr-2"></i>Latest Update jQuery v3.5.1
+            </li>
+            <li class="text-muted ml-3">
+              <i class="mdi mdi-circle-medium mr-2"></i>Latest Update Material Design Icons v5.3.45
+            </li>
+            <li class="text-muted ml-3"><i class="mdi mdi-circle-medium mr-2"></i>New
+              <b>RTL Version</b> (Only CSS Base)
+            </li>
+            <li class="text-muted ml-3"><i class="mdi mdi-circle-medium mr-2"></i>New
+              <b>Dark Version</b> (Only CSS Base)
+            </li>
+            <li class="text-muted ml-3"><i class="mdi mdi-circle-medium mr-2"></i>New
+              <b>Dark RTL Version</b> (Only CSS Base)
+            </li>
+            <li class="text-muted ml-3"><i class="mdi mdi-circle-medium mr-2"></i>Added 6 Colors scheme
+            </li>
+            <li class="text-muted ml-3">
+              <i class="mdi mdi-circle-medium mr-2"></i>Fixed some responsive issues
+            </li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

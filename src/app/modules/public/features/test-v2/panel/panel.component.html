@@ -1,0 +1,130 @@
+<div class="w-100 h-100 position-relative" style="background-color: #5a725c52;">
+    <ng-container [ngSwitch]="mode">
+        <ng-container *ngSwitchCase="'PANEL'">
+            <div class="d-flex justify-content-center align-items-center h-100 flex-column">
+                <div class="container screen-container">
+                    <div class="header_container">
+                        <div class="info_container-new">
+                            <div class="info_container-head-new d-flex justify-content-center align-items-center">
+                                <div class="info-avatar d-flex justify-content-center align-items-center">
+                                    <i class="fa fa-user-circle-o mr-1" aria-hidden="true"></i><span class="info_container-head-new__phone-number">{{contestantInfo.email}}</span>
+                                </div>
+                            </div>
+                            <div class="counter-clock-wrap d-flex justify-content-center align-items-center">
+                                <div class="d-inline timer">{{ getFormattedTime() }}</div>
+                            </div>
+                            <div class="header-btn-controls d-flex align-items-center">
+                                <div class="e-learning-panel__test-progress-step">
+                                    <span class="e-learning-panel__test-progress-step__step-number">{{contestantInfo.answered}}/{{contestantInfo.totalQuestion}}</span>
+                                    <svg class="e-learning-panel__test-progress-step__svg">
+                                        <circle class="e-learning-panel__test-progress-step__svg__circle" [attr.stroke-dasharray]="contestantInfo.strokeDasharray" cx="21" cy="21" r="18" stroke-width="4" fill="none" role="slider" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"></circle>
+                                    </svg>
+                                </div>
+                                <button *ngIf="enableSubmitButton; else disableSubmitButton" pButton pRipple label="Nộp bài" class="ml-2" (click)="submitTheTest(true)"></button>
+                                <ng-template #disableSubmitButton>
+                                    <button disabled pButton pRipple label="Nộp bài" class="ml-2 --invisible-button"></button>
+                                </ng-template>
+                            </div>
+                        </div>
+                        <div class=" space-item"></div>
+                    </div>
+                    <div class="exam-container">
+<!--                        <div class="exam-container__full-questions exam">-->
+                      <div class="exam-02">
+                        <p-tabView [scrollable]="true" class="tabview-exam">
+                          <p-tabPanel *ngFor="let question of questions, index as i" header="Câu {{i+1}}">
+                            <div  class="exam-container__item" >
+<!--                              <div class="exam-container__item-label">Câu {{i + 1}}:-->
+                              <div class="exam-container__item-label">
+                                <div class="--fw-500 d-inline" [innerHTML]="question.title | htmlDecode"></div>
+                              </div>
+                              <groups-radio [options]="question.answer_options" inputType="checkbox" [default]="question['__answered']" (onChange)="onAnswerQuestion(question.id, $event)" [options_sty]="question.options_sty"></groups-radio>
+                            </div>
+                          </p-tabPanel>
+
+                        </p-tabView>
+                      </div>
+<!--                        <div class="exam">-->
+<!--                          <button *ngFor="let question of questions, index as i" pButton pRipple class="p-button-icon btn-questions" label="{{i+1}}"-->
+<!--                          [ngClass]=" btnExamSelect === i+1 ? 'p-button-primary' : 'ovic-button-none-selected'" (click)="btnSelectQuestion(i+1)"-->
+<!--                          ></button>-->
+<!--                        </div>-->
+<!--                        <div  class="exam-container__item" *ngFor="let question of questions, index as i"  [ngClass]=" btnExamSelect === i+1 ? 'd-block ' : 'd-none'"  >-->
+<!--                            <div class="exam-container__item-label">Câu {{i + 1}}:-->
+<!--                                <div class="font-weight-bold d-inline" [innerHTML]="question.title | htmlDecode"></div>-->
+<!--                            </div>-->
+<!--                            <groups-radio [options]="question.answer_options" inputType="checkbox" [default]="question['__answered']" (onChange)="onAnswerQuestion(question.id, $event)" [options_sty]="question.options_sty"></groups-radio>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'TEST_RESULT'">
+            <div class="results-container border">
+                <h4 class="text-center font-weight-bold my-2 text-uppercase font-weight-bold primary-font-family">Kết quả</h4>
+                <table *ngIf="shiftTest" class="tbl-in-dialog w-100">
+                    <tr>
+                        <td class="font-weight-bold">Email:</td>
+                        <td>{{contestantInfo.email}}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Bài thi:</td>
+                        <td>{{contestantInfo.testName}}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Điểm:</td>
+                        <td style="color: var(--primary)">{{contestantInfo.score}}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Số câu trả lời đúng:</td>
+                        <td style="color: var(--success)">{{contestantInfo.number_correct}}</td>
+                    </tr>
+                </table>
+                <div class="d-flex justify-content-center align-items-center my-2">
+                    <button pRipple pButton icon="pi pi-sign-out" label="Thoát" iconPos="right" class="p-button-danger p-button-text" (click)="btnOutTest()"></button>
+                </div>
+<!--              <button pRipple pButton label="check" (click)="checkpush()"></button>-->
+            </div>
+        </ng-container>
+
+        <ng-container *ngSwitchDefault>
+<!--            <div class="results-container&#45;&#45;center border text-center d-flex justify-content-center align-items-center">-->
+<!--                <span class="text-primary &#45;&#45;fs-15 mr-2">Tải thông tin</span><i class="pi pi-spin pi-spinner &#45;&#45;before-fs-22"></i>-->
+<!--            </div>-->
+        </ng-container>
+    </ng-container>
+
+
+
+</div>
+
+<p-dialog [(visible)]="openStartTheTestDialog" styleClass="test-notify test-notify--no-header" appendTo="body" [modal]="true">
+    <h4 class="text-center text-primary font-weight-bold primary-font-family text-uppercase">Thông báo</h4>
+    <table *ngIf="shiftTest" class="tbl-in-dialog w-100">
+        <tr>
+            <td>Email:</td>
+            <td>{{ contestantInfo.email }}</td>
+        </tr>
+        <tr>
+            <td>Bài thi:</td>
+            <td>{{contestantInfo.testName}}</td>
+        </tr>
+        <tr>
+            <td>Thời gian làm bài:</td>
+            <td>{{getFormattedTime()}} </td>
+        </tr>
+    </table>
+    <div class="d-flex justify-content-center align-items-center mt-3">
+        <button pRipple pButton icon="pi pi-sign-out" label="Thoát" class="p-button-secondary" (click)="btnOutTest()"></button>
+        <button pButton pRipple icon="pi pi-check-square" label="Bắt đầu thi" class="ml-3" (click)="startTheTest()"></button>
+    </div>
+</p-dialog>
+
+<p-dialog [(visible)]="isTimeOver" styleClass="test-notify test-notify--no-header" appendTo="body" [modal]="true">
+    <h4 class="text-center text-danger font-weight-bold primary-font-family text-uppercase">Thông báo hết giờ làm bài</h4>
+    <p class="text-center mt-1">Xác nhận nộp bài</p>
+    <div class="d-flex justify-content-center align-items-center mt-2">
+        <button pButton pRipple class="p-button-success" label="Xác nhận" (click)="submitTheTest()"></button>
+    </div>
+</p-dialog>

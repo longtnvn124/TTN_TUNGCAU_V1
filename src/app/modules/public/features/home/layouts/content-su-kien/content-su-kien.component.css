@@ -1,0 +1,78 @@
+.text-in-line{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sukien_title{
+  margin-top: 50px;
+  margin-bottom: 20px;
+  font-size: 28px;
+  color: #3A4E42;
+  font-weight: 800;
+  text-align: center;
+  line-height: 1.2;
+}
+.sukien_desc{
+  width:100%;
+  font-size: 70%;
+  text-align: justify;
+  overflow: hidden;
+}
+.sukien_desc p img{
+  /*width:100%;*/
+}
+.sukien_desc p{
+
+}
+
+.item-Sukien{
+  position: relative;
+  overflow: hidden;
+}
+.item-Sukien:hover{
+  cursor: pointer;
+}
+/*==========================================*/
+.ngulieuso__title h3{
+  color:#3A4E42;
+  font-weight:400;
+  font-size:18px;
+}
+.ngulieuso_item_title {
+
+  font-size: 14px;
+  color: #3f604d;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 44px;
+}
+.sukien_desc div{
+  font-weight: 400;
+}
+.sukien_desc div span{
+  font-weight: 300;
+}
+.btn-bd-rd-50{
+  border-radius:50%;
+}
+.header-custom {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1e7e34;
+}
+.nhanvat-title{
+  padding: 0;
+  margin: 0;
+  font-size:20px;
+  font-weight:700;
+}
+
+/*================update video==================*/

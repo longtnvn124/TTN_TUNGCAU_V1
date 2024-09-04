@@ -1,0 +1,16 @@
+<div class="ovic-show-svg">
+    <h2 class="ovic-show-svg__title">OVIC Icon</h2>
+    <form class="ovic-show-svg__form-head" [formGroup]="form">
+        <div class="ovic-show-svg__form-head__wrap-search">
+            <input type="text" formControlName="s" placeholder="Search...">
+            <i class="fa fa-spinner fa-spin fa-fw" *ngIf="isLoading"></i>
+        </div>
+    </form>
+    <ul class="ovic-show-svg__list">
+        <li *ngFor="let item of processedData">
+            <button class="ovic-show-svg__button btn" (click)="copySvgElement(item)">
+                <i class="ovic-show-svg__icon" [ngStyle]="{'background-image': 'url(' + item.icon + ')'}"></i>
+            </button>
+        </li>
+    </ul>
+</div>

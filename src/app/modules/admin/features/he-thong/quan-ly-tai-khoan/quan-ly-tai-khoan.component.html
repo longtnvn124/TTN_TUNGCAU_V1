@@ -1,0 +1,103 @@
+  <div class="row">
+  <div class="col-12">
+
+
+    <ovic-table emptyMessage="Danh sách trống" [data]="data"
+                styleClass="tbl-danh-sach-tap-the head-input-size--normal head-input-size--250px" dataKey="id"
+                rowHover="true"
+                [rows]="15" tableName="Danh sách tài khoản" [tblStructure]="cols"
+                (onButtonClick)="userActions($event)" [enableSearch]="false" [enableSearchLocal]="false"
+                [searchDebounceTime]="800" [headerButtons]="headButtons"></ovic-table>
+    <p-paginator class="p-paginator--custom" [showCurrentPageReport]="true" [rows]="15"
+                 [totalRecords]="data.length" [pageLinkSize]="5"></p-paginator>
+
+
+  </div>
+</div>
+
+<!-- Form tạo tài khoản -->
+<ng-template #tplCreateAccount let-c="close" let-d="dismiss">
+  <div class="modal-header ">
+    <h4 class="modal-title">{{formTitle}}</h4>
+    <button pButton pRipple type="button" icon="pi pi-times"
+            class="p-button-rounded p-button-danger p-button-text close" (click)="d(false)"></button>
+  </div>
+  <div class="modal-body ovic-modal-body">
+    <div class="ovic-vertical__inputs">
+      <form [formGroup]="formSave" autocomplete="off">
+        <p class="form-row" [class.err-input]="f['username'].invalid">
+          <label for="newusername1">Tài khoản <span class="ovic-mark">*</span></label>
+          <input type="text" id="newusername1" formControlName="username" autocomplete="off">
+        </p>
+        <p class="form-row" [class.err-input]="f['email'].invalid">
+          <label for="email1">Email <span class="ovic-mark">*</span></label>
+          <input type="text" id="email1" formControlName="email" autocomplete="off">
+        </p>
+        <p class="form-row" [class.err-input]="f['display_name'].invalid">
+          <label for="dname1">Tên hiển thị <span class="ovic-mark">*</span></label>
+          <input type="text" id="dname1" formControlName="display_name" autocomplete="off">
+        </p>
+        <p class="form-row">
+          <label for="phone1">Số điện thoại <span class="ovic-mark">*</span></label>
+          <input type="text" id="phone1" formControlName="phone" autocomplete="off">
+        </p>
+        <div class="form-row form-group position-relative" [class.err-input]="changPassState && f['password'].invalid">
+          <label for="new_password">Mật khẩu <span class="ovic-mark">*</span></label>
+          <input type="{{type_password}}" id="new_password" formControlName="password"
+                 [attr.disabled]=" !changPassState == true ? true : null" autocomplete="off">
+          <div style="position: absolute;right: 12px;top: 0;height: 100%;text-align: center;display: flex;align-items: center;">
+            <i [pTooltip]="'Hiển thị mật khẩu'" [tooltipPosition]="'left'" class="mr-2 btn-check"  [ngClass]="[type_password==='password' ? 'pi pi-eye': 'pi pi-eye-slash', changPassState === true ?'':'p-disabled']" (click)="btnShowPassWord()"></i>
+            <i [pTooltip]="'Cập nhật mật khẩu'" *ngIf="formTitle ==='Cập nhật tài khoản'" class="btn-check" [ngClass]="!changPassState == true ? 'pi pi-stop': 'pi pi-check-square icon-check-pass'" (click)="btnPasswordActive()"></i>
+          </div>
+        </div>
+        <div class="warning-pass">
+          <div class="warning-pass_item font-weight-bold">Lưu ý:</div>
+          <div class="warning-pass_item">* Mật khẩu phải có ít nhất 8 ký tự</div>
+          <div class="warning-pass_item">* Mật khẩu phải có ký tự đặc biệt(!,@,#,$,%,^,&,*,...)</div>
+          <div class="warning-pass_item">* Mật khẩu phải có chữ in hoa</div>
+          <div class="warning-pass_item">* Mật khẩu phải có chữ và số</div>
+        </div>
+        <p class="form-row">
+          <label>Nhóm quyền <span class="ovic-mark">*</span></label>
+          <ovic-multi-select [options]="dsNhomQuyen" placeholder="------" optionId="id" optionLabel="title"
+                             [formField]="f['role_ids']" [defaultValue]="f['role_ids'].value"></ovic-multi-select>
+        </p>
+        <p class="form-row">
+          <label>Trạng thái <span class="ovic-mark">*</span></label>
+          <span class="form-row__switch-buttons">
+                        <button class="btn form-row__btn-switch" [class.--btn-switch-active]="f['status'].value === 1"
+                                (click)="creatUserChangeActive(1)">Kích hoạt</button>
+                        <button class="btn form-row__btn-switch" [class.--btn-switch-active]="f['status'].value !== 1"
+                                (click)="creatUserChangeActive(0)">Không kích hoạt</button>
+                    </span>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-footer" *ngIf="!isUpdateForm">
+    <span class="dltk-school-name" *ngIf="isAdmin">{{schoolName}}</span>
+    <button type="button" class="btn btn-primary" (click)="taoTaiKhoan(formSave)">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i>Tạo tài khoản
+    </button>
+    <button type="button" class="btn btn-cancel" (click)="resetForm(formSave)">
+      <i class="fa fa-ban" aria-hidden="true"></i>Reset Form
+    </button>
+  </div>
+
+  <div class="modal-footer" *ngIf="isUpdateForm">
+    <span class="dltk-school-name" *ngIf="isAdmin">{{schoolName}}</span>
+    <button type="button" class="btn btn-primary" (click)="capNhatTaiKhoan(formSave)">
+      <i class="fa fa-floppy-o" aria-hidden="true"></i>Cập nhật tài khoản
+    </button>
+    <button type="button" class="btn btn-cancel" (click)="d('none')">
+      <i class="fa fa-ban" aria-hidden="true"></i>Hủy thao tác
+    </button>
+  </div>
+
+</ng-template>
+
+<!--&lt;!&ndash;right context menu template &ndash;&gt;-->
+<!--<ng-template #userMenu let-item>-->
+<!--  <ovic-right-content-menu [menu]="rightContextMenu" [item]="item" (clicked)="rClick($event)"></ovic-right-content-menu>-->
+<!--</ng-template>-->

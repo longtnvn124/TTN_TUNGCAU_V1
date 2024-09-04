@@ -1,0 +1,164 @@
+<ng-container [ngSwitch]="mode" class="h-100 w-100">
+  <ng-container *ngSwitchDefault>
+    <div class="position-relative w-100 h-100 d-flex flex-column" [class.ovic-is-loading]="isLoading">
+      <div class="ds-diem-truy-cap__content w-100">
+        <div class="w-100 ovic-load-init-fail alert alert-danger --fs-14" *ngIf="error; else tableData">
+          Đã có lỗi trong quá trình tải dữ liệu
+          <button class="btn btn-primary border-circle --fs-13 ml-2" (click)="loadInit()">Reload</button>
+        </div>
+        <ng-template #tableData>
+          <ovic-table class="w-100 h-100" emptyMessage="Danh sách trống" [index]="index" [data]="data"
+                      styleClass="tbl-danh-sach-tap-the head-input-size--normal head-input-size--250px" dataKey="id"
+                      rowHover="true"
+                      [rows]="15" tableName="Danh sách điểm truy cập" [tblStructure]="tblStructure"
+                      (onButtonClick)="handleClickOnTable($event)" [enableSearch]="true" [enableSearchLocal]="false"
+                      (onSearch)="onSearch($event)" [searchDebounceTime]="800" [headerButtons]="headButtons"></ovic-table>
+        </ng-template>
+      </div>
+      <p-paginator class="p-paginator--custom" [showCurrentPageReport]="true" [rows]="rows" [totalRecords]="recordsTotal"
+                   [pageLinkSize]="5" (onPageChange)="paginate($event)"></p-paginator>
+    </div>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'MEDIAVR'" class="p-0 w-100 h-100">
+    <div class="w-100 h-100 position-relative">
+      <button pRipple pButton label="Thoát" icon="pi pi-sign-out" class="p-button-secondary btn-exit" (click)="btnExit()"></button>
+<!--      <media-vr-manager [_diemtruycap]="diemditichPoint" [showOnly]="false" class="w-100 h-100"></media-vr-manager>-->
+
+<!--      <ovic-input-vr-media  [_pointStart]="diemditichPoint" [showOnly]="false" ></ovic-input-vr-media>-->
+    </div>
+
+  </ng-container>
+</ng-container>
+<ng-template #fromUpdate>
+  <div class="ovic-side-navigation-content">
+    <div class="ovic-side-navigation-content__head">
+      <h4 class="ovic-side-navigation-content__head__title">{{formActive ? formActive.title : ''}}</h4>
+      <button (click)="closeForm()" pButton pRipple type="button" icon="pi pi-times"
+              class="p-button-rounded p-button-danger p-button-text close ovic-side-navigation-content__head__btn-close"></button>
+    </div>
+    <div class="ovic-side-navigation-content__body ovic-scroll-style">
+      <div class="ovic-vertical__inputs ovic-vertical__inputs--layout-2">
+        <form [formGroup]="formSave" autocomplete="off">
+          <div class="row">
+            <div class="col-12">
+              <p class="form-row">
+                <label>Tên điểm truy cập <span class="ovic-mark">*</span></label>
+                <input type="text" placeholder="Tên di tích..." formControlName="title" autocomplete="off">
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <p class="form-row">
+                <label for="mota">Mô tả</label>
+                <textarea formControlName="mota" placeholder="Mô tả..." autocomplete="off" id="mota" cols="30"
+                          rows="5"></textarea>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <p class="form-row">
+                <label>Toạ độ bản đồ  <span class="ovic-mark">*</span></label>
+                <input type="text" placeholder="..." formControlName="toado_map"
+                       autocomplete="off">
+              </p>
+            </div>
+
+            <div class="col-6">
+              <p class="form-row">
+                <label>loại điểm truy cập <span class="ovic-mark">*</span></label>
+                <p-dropdown placeholder="Chọn..." class="w-100" [options]="typeOptions" optionLabel="label"
+                            optionValue="value" formControlName='type'></p-dropdown>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <p class="form-row">
+                <label>Thuộc điểm di tích <span class="ovic-mark">*</span></label>
+                <p-dropdown placeholder="Chọn..." class="w-100" [options]="dataDiemditich" optionLabel="ten"
+                            [showClear]="true" optionValue="id" formControlName='ditich_id'
+                            (onChange)="onChangeDitich($event)"></p-dropdown>
+              </p>
+            </div>
+
+            <div class="col-6">
+              <p class="form-row">
+                <label>Thuộc điểm truy cập <span class="ovic-mark">*</span></label>
+                <p-dropdown placeholder="Chọn..." class="w-100" [options]="dataFull" optionLabel="title"
+                            [showClear]="true" optionValue="id" formControlName='parent_id'
+                ></p-dropdown>
+              </p>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="f['type'].value === 'DIRECT'">
+            <div class="col-12">
+              <div class="form-row">
+                <label>Đích đến <span class="ovic-mark">*</span></label>
+                <div class="w-100">
+                  <button *ngIf="!destination; else showDestination" pRipple
+                          class="btn-vr-chooser justify-content-center align-items-center" [class.btn-vr-chooser--invalid]="f['ds_ngulieu'].touched && formSave.getError('invalidPinable')" (click)="btnAddNgulieu('DIRECT')">
+                    <span class="btn-vr-chooser__icon"></span>
+                  </button>
+                  <ng-template #showDestination>
+                    <div class="list-vr-chooser" *ngIf="destination">
+                      <div class="d-flex align-items-center w-100 mb-0">
+                        <div class="btn-vr-chooser--single w-100 p-0 border-0">
+                          <span class="btn-vr-chooser__icon" [class]="'btn-vr-chooser__icon--'+destination.loaingulieu"></span>
+                          <p class="btn-vr-chooser__name">{{ destination.title }}</p>
+                        </div>
+                        <button class="btn-vr-chooser__control p-button-text p-button-rounded" pRipple pButton icon="pi pi-download"
+                                (click)="btnDownloadFIle(destination)"></button>
+                        <button class="btn-vr-chooser__control p-button-text p-button-danger p-button-rounded" pRipple pButton icon="pi pi-trash"
+                                (click)="deleteNguLieuOnForm(destination)"></button>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="form-row">
+                <label>Danh mục ngữ liệu <span class="ovic-mark">*</span></label>
+                <div class="list-vr-chooser">
+                  <div class="d-flex align-items-center w-100" *ngFor="let n of otherInfo">
+                    <div class="btn-vr-chooser--single pt-2 pb-2 px-0 border-0">
+                      <span class="btn-vr-chooser__icon" [class]="'btn-vr-chooser__icon--'+n.loaingulieu"></span>
+                      <p class="btn-vr-chooser__name">{{ n.title }}</p>
+                    </div>
+                    <button class="btn-vr-chooser__control p-button-text p-button-rounded" pRipple pButton icon="pi pi-download"
+                            (click)="btnDownloadFIle(n)"></button>
+                    <button class="btn-vr-chooser__control p-button-text p-button-danger p-button-rounded" pRipple pButton icon="pi pi-trash"
+                            (click)="deleteNguLieuOnForm(n)"></button>
+                  </div>
+                  <div class="d-flex align-items-center w-100 border-0">
+                    <button class="p-button-success w-100" pRipple pButton icon="pi pi-plus"
+                            (click)="btnAddNgulieu('INFO')"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="ovic-side-navigation-content__foot">
+      <span class="ovic-side-navigation-content__foot__notice mr-auto"><mark>(*)</mark> bắt buộc phải nhập</span>
+      <button pButton pRipple type="button" [label]="btn_checkAdd" icon="pi pi-save" (click)="saveForm()"
+              class="p-button-success"></button>
+      <button pButton pRipple type="button" label="Đóng" class="p-button-secondary ml-3" icon="pi pi-times"
+              (click)="closeForm()"></button>
+    </div>
+  </div>
+</ng-template>
+
+<!--<ovic-input-vr-media [_pointStart]="data[0]"></ovic-input-vr-media>-->
+<p-dialog>
+
+</p-dialog>

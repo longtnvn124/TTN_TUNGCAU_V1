@@ -1,0 +1,25 @@
+<div class="ovic-download-progress" *ngIf="_file">
+    <div class="ovic-download-progress__left-area">
+        <i [ngClass]="_file | ovicFileIcon" aria-hidden="true"></i>
+        <!-- <img class="ovic-download-progress__img img-loading" onload="this.classList.remove('img-loading')" onerror="this.classList.add('img-loading-failed')" [attr.src]="this.file | ovicFileIcon" alt="" width="32" height="32">-->
+    </div>
+    <div class="ovic-download-progress__right-area">
+        <ul class="ovic-download-progress__list">
+            <li class="ovic-download-progress__elm">
+                <span class="ovic-download-progress__title ovic-download-progress__file-name">{{ fileName }}</span>
+            </li>
+            <li class="ovic-download-progress__elm" *ngIf="_file['size']">
+                <span class="ovic-download-progress__title">{{ _file | ovicFileSize }}</span>
+            </li>
+            <li class="ovic-download-progress__elm">
+                <span class="ovic-download-progress__title">{{ _file | ovicFileType }}</span>
+            </li>
+            <li class="ovic-download-progress__elm ovic-download-progress__process-line">
+                <mat-progress-bar *ngIf="download$ | async as download" [mode]="download.state == 'PENDING' ? 'buffer' : 'determinate'" [value]="download.progress" (animationstart)="processing.emit(downloadProcess.started)"></mat-progress-bar>
+            </li>
+        </ul>
+    </div>
+    <div class="ovic-download-progress__buttons">
+        <button class="btn btn-cancel ovic-download-progress__btn-cancel" (click)="close( downloadProcess.cancel )">Hủy</button>
+    </div>
+</div>

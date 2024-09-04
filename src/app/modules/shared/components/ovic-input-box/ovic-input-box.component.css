@@ -1,0 +1,91 @@
+.ovic-input-box {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+.ovic-input-box label {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1;
+    border-radius: 0;
+    border: 1px solid #888888;
+    color: #333333;
+    border-right: 0;
+    padding: 13px 5px;
+    width: 40px;
+}
+
+.ovic-input-box input {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 400;
+    color: #333333;
+    border: 1px solid #888888;
+    border-radius: 0;
+    box-shadow: none !important;
+    outline: none !important;
+    padding: 0 10px;
+    width: 100%;
+}
+
+/*.enable-show-answer input {*/
+/*    border-right: 0;*/
+/*}*/
+
+.mark-answer-section .btn {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    border: 1px solid #888888 !important;
+    border-radius: 0;
+    background-color: #f4f4f4;
+    border-left: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.mark-answer-section .btn svg {
+    width: 17px;
+    height: 17px;
+}
+
+.ovic-input-box .btn-check-answer {
+    cursor: text;
+}
+
+.ovic-input-box .btn-check-answer > svg {
+    width: 13px;
+    height: 13px;
+}
+
+.not-available-yet > span {
+    display: none;
+}
+
+.not-available-yet:hover > svg,
+.not-available-yet > svg {
+    fill: #dddddd;
+}
+
+.--question-on-top {
+    flex-wrap: wrap;
+}
+
+.--question-on-top label {
+    width: 100%;
+    border: none;
+    padding: 0;
+    text-align: left;
+    font-size: inherit;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.--question-on-top input {
+    min-height: 40px;
+}

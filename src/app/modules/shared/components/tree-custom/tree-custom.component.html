@@ -1,0 +1,33 @@
+<p-contextMenu #cm [model]="contextMenuItems" appendTo="body"></p-contextMenu>
+<div class="tree " style="font-size: 14px;">
+    <ng-container [ngTemplateOutlet]="templateNode" [ngTemplateOutletContext]="{ dataTree: data_tree}"></ng-container>
+</div>
+
+
+<ng-template #templateNode let-dataTree="dataTree" let-parentTree="parentTree">
+    <ul style="padding: 0px;">
+        <li *ngFor="let node of dataTree" (contextmenu)="onShowContext(cm,$event,node, parentTree)">
+            <div class="tree-parent">
+                <div class="hover-tree" [ngClass]="select_tree && select_tree.id === node.id?'node-active':''"></div>
+                <i (click)="closeAndOpen(node)" [ngClass]="node['icon']?node['icon']:''"
+                    class="icon-node-leaf {{!node.expanded && !node['icon']?node['collapsedIcon']:node['expandedIcon']}}"></i>
+                <div (click)="onSelectNode(node, parentTree)"
+                    class="tree-node-name {{node['read_only']?'no-pms-for-this-tctc':''}}">
+                    <span class="node-label" style="font-size: 14px;">{{node['label']}}</span>
+                    <span style="margin: 0 2px; color: #198cf0; font-size: 14px;" *ngIf="node.comment"
+                        class="node-comment"><i class="fa fa-comment"></i></span>
+                    <span *ngIf="node.trangthai_baocao" class="node-comment"><i
+                            style="margin: 0 2px; color: #53973b!important; font-size: 14px;"
+                            class="pi pi-check"></i></span>
+                    <span *ngIf="node.kyhieu" class="node-key">[{{node['kyhieu']}}]</span>
+                </div>
+            </div>
+            <div *ngIf="node.children && node.children.length"
+                class="tree-children {{!node.expanded?'collapse':'expanded'}}">
+                <ng-container [ngTemplateOutlet]="templateNode"
+                    [ngTemplateOutletContext]="{ dataTree: node.children, parentTree: node}">
+                </ng-container>
+            </div>
+        </li>
+    </ul>
+</ng-template>

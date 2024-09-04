@@ -1,0 +1,33 @@
+<div class="answer-option-group">
+
+  <ng-container *ngFor="let option of options; index as i">
+    <div class="answer-option-group__answer">
+      <button pButton pRipple [icon]="correctAnswer.includes(option.id) ? 'pi pi-check-circle' : 'pi pi-times-circle'"
+              [ngClass]=" correctAnswer.includes(option.id) ? 'p-button-success' : 'p-button-danger'"
+              class="answer-option-group__answer__button p-button-text"
+              (click)="selectItem(option.id)"></button>
+      <div class="answer-option-group__answer__form-row form-row">
+        <label>Câu trả lời {{1 + i}}</label>
+
+        <input *ngIf="option.type_input === 0" type="text" placeholder="...." [(ngModel)]="option.value" autocomplete="off">
+        <button *ngIf="option.type_input === 1" pRipple class="btn w-100 btn-ctm" (click)="btnUploadFile(option.id)">
+          <img *ngIf="option['_url_file']; else showIcon" [src]="option['_url_file']" alt="">
+          <ng-template #showIcon>
+            <i class="pi pi-images "></i>
+          </ng-template>
+        </button>
+      </div>
+
+      <button pButton pRipple class="answer-option-group__answer__button p-button-text" [icon]="option.type_input === 0 ? 'pi pi-image': ' pi pi-user-edit'" (click)="btnSwitch(option.id, option.type_input)" ></button>
+      <button pButton pRipple icon="pi pi-trash"
+              class="answer-option-group__answer__button p-button-danger p-button-text"
+              (click)="deleteItem(option.id)"></button>
+    </div>
+  </ng-container>
+
+  <button pRipple pButton class="w-100 my-3" icon="pi pi-plus" label="Thêm phương án trả lời"
+          (click)="addMoreAnswer()"></button>
+</div>
+
+<input type="file" #fileInput (change)="uploadFile($event)" hidden="true" >
+

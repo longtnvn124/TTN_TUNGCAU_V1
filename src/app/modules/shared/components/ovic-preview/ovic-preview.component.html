@@ -1,0 +1,59 @@
+<div class="modal-body ovic-modal-body ovic-preview-file-content">
+    <button type="button" class="btn ovic-preview-file-content__btn-close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+
+    <div class="ovic-preview-file-content__annoucements" *ngIf="!loadingFail && isLoadFileContent">
+        <mat-progress-bar *ngIf="download$ | async as download" [mode]="download.state == 'PENDING' ? 'buffer' : 'determinate'" [value]="download.progress"></mat-progress-bar>
+    </div>
+
+    <div class="ovic-preview-file-content__annoucements" *ngIf="loadingFail">
+        <h3 class="ovic-preview-file-content__announcement-title">Quá trình download file bị gián đoạn hoặc file đã bị xóa</h3>
+        <div class="ovic-preview-file-content__announcement-buttons">
+            <button type="button" class="btn btn-primary ovic-preview-file-content__announcement-btn btn-c-pink" (click)="getFileInfo( files[ currentIndex ] )">Tải lại</button>
+            <button type="button" class="btn btn-cancel ovic-preview-file-content__announcement-btn btn-c-blue" (click)="close()">Thoát</button>
+        </div>
+    </div>
+
+    <!--present files-->
+    <div class="ovic-preview-file-content__container" [class.bg-transparent]="isLoadFileContent">
+        <div class="ovic-preview-file-content__inner">
+            <div class="ovic-preview-file-content__present-content" [class.is-loading]="isLoading" *ngIf="!loadingFail">
+                <ng-container *ngIf=" !isLoading && rawContent">
+                    <ng-container [ngSwitch]="objectType">
+                        <!--<video *ngSwitchCase="'mp4'" [class.nodownload]="!canDownload" controls controlsList="nodownload" [attr.width]="800" [attr.height]="450">
+                            <source [src]="rawContent | ovicSafeResourceUrl" [type]="mediaType">
+                        </video>-->
+                        <!-- <audio *ngSwitchCase="'mp3'" [class.nodownload]="!canDownload" controls controlsList="nodownload">-->
+                        <!-- <source [src]="rawContent | ovicSafeResourceUrl" [type]="mediaType">-->
+                        <!-- </audio>-->
+                        <plyr *ngSwitchCase="'mp4'" plyrType="video" [plyrPlaysInline]="true" [plyrCrossOrigin]="true" [plyrSources]="mediaSource"></plyr>
+                        <plyr *ngSwitchCase="'mp3'" plyrType="audio" [plyrPlaysInline]="true" [plyrCrossOrigin]="true" [plyrSources]="mediaSource"></plyr>
+                        <img *ngSwitchCase="'img'" [src]="rawContent | ovicSafeResourceUrl" [alt]="mediaType">
+                        <p class="p-text-content" *ngSwitchCase="'text'" [innerHTML]="rawContent"></p>
+                        <p class="ovic-preview-file-content__announce-invalid" *ngSwitchDefault>Định dạng {{ objectType }} chưa được hỗ trợ</p>
+                    </ng-container>
+                </ng-container>
+                <p class="ovic-preview-file-content__announce-invalid" *ngIf="!validContent">Định dạng {{ objectType }} chưa được hỗ trợ</p>
+            </div>
+            <div class="ovic-preview-file-content__wrap-directions">
+                <button class="btn btn-prev ovic-preview-file__btn-direction" [class.ovic-preview-file__btn-active]="prevIndex !== null" (click)="changeSelectedElm(prevIndex)">
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                </button>
+                <span class="ovic-preview-file__index-direction">{{textNav}}</span>
+                <button class="btn btn-next ovic-preview-file__btn-direction" [class.ovic-preview-file__btn-active]="nextIndex !== null" (click)="changeSelectedElm(nextIndex)">
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </button>
+                <button *ngIf="canDownload" class="btn opf-btn-download ovic-preview-file__btn-direction" [class.ovic-preview-file__btn-active]="canDownload" (click)="downloadFile(currentIndex)">
+                    <i class="fa fa-download" aria-hidden="true"></i>
+                </button>
+                <button *ngIf="canGetFileDetail" class="btn opf-btn-download ovic-preview-file__btn-direction" [class.ovic-preview-file__btn-active]="canGetFileDetail" (click)="previewFile(currentIndex)">
+                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--present files-->
+
+</div>
+

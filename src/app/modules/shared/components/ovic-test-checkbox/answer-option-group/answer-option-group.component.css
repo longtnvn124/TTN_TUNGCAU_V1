@@ -1,0 +1,99 @@
+.answer-option-group__answer
+{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+  margin: 10px 0;
+}
+
+.answer-option-group__answer-v2{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin: 10px 0;
+}
+
+.answer-option-group__answer-v2 .answer-option__header,
+.answer-option-group__answer-v2 .answer-delete
+{
+    width:42px;
+}
+.answer-option-group__answer-v2 .answer-option__body{
+  width:calc(100% - 42px - 42px);
+}
+
+.answer-option-group__answer input{
+  width: calc(100% - 20px);
+  margin: 0 10px;
+  height: 38px;
+  border-radius: 4px;
+  box-shadow: none;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  padding: 0 40px;
+  outline: none;
+}
+
+.answer-option-group__answer input:active,
+.answer-option-group__answer input:hover,
+.answer-option-group__answer input:focus{
+  outline: none;
+
+}
+
+.answer-option-group__answer .answer-correct{
+  position: absolute;
+  left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.answer-correct button:hover,
+.answer-correct button:focus
+{
+  background:none;
+}
+.answer-option-group__answer .answer-delete{
+  position: absolute;
+  right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:100%;
+
+}
+.answer-option-group__answer .answer-delete i{
+  color:tomato;
+}
+
+
+.answer-option-group__answer__button {
+  width: 42px;
+  height: 42px;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.answer-option-group__answer__form-row {
+  width: calc(100% - 42px - 42px);
+}
+.btn-ctm {
+  border: 1px solid #e0e0e0;
+  min-height: 42px;
+}
+
+
+.background-select{
+  background-color: #0b69e3;
+}
+
+.btn-add-answer{
+  width: calc(100% - 20px);
+  margin: 15px 10px;
+
+}

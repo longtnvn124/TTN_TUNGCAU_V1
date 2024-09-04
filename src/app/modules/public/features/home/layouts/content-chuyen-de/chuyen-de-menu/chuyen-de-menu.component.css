@@ -1,0 +1,216 @@
+.lesson-board {
+  display: flex;
+  width: 100%;
+  /*height: calc(var(--max-screen-height) - var(--ictu-learning-board__section-head-height, 45px) - var(--ictu-learning-board__section-foot-height, 46px));*/
+  overflow-y: auto;
+}
+
+.lesson-board::-webkit-scrollbar {
+  width: 10px;
+  background-color: #F5F5F5;
+}
+
+.lesson-board::-webkit-scrollbar-track {
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid #ccc;
+}
+
+.lesson-board::-webkit-scrollbar-thumb {
+  border-radius: 0;
+  border: 1px solid #c8c8c8;
+  border-right: 0;
+  /*background-color: #ffffff;*/
+  background: #333333;
+}
+
+.lesson-board::-webkit-scrollbar-thumb:hover {
+  /*background-color: #ffffff;*/
+  background: #333333;
+}
+
+.lesson-board::-webkit-scrollbar-thumb:active {
+  /*background-color: #ffffff;*/
+  background: #333333;
+}
+
+.lesson-board__list__child,
+.lesson-board__list {
+  padding: 10px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  width: 100%;
+}
+
+.lesson-board__list__child__elm {
+  display: flex;
+  width: 100%;
+}
+
+.lesson-board__lesson {
+  margin: 0;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  display: flex;
+  align-items: flex-start;
+  text-align: left;
+  width: 100%;
+  /*border: 1px solid #D4E8FD;*/
+  border: 1px solid #ededed;
+  background-color: #f6f6f6;
+  color: #484A4B;
+  padding: 6px 5px;
+}
+
+.lesson-board__lesson__icon {
+  width: 24px;
+  min-width: 24px;
+  height: auto;
+}
+
+.lesson-board__lesson__title {
+  width: calc(100% - 24px - 24px);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  padding: 5px 0 5px 5px;
+}
+
+.lesson-board__lesson__progress {
+  width: 24px;
+  min-width: 24px;
+  height: 100%;
+  text-align: center;
+}
+
+.lesson-board__lesson--chapter {
+  width: 100%;
+}
+
+.lesson-board__lesson--chapter {
+  border: none !important;
+  background-color: #ffffff;
+  padding: 0;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.lesson-board__lesson__icon--chapter {
+  width: 18px;
+  min-width: 18px;
+  height: auto;
+}
+
+.lesson-board__lesson__title--chapter {
+  width: calc(100% - 18px);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.2;
+  padding: 5px 0 5px 10px;
+  text-transform: uppercase;
+}
+
+.lesson-board__list__child {
+  padding: 0;
+  margin-top: 10px;
+}
+
+.lesson-board__list__elm {
+  padding-bottom: 25px;
+  width: 100%;
+}
+
+.lesson-board__list__child__elm + .lesson-board__list__child__elm {
+  margin-top: 3px;
+}
+
+.lesson-board__lesson:not(.lesson--active):hover {
+  /*color: #3F51B5;*/
+  /*border-color: #a7cdff;*/
+  /*background-color: #caffff;*/
+  /*border-color: #73e5e5;*/
+  border-color: #609174;
+  /*color: #002c2c;*/
+  color: #111;
+}
+
+.lesson--active {
+  /*background-color: #caffff;*/
+  /*!*border-color: #73e5e5;*!*/
+  /*border-color: #b4e9e9;*/
+
+
+  background-color: rgb(202 237 217 / 40%);
+  border-color: #609174;
+  border-radius:4px;
+  color: #111;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.lesson--active-has-present::after {
+  position: absolute;
+  width: 1px;
+  content: "";
+  display: block;
+  border-left: 1px dashed #888;
+  bottom: 23px;
+  left: 15px;
+  top: 27px;
+  z-index: 2;
+}
+
+.lesson-board__lesson__paths {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 0 0 10px;
+  position: relative;
+}
+
+.lesson-board__lesson__paths__button {
+  display: inline-flex;
+  padding: 10px;
+  border-radius: 4px;
+  outline: none !important;
+  box-shadow: none !important;
+  position: relative;
+  margin: 10px 0 0 20px;
+  overflow: visible;
+  font-family: Roboto, sans-serif;
+  font-size: 13px;
+}
+
+.lesson-board__lesson__paths__button:not(.lesson-path--active) {
+  color: #444444;
+  background-color: transparent;
+  border: 1px dashed #888;
+}
+
+.lesson-board__lesson__paths__button:not(.lesson-path--active):hover {
+  background-color: #609174;
+  /*border-color: #d4ecff;*/
+  /*border-style: solid;*/
+}
+
+.lesson-board__lesson__paths__button::before {
+  position: absolute;
+  width: 20px;
+  content: "";
+  display: block;
+  border-top: 1px dashed #888;
+  top: 50%;
+  right: 100%;
+  z-index: 2;
+}
+
+
+.lesson-board__lesson__icon__svg-resize {
+  width: 20px;
+  height: auto;
+  fill: #727272;
+}

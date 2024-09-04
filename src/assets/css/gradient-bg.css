@@ -1,0 +1,49 @@
+.box-shadow {
+	box-shadow: 0 1px 1px 0 rgba(60, 75, 100, .14), 0 2px 1px -1px rgba(60, 75, 100, .12), 0 1px 3px 0 rgba(60, 75, 100, .2)
+}
+
+.box-radius {
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+
+.bg-primary-gradient {
+	background-color: #321fdb;
+	background-image: linear-gradient(45deg, #321fdb 0%, #1f1498);
+}
+
+.bg-secondary-gradient {
+	background-color: #9da5b1;
+	background-image: linear-gradient(45deg, #c8d2dc 0%, #fff);
+}
+
+.bg-success-gradient {
+	background-color: #2eb85c;
+	background-image: linear-gradient(45deg, #2eb85c 0%, #1b9e3e);
+}
+
+.bg-info-gradient {
+	background-color: #39f;
+	background-image: linear-gradient(45deg, #39f 0%, #2982cc);
+}
+
+.bg-warning-gradient {
+	background-color: #f9b115;
+	background-image: linear-gradient(45deg, #f9b115 0%, #e6b800);
+}
+
+.bg-danger-gradient {
+	background-color: #e55353;
+	background-image: linear-gradient(45deg, #e55353 0%, #d73263);
+}
+
+.bg-light-gradient {
+	background-color: #f0f4f7;
+	background-image: linear-gradient(45deg, #e3e8ed 0%, #fff);
+}
+
+.bg-dark-gradient {
+	background-color: #636f83;
+	background-image: linear-gradient(45deg, #3c4b64 0%, #212333);
+}

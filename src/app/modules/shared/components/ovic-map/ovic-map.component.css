@@ -1,0 +1,36 @@
+.map {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.marker {
+  background: url('/assets/images/logo.png');
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.mapboxgl-popup {
+  max-width: 100%;
+}
+
+.mapboxgl-popup-content {
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+}
+.btn-reload{
+  background: #fff;
+  color: #000000;
+  z-index: 9999;
+  border: none;
+  position: absolute;
+  right: 43px;
+  top: 8px;
+  box-shadow: none;
+  padding: 10px 0px;
+  width: 34px;
+  font-weight: bold;
+}

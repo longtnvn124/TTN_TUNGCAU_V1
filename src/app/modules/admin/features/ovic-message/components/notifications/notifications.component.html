@@ -1,0 +1,68 @@
+<div class="ovic-notifications-list">
+    <div class="ovic-notifications-list__head">
+        <div class="ovic-notifications-list__head__toolbar">
+            <div class="ovic-notifications-list__head__toolbar--left">
+                <h3>Danh sách thông báo</h3>
+            </div>
+            <div class="ovic-notifications-list__head__toolbar--right">
+                <!-- <button class="btn p-button-rounded p-button-success" type="button" pRipple pButton icon="pi pi-plus-circle" label="Tạo thông báo mới" iconPos="left"></button>-->
+                <!--<button class="btn p-button-rounded p-button-danger &#45;&#45;button-visible-on-desktop" type="button" pRipple pButton icon="pi pi-trash" label="Xóa" iconPos="left"></button>-->
+                <button pButton pRipple pTooltip="Làm mới danh sách" tooltipPosition="top" type="button" icon="pi pi-refresh" class="p-button-rounded p-button-secondary --button-visible-on-desktop" (click)="loadData()"></button>
+                <button class="btn p-button-rounded p-button-primary --button-visible-on-desktop" type="button" pRipple pButton icon="pi pi-check" label="Đánh dấu là đã đọc" (click)="markAsRead()"></button>
+                <button class="btn p-button-rounded p-button-text p-button-secondary --button-visible-on-mobile position-relative" type="button" pRipple pButton icon="pi pi-ellipsis-v" (click)="menu.toggle($event)"></button>
+                <p-menu #menu [popup]="true" [model]="items"></p-menu>
+            </div>
+        </div>
+    </div>
+    <div class="ovic-notifications-list__body">
+        <ng-container *ngIf="errorLoading">
+            <div class="ovic-notifications-list__wrap-note">
+                <p class="alert alert-danger" role="alert">Đã có lỗi trong quá trình tải dữ liệu, vui lòng chọn 'Reload' để tải lại dữ liệu</p>
+                <button class="p-button" pRipple pButton label="Reload" icon="pi pi-refresh" (click)="loadData()"></button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="!errorLoading && data && data.length">
+            <ul class="ovic-notifications-list__body__items">
+                <li class="ovic-notifications-list__body__items__row-header">
+                    <button pRipple class="ovic-notifications-list__body__btn-selected" [class.--highlight]="isCheckAll" (click)="toggleCheckAll()">
+                        <i class="p-checkbox-icon" [ngClass]="[isCheckAll ? 'pi pi-check' : '']"></i>
+                    </button>
+                    <div class="ovic-notifications-list__notify">
+                        <b class="ovic-notifications-list__notify__author">Người tạo</b>
+                        <p class="ovic-notifications-list__notify__title">Tiêu đề</p>
+                        <p class="ovic-notifications-list__notify__message">Nội dung</p>
+                        <p class="ovic-notifications-list__notify__date">Thời gian</p>
+                    </div>
+                </li>
+                <ng-container *ngFor="let notify of data">
+                    <li class="ovic-notifications-list__body__items__elm" [class.--checked]="notify['__check']" [class.--already-read]="notify['__already_read']">
+                        <button pRipple class="ovic-notifications-list__body__btn-selected" [class.--highlight]="notify['__check']" (click)="toggleCheckElement($event,notify)">
+                            <i class="p-checkbox-icon" [ngClass]="[ notify['__check'] ? 'pi pi-check' : '']"></i>
+                        </button>
+                        <button class="ovic-notifications-list__notify" pRipple (click)="openDetail(notify)">
+                            <span class="ovic-notifications-list__notify__avatar">
+                                <img [src]="notify.params.avatar" alt="">
+                            </span>
+                            <div class="ovic-notifications-list__notify__group-author-message">
+                                <b class="ovic-notifications-list__notify__author" [innerHTML]="notify.params.author | removeHtmlTags"></b>
+                                <div class="ovic-notifications-list__notify__title" [innerHTML]="notify.title | removeHtmlTags"></div>
+                                <div class="ovic-notifications-list__notify__message" [innerHTML]="notify.message | removeHtmlTags"></div>
+                            </div>
+                            <p class="ovic-notifications-list__notify__date">{{ notify[ '__time' ] }}</p>
+                        </button>
+                    </li>
+                </ng-container>
+            </ul>
+            <div class="ovic-notifications-list__body__pagination">
+                <p-paginator (onPageChange)="changePage($event)" [rows]="itemPerPage" [totalRecords]="totalRecords" [pageLinkSize]="3"></p-paginator>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="!errorLoading && data && data.length === 0">
+            <div class="ovic-notifications-list__wrap-note">
+                <p class="alert alert-primary" role="alert">Danh sách trống</p>
+                <button class="p-button" pRipple pButton label="Reload" icon="pi pi-refresh" (click)="loadData()"></button>
+            </div>
+        </ng-container>
+        <!--<button class="p-button" pRipple pButton label="Push new notification" icon="pi pi-comment" (click)="pushNewNotification()"></button>-->
+    </div>
+</div>

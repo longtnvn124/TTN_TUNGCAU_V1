@@ -1,0 +1,163 @@
+.chuyen-muc-container {
+  display:flex;
+}
+
+.chuyen-muc-left {
+  /*width:250px;*/
+  height:100%;
+  /*border-right:1px dashed #4d6657;*/
+}
+.chuyen-muc-left_content{
+  padding:6px;
+  margin-right:10px;
+}
+.chuyen-muc-header{
+  text-transform:uppercase;
+  font-size:16px;
+  font-weight:600;
+  padding:6px;
+  border:1px solid #4d6657;
+  width: 240px;
+}
+
+.chuyen-muc-data{
+  background: rgb(224, 223, 223);
+}
+/*.chuyen-muc-rps{*/
+/*  display:none;*/
+/*  background:rgb(245 244 244);;*/
+/*}*/
+.chuyen-muc-item{
+  font-family: "Roboto", sans-serif;
+  margin-bottom: 0;
+  width: 100%;
+  border: 1px solid #3A4E42;
+  font-size: 13px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 3px;
+}
+.chuyen-muc-item:hover{
+  background: #3A4E42;
+  color:#fff;
+  cursor: pointer;
+
+}
+.chuyen-muc-item_active{
+  background: #3A4E42;
+  color:#fff;
+}
+
+.chuyen-muc-right {
+  width:100%;
+}
+
+.ngulieuso_item_title{
+  font-size:14px;
+  font-weight:500;
+  /*line-height: 15px;*/
+  height: 44px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Số lượng dòng cần hiển thị */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chuyen-muc-data-rps{
+  display:none;
+  background: rgb(224, 223, 223);
+
+}
+@media(width<=1024px){
+  .chuyen-muc-container{
+    flex-direction: column;
+  }
+  .chuyen-muc-left{
+    width:100%;
+  }
+  .chuyen-muc-header{
+    width:100%;
+  }
+  .chuyen-muc-data{
+    display:none;
+  }
+  .chuyen-muc-data-rps{
+    display:flex;
+  }
+  .chuyen-muc-item{
+    margin-bottom:0;
+    width:100%;
+    border:1px solid #3A4E42;
+    font-size: 13px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 3px;
+  }
+
+  .chuyen-muc-left_content{
+    padding: 0;
+    margin-right: 0;
+  }
+}
+
+.ngulieuso__title h3{
+  font-size: 18px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid;
+  font-weight: 500;
+}
+
+
+/*---------------------------------------------*/
+.nv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #A20102;
+  height: 50px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.nv-header_left, .nv-header_right {
+  color: #fff;
+
+}
+
+.nv-header_left {
+  display: flex;
+  align-items: center;
+
+}
+.nv-header_right{
+  display: flex;
+  align-items: center;
+}
+
+
+
+.nv-header_left i {
+  font-size: 18px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.nv-header_left div {
+  font-size: 16px;
+  font-weight: 600;
+  line-height:17px;
+  text-transform: uppercase;
+}
+
+.nv-header_right i {
+  font-size: 14px;
+  padding: 8px;
+}
+

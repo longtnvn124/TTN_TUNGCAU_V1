@@ -1,0 +1,257 @@
+<div class="modal-body ovic-modal-body ovic-file-manager-body p-0 ovic-file-color">
+    <div class="ovic-file-explorer" (contextmenu)="disableContextMenu($event)" [class.--mobile-menu-opened]="mobileMenuOpened">
+
+        <!--toolbar-->
+        <div class="ovic-file-explorer__toolbar d-flex align-items-stretch">
+            <div class="ovic-file-explorer__toolbar-left">
+                <!--<button class="ovic-file-explorer__choose-source-files" [class.chosen]="server==='serverFile'" (click)="changeSourceStore('serverFile')">
+                    <i class="pi pi-inbox" aria-hidden="true"></i>
+                    <span class="btn-label">{{storeLabel[0] || 'Server File'}}</span>
+                </button>-->
+                <span class="ovic-file-explorer__choose-source-files">
+                    <i class="pi pi-inbox" aria-hidden="true"></i>
+                    <span class="btn-label">{{storeLabel[0] || 'Server File'}}</span>
+                </span>
+                <button class="ovic-file-explorer__choose-source-files" [class.chosen]="server==='googleDrive'" type="button" (click)="changeSourceStore('googleDrive')">
+                    <i class="pi pi-cloud" aria-hidden="true"></i>
+                    <span class="btn-label">{{storeLabel[1] || 'Google Diver'}}</span>
+                </button>
+                <a href="#" class="ovic-file-explorer__btn--mobile-close-panel" (click)="closeMobilePanel($event)">&times;</a>
+            </div>
+            <div class="ovic-file-explorer__toolbar-right">
+                <div class="ovic-file-explorer__toolbar-search">
+                    <form [formGroup]="form">
+                        <label class="ovic-file-explorer__toolbar-elm-search" [class.show-clear]="showClearSearch">
+                            <span class="ovic-file-explorer__icon-search"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span>
+                            <input type="text" class="ovic-file-explorer__search-input ovic-text-placeholder" placeholder="Tìm kiếm" formControlName="search">
+                            <button class="btn ovic-file-explorer__btn-clear-search" type="button" (click)="form.get('search').setValue('')">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </label>
+                    </form>
+                </div>
+                <ul class="ovic-file-explorer__list-toolbar">
+                    <li class="ovic-file-explorer__toolbar-elm --mobile-element">
+                        <a href="#" class="btn text-dark btn-count-selected-items" (click)="clearAllSelected($event)" *ngIf="canDelete && selectedFileIds.size>0">Đã chọn {{ selectedFileIds.size > 1 ? ''.concat(selectedFileIds.size.toString(), ' file(s)') : ''.concat(selectedFileIds.size.toString(), ' file') }}</a>
+                        <button class="ovic-file-explorer__toolbar-btn ovic-tooltip__parent ml__15px" type="button" (click)="reloadData()">
+                            <i class="fa fa-refresh" aria-hidden="true"></i>
+                            <span class="ovic-tooltip__content ovic-tooltip__content--left ovic-tooltip__content--danger">Làm mới danh sách file</span>
+                        </button>
+                        <button *ngIf="canDelete" class="ovic-file-explorer__toolbar-btn ovic-file-explorer__btn-delete ml__15px ovic-tooltip__parent" type="button" [class.ovic-button--invisible]="selectedFileIds.size === 0" (click)="deleteFile()">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            <span class="ovic-tooltip__content ovic-tooltip__content--left ovic-tooltip__content--danger">Xoá các files đã chọn</span>
+                        </button>
+                        <!-- <span *ngIf="!canDelete" class="ovic-file-explorer__toolbar-btn ovic-file-explorer__btn-delete ml__15px ovic-tooltip__parent ovic-button&#45;&#45;invisible">-->
+                        <!-- <i class="fa fa-trash-o" aria-hidden="true"></i>-->
+                        <!-- <span class="ovic-tooltip__content ovic-tooltip__content&#45;&#45;left ovic-tooltip__content&#45;&#45;danger">Xoá các files đã chọn</span>-->
+                        <!-- </span>-->
+                    </li>
+                    <li class="ovic-file-explorer__toolbar-elm">
+                        <button class="ovic-file-explorer__toolbar-btn ovic-file-explorer__btn-change-mode" type="button" [class.active]="gridMode" (click)="changeView(true)">
+                            <i class="fa fa-th-large" aria-hidden="true"></i>
+                        </button>
+                        <button class="ovic-file-explorer__toolbar-btn ovic-file-explorer__btn-change-mode" type="button" [class.active]="!gridMode" (click)="changeView(false)">
+                            <i class="fa fa-bars" aria-hidden="true"></i>
+                        </button>
+                    </li>
+                    <li class="ovic-file-explorer__toolbar-elm --mobile-element">
+                        <button class="ovic-file-explorer__toolbar-btn ovic-file-explorer__btn-change-mode" type="button" (click)="openMobilePanel()">
+                            <i class="fa fa-bars" aria-hidden="true"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--end toolbar-->
+
+        <!--left area-->
+        <div class="ovic-file-explorer__left-content" [ngClass]="{'ovic-is-loading' : directoriesLoading }">
+            <!--nav menu-->
+            <ul class="ovic-file-explorer__dir-tree ovic-file-explorer__dir-tree-panel">
+                <li class="ovic-file-explorer__tree-node" [class.node-active]="menuSelected === node.slug" data-id="{{node.slug}}" *ngFor="let node of directories; let i=index">
+                    <a class="ovic-file-explorer__node-label" href="#" (click)="evtActiveMenu($event,node, true)">
+                        <i class="ovic-file-explorer__angle-state fa " [ngClass]="node.isOpen? 'fa-angle-down': 'fa-angle-right'" *ngIf="node.children && node.children.length"></i>
+                        <i class="ovic-file-explorer__angle-state-empty"></i>
+                        <i class="fa fa-folder" aria-hidden="true"></i>{{node.label}}
+                    </a>
+                    <ul class="ovic-file-explorer__dir-tree ovic-file-explorer__dir-tree--child" *ngIf="node.children.length">
+                        <li class="ovic-file-explorer__tree-node" [class.node-active]="menuSelected === nodeChild.slug" data-id="{{nodeChild.slug}}" *ngFor="let nodeChild of node.children" [@openSubmenu]=" node.isOpen ? 'opened' : 'closed'">
+                            <a class="ovic-file-explorer__node-label" href="#" (click)="evtActiveMenu($event,nodeChild, false)">
+                                <i class="fa fa-folder" aria-hidden="true"></i>{{nodeChild.label}}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!--nav menu-->
+
+            <!--upload area-->
+            <div class="ovic-file-manager-upload-area">
+
+                <!--upload input-->
+                <div class="ovic-file-manager-container" ovicDropAndDrag (fileDropped)="onFileInput($event,fileChooser)">
+                    <input type="file" #fileChooser multiple (change)="onFileInput($event.target['files'],fileChooser)"/>
+                    <img src="assets/images/dnd/ic-upload-file.svg" alt="">
+                    <h3>Kéo thả files vào đây hoặc <span class="text-danger">click</span> để upload files</h3>
+                </div>
+
+                <a href="#" class="ovic-file-manager-upload-area__button--mobile-element btn" (click)="openFileChooser($event)">
+                    <i class="fa fa-upload" aria-hidden="true"></i> Click để upload
+                </a>
+
+                <!--upload process-->
+                <div class="upload-processing-files" *ngIf="uploadingFiles.length">
+                    <ul class="upload-processing__file-list" *ngIf="!errorMaxFileUploading">
+                        <ng-container *ngFor="let file of uploadingFiles ; let i = index">
+                            <li class="single-file" [class.has-error]="!file.validate" *ngIf="file">
+                                <i [ngClass]="file | ovicFileIcon" aria-hidden="true"></i>
+                                <div class="info">
+                                    <h4 class="name">{{ file.title ? file.title : file.name }}</h4>
+                                    <p class="size">{{ file['_size'] }}</p>
+                                    <span class="upload-processing-files__message fz__14 lh__1" [ngClass]="file.validate ? 'text-success': 'text-danger'" *ngIf="file.message">{{ file.message }}</span>
+                                    <div class="ovic-upload-progress-bar" *ngIf="file.validate && !file.uploaded"></div>
+                                </div>
+                                <a href="#" class="btn btn-close" (click)="removeFileFromUploadingList($event, file.id)"><span>&times;</span></a>
+                            </li>
+                        </ng-container>
+                    </ul>
+                    <ul class="upload-processing__file-list" *ngIf="errorMaxFileUploading">
+                        <li class="single-file">
+                            <p class="upload-processing__file-list__mes fz__15 p-2 m-0 text text-danger">Số lượng file upload không quá {{ maxUploadingFiles }} file mỗi lần</p>
+                        </li>
+                    </ul>
+                </div>
+                <!--end upload process-->
+
+            </div>
+            <!--end upload area-->
+
+        </div>
+        <!--end left area-->
+
+        <!--right area-->
+        <div class="ovic-file-explorer__right-content" [class.ovic-is-loading]="fileLoading">
+            <!--main library-->
+            <div class="ovic-file-explorer__file-container" [ngClass]=" gridMode ? 'grid-mode-showed' : 'list-mode-showed'">
+                <div class="ovic-file-explorer__wrap-file-list ovic-file-color">
+                    <!--file list-->
+                    <ul class="ovic-file-explorer__file-list" (scroll)="closeContextMenu()">
+                        <li class="ovic-file-explorer__file-elm ovic-file-explorer__file-elm-head" [class.check-all-items]="library && library.length && library.length === selectedFileIds.size">
+                            <div class="ovic-file-explorer__file-check ovic-file-explorer__file-check--head">
+                                <button class="ovic-file-explorer__circle-checker" type="button" (click)="checkAllList()"></button>
+                            </div>
+                            <div class="ovic-file-explorer__file-icon ovic-file-explorer__file-icon--head">
+                                <span class="ovic-file-explorer__file-icon__folder"></span>
+                            </div>
+                            <div class="ovic-file-explorer__file-name ovic-file-explorer__file-name--head">Tiêu đề</div>
+                            <div class="ovic-file-explorer__file-date ovic-file-explorer__file-date--head">Ngày upload</div>
+                            <div class="ovic-file-explorer__file-size ovic-file-explorer__file-size--head">Kích thước</div>
+                            <div class="ovic-file-explorer__file-share-state ovic-file-explorer__file-share-state--head">Trạng thái</div>
+                        </li>
+                        <li class="ovic-file-explorer__file-elm" [ngClass]="{ 'file-selected' : selectedFileIds.has(f.id) , 'elm-folder' : f['mimeType'] &&  f['mimeType'] ==='application/vnd.google-apps.folder' , 'file-highlight' : f.hasOwnProperty('highlight') && f['highlight'] }" *ngFor="let f of library" (click)="selectFile(f)" (dblclick)="validateOpenFolder(f)" (contextmenu)="openContextMenu($event, f)" (touchstart)="touchstart($event, f)" (touchend)="touchend()">
+                            <div class="ovic-file-explorer__file-check">
+                                <span class="ovic-file-explorer__circle-checker"></span>
+                            </div>
+                            <div class="ovic-file-explorer__file-icon">
+                                <i [ngClass]="f | ovicFileIcon" aria-hidden="true"></i>
+                            </div>
+                            <div class="ovic-file-explorer__file-name">{{f.title}}</div>
+                            <div class="ovic-file-explorer__file-date">{{f['upload_at']}}</div>
+                            <div class="ovic-file-explorer__file-size">{{f['file_size']}}</div>
+                            <span class="ovic-file-explorer__file-share-state" [ngClass]="f | ovicFileShareState"></span>
+                        </li>
+                        <li class="ovic-file-explorer__wrap-load-more" *ngIf="btnLoadMore">
+                            <button class="ovic-file-explorer__btn-load-more" (click)="loadMoreContent(btnLoadMore)">Tải thêm file</button>
+                        </li>
+                    </ul>
+                    <!--end file list-->
+                </div>
+            </div>
+            <!--end main library-->
+        </div>
+        <!--end right area-->
+
+        <!--emptyStore-->
+        <div class="ovic-file-explorer__crete-new-store" *ngIf="emptyStore">
+            <button class="btn btn-primary ovic-file-explorer__crete-new-store__button" type="button" (click)="createNewStore()" *ngIf="!isCreatingStore && !createdStoreMessage">
+                Khởi tạo không gian lưu trữ cho riêng bạn
+            </button>
+            <span class="btn btn-primary ovic-file-explorer__crete-new-store__button intro-y" *ngIf="isCreatingStore">
+                <i class="fa fa-refresh fa-spin fa-fw"></i> Đang khỏi tạo không gian lưu trữ mới
+            </span>
+            <div *ngIf="!isCreatingStore && createdStoreMessage" class="ovic-file-explorer__crete-new-store__success-mess alert alert-success intro-y">
+                Chúc mừng bạn đã khởi tạo không gian lưu trữ thành công, bạn có thể upload file từ bây giờ
+                <button class="btn btn-success" type="button" (click)="init()">Bắt đầu sử dụng</button>
+            </div>
+        </div>
+        <!--mobile overlay-->
+        <a href="#" class="ovic-file-explorer__mobile-overlay" (click)="closeMobilePanel($event)"></a>
+    </div>
+</div>
+<div class="modal-footer ovic-file-explorer__modal-footer row m-0">
+    <div class="col m-0 p-0" *ngIf="!emptyStore">
+        <!--breadcrumb-->
+        <ul class="ovic-file-explorer__navbar">
+            <ng-container *ngIf="server==='googleDrive'">
+                <li class="ovic-file-explorer__nav-elm">
+                    <i class="fa fa-angle-right"></i><span class="ovic-file-explorer__nav-link">{{storeLabel[1] || 'Google Diver'}}</span>
+                </li>
+                <!--<li class="ovic-file-explorer__nav-elm" *ngFor="let nav of gdBreadcrumb">
+                    <i class="fa fa-angle-right"></i><a href="#" class="ovic-file-explorer__nav-link" (click)="gdGetFileContent($event, nav)">{{nav.label}}</a>
+                </li>-->
+            </ng-container>
+            <ng-container *ngIf="server==='serverFile'">
+                <li class="ovic-file-explorer__nav-elm" *ngFor="let nav of breadcrumb">
+                    <i class="fa fa-angle-right"></i><a href="#" class="ovic-file-explorer__nav-link" (click)="evtActiveMenu($event, nav, false)">{{nav.label}}</a>
+                </li>
+            </ng-container>
+        </ul>
+        <!--end breadcrumb-->
+    </div>
+    <div class="col m-0 p-0 justify-content-end d-flex --mobile-element">
+        <button type="button" class="btn btn-primary" (click)="closePanel(selectedFiles)" [innerHTML]="saveButton"></button>
+        <button type="button" class="btn btn-cancel" (click)="closePanel([])" [innerHTML]="cancelButton"></button>
+    </div>
+</div>
+
+<!--right context menu template -->
+<ng-template #userMenu let-item>
+    <div class="ovic-right-context-menu" [class.submenu-open-left]="subMenuOpenLeft" (contextmenu)="disableContextMenu($event)">
+        <ul class="ovic-right-context-menu__nav">
+            <li class="ovic-right-context-menu__nav-elm">
+                <a class="btn ovic-right-context-menu__btn-nav" href="#" (click)="handleClickOnContextMenu($event,item,contextMenuFunction.preview)"><i class="fa fa-eye" aria-hidden="true"></i><span>Xem trước</span></a>
+            </li>
+            <li class="ovic-right-context-menu__nav-elm">
+                <a class="btn ovic-right-context-menu__btn-nav" href="#" (click)="handleClickOnContextMenu($event,item,contextMenuFunction.detail)"><i class="fa fa-info-circle" aria-hidden="true"></i><span>Chi tiết</span></a>
+            </li>
+            <li class="ovic-right-context-menu__nav-elm">
+                <a class="btn ovic-right-context-menu__btn-nav" href="#" (click)="handleClickOnContextMenu($event,item,contextMenuFunction.download)"><i class="fa fa-cloud-download" aria-hidden="true"></i><span>Tải xuống</span></a>
+            </li>
+            <li class="ovic-right-context-menu__nav-elm elm-has-child">
+                <span class="btn ovic-right-context-menu__btn-nav" [ngClass]=" server !=='serverFile' ? 'disabled' : null "><i class="fa fa-share-alt" aria-hidden="true"></i><span>Chia sẻ</span></span>
+                <ul class="ovic-right-context-menu__nav-child" *ngIf="server==='serverFile'">
+                    <li class="ovic-right-context-menu__nav-elm">
+                        <a class="btn ovic-right-context-menu__btn-nav" href="#" (click)="handleClickOnContextMenu($event,item,contextMenuFunction.public)"><i class="fa fa-globe" aria-hidden="true"></i><span>Công khai</span></a>
+                    </li>
+                    <li class="ovic-right-context-menu__nav-elm">
+                        <a class="btn ovic-right-context-menu__btn-nav" href="#" (click)="handleClickOnContextMenu($event,item,contextMenuFunction.share)"><i class="fa fa-users" aria-hidden="true"></i><span>Trong nhóm</span></a>
+                    </li>
+                    <li class="ovic-right-context-menu__nav-elm">
+                        <a class="btn ovic-right-context-menu__btn-nav" href="#" (click)="handleClickOnContextMenu($event,item,contextMenuFunction.private)"><i class="fa fa-lock" aria-hidden="true"></i><span>Chỉ mình tôi</span></a>
+                    </li>
+                </ul>
+            </li>
+            <li class="ovic-right-context-menu__nav-elm">
+                <span class="btn ovic-right-context-menu__btn-nav disabled"><i class="fa fa-link" aria-hidden="true"></i><span>Link file</span></span>
+            </li>
+            <li class="ovic-right-context-menu__nav-elm">
+                <a class="btn ovic-right-context-menu__btn-nav" href="#" (click)="handleCopyAudioCode($event,item)" *ngIf="isAudioFile(item)"><i class="fa fa-clipboard" aria-hidden="true"></i><span>Copy code</span></a>
+                <span class="btn ovic-right-context-menu__btn-nav disabled" *ngIf="!isAudioFile(item)"><i class="fa fa-clipboard" aria-hidden="true"></i><span>Copy code</span></span>
+            </li>
+            <li class="ovic-right-context-menu__nav-elm" *ngIf="canDelete && ( server !== 'serverFile' || _fileRunning['user_id'] === userId )">
+                <a class="btn ovic-right-context-menu__btn-nav" href="#" (click)="handleClickOnContextMenu($event,item,contextMenuFunction.delete)"><i class="fa fa-trash" aria-hidden="true"></i><span>Xóa file</span></a>
+                <!-- <span class="btn ovic-right-context-menu__btn-nav disabled" *ngIf=" !canDelete || (server === 'serverFile' && _fileRunning['user_id'] !== userId)"><i class="fa fa-trash" aria-hidden="true"></i><span>Xóa file</span></span>-->
+            </li>
+        </ul>
+    </div>
+</ng-template><!--end right context menu template -->

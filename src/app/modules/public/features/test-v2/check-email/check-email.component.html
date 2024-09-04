@@ -1,0 +1,69 @@
+<div class="test-member ovic-scroll-style">
+  <div class="test-member__body">
+    <div class="test-member__form intro-y">
+      <h2 class="test-member__form__heading">Email của bạn</h2>
+      <div class="test-member__form__controls" [class.ictu-is-loading--circle-black]="isLoading">
+        <form [formGroup]="formGroup" class="test-member__from-wrap">
+          <div class="test-member__from__row intro-y">
+            <div class="test-member__from__col test-member-size--max position-relative">
+              <fieldset [ngClass]="{ 'fieldset--error' : f['email'].touched && f['email'].invalid , 'fieldset--invalid' : f['email'].touched && f['email'].valid }">
+                <legend><label>Email</label></legend>
+                <input type="text" class="test-member__form__input" placeholder="Nhập email ở đây." formControlName="email" autocomplete="off">
+              </fieldset>
+              <button *ngIf="f['email'].touched && !f['email'].valid; else showCheckValue" class="test-member__form__recheck" pButton pRipple icon="pi pi-refresh" (click)="resetText()"></button>
+              <ng-template #showCheckValue>
+                <i *ngIf="f['email'].valid" class="test-member__form__recheck-result pi-check-circle pi text-success"></i>
+              </ng-template>
+            </div>
+          </div>
+          <div class="test-member__from__row intro-y">
+
+<!--            <div *ngIf="sendEmailCheck ,else disibleMail" class="test-member__from__col test-member-size&#45;&#45;max pb-0 justify-content-center">-->
+<!--              <button (click)="btnSendFormData()" *ngIf="formGroup.valid; else disableButton" class="p-button-success test-member__from__btn-submit" pButton pRipple icon="pi pi-file-edit" label="Gửi yêu cầu truy cập thi"></button>-->
+<!--              <ng-template #disableButton>-->
+<!--&lt;!&ndash;                <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>&ndash;&gt;-->
+<!--                <button disabled class="p-button-success test-member__from__btn-submit ovic-button&#45;&#45;disabled" pButton pRipple icon="pi pi-file-edit" label="Gửi yêu cầu truy cập thi"></button>-->
+<!--              </ng-template>-->
+<!--            </div>-->
+<!--            <ng-template #disibleMail>-->
+<!--              <div class="test-member__from__col test-member-size&#45;&#45;max pb-0 justify-content-center">-->
+<!--                <button pButton pRipple class="p-button-success ovic-button&#45;&#45;disabled" label="Gửi yêu cầu truy cập thi"></button>-->
+<!--              </div>-->
+<!--              <div class="test-submit-form">-->
+<!--                <div class="intro-y">-->
+<!--                  <i class="pi pi-check"></i>-->
+<!--                  <label>Hệ thống đã gửi thông tin xác thực về Email của bạn, vui lòng kiểm tra email. Trường hợp không thấy email, vui lòng kiểm tra hòm <b>"Thư rác"</b> hoặc <b>"Spam"</b>. </label>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </ng-template>-->
+
+            <div *ngIf="type_check_email === 1" class="test-member__from__col test-member-size--max pb-0 justify-content-center">
+              <button (click)="btnSendFormData()" *ngIf="formGroup.valid; else disableButton" class="p-button-success test-member__from__btn-submit" pButton pRipple icon="pi pi-file-edit" label="Gửi yêu cầu truy cập thi"></button>
+              <ng-template #disableButton>
+                <!--                <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>-->
+                <button disabled class="p-button-success test-member__from__btn-submit ovic-button--disabled" pButton pRipple icon="pi pi-file-edit" label="Gửi yêu cầu truy cập thi"></button>
+              </ng-template>
+            </div>
+            <div *ngIf="type_check_email === 2" class="test-member__from__col test-member-size--max pb-0 justify-content-center">
+              <button disabled class="p-button-success test-member__from__btn-submit ovic-button--disabled" pButton pRipple icon="pi pi-spin pi-spinner" label="Hệ thống đang gửi yêu cầu truy cập thi"></button>
+            </div>
+            <div *ngIf="type_check_email === 3">
+              <div class="w-100 test-member__from__col test-member-size--max pb-0 justify-content-center">
+                <button disabled class="p-button-success test-member__from__btn-submit ovic-button--disabled" pButton pRipple icon="pi pi-file-edit" label="Gửi yêu cầu truy cập thi"></button>
+              </div>
+              <div class="test-submit-form">
+                <div class="intro-y">
+                  <i class="pi pi-check"></i>
+                  <label>Hệ thống đã gửi thông tin xác thực về Email của bạn, vui lòng kiểm tra email. Trường hợp không thấy email, vui lòng kiểm tra hòm <b>"Thư rác"</b> hoặc <b>"Spam"</b>. </label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="paper-background" style="background-image: url('assets/images/paper-crack-2.png')">
+  </div>
+</div>

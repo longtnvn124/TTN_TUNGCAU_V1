@@ -1,0 +1,20 @@
+<div class="ovic-input-address-four-layouts w-100" [class.ovic-is-loading]="isLoading">
+    <form [formGroup]="form" autocomplete="off">
+        <div class="ovic-input-address-four-layouts__row p-dropdown--border-bottom">
+            <div class="ovic-input-address-four-layouts__col">
+                <p-dropdown class="input-element ovic-dropdown-style" [filter]="true" filterBy="name" [options]="provinceOptions" optionLabel="name" optionValue="id" formControlName="province" placeholder="Chọn Tỉnh, Thành phố"></p-dropdown>
+            </div>
+            <div class="ovic-input-address-four-layouts__col">
+                <p-dropdown class="input-element ovic-dropdown-style" [filter]="true" filterBy="name" [options]="districtOptions" optionLabel="name" optionValue="id" formControlName="district" placeholder="Chọn Quận,Huyện"></p-dropdown>
+            </div>
+            <div class="ovic-input-address-four-layouts__col">
+                <p-dropdown class="input-element ovic-dropdown-style" [filter]="true" filterBy="name" [options]="wardsOptions" optionLabel="name" optionValue="id" formControlName="wards" placeholder="Chọn Xã, Phường"></p-dropdown>
+            </div>
+        </div>
+        <div class="ovic-input-address-four-layouts__row">
+            <div class="ovic-input-address-four-layouts__col">
+                <input type="text" name="address" id="address" formControlName="address" placeholder="Nhập địa chỉ">
+            </div>
+        </div>
+    </form>
+</div>

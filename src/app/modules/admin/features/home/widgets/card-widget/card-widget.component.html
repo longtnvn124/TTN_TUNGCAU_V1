@@ -1,0 +1,10 @@
+<div class="dashboard-widget position-relative" [class]="styleClass" [class.ovic-is-loading--circle]="state==='loading'">
+    <div class="dashboard-widget__content">
+        <b class="dashboard-widget__content__heading">{{value}}</b>
+        <ng-container [ngTemplateOutlet]="icon"></ng-container>
+    </div>
+    <p class="dashboard-widget__text" *ngIf="title">{{title}}</p>
+    <div class="dashboard-widget__error-notice" *ngIf="state==='error'">
+        <button (click)="btnReloadData()" type="button" class="p-button-icon p-button-danger" pButton pRipple icon="pi pi-refresh"></button>
+    </div>
+</div>

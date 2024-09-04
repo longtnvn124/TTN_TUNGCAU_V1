@@ -1,0 +1,128 @@
+<div class="data-permission-table ovic-ui-table" [class.ovic-is-loading]="isLoading">
+    <div class="alert alert-danger m-0 --fs-14" *ngIf="error; else showData">
+        Mất kết nối với máy chủ!. vui lòng <a href="#" (click)="reloadData($event)">tải lại</a>
+    </div>
+    <ng-template #showData>
+        <div class="p-datatable-header">
+            <h3 class="tbl-title ng-star-inserted">Danh sách đơn vị</h3>
+            <div class="search-block ui-table-globalfilter-container ng-star-inserted">
+                <form [formGroup]="formSearch">
+                    <div class="d-flex align-items-center">
+                        <div class="search-block__elm filter-by-group-control">
+                            <p-dropdown formControlName="fromGroup" emptyMessage="Không có chuyên viên" placeholder="Tất cả chuyên viên" styleClass="ovic-dropdown-style w-100 dropdown--narrow-angle" [options]="groupOptions"></p-dropdown>
+                        </div>
+                        <div class="search-block__elm ml-3 filter-by-staff-control">
+                            <p-dropdown formControlName="fromUser" emptyMessage="Không có chuyên viên" placeholder="Tất cả chuyên viên" styleClass="ovic-dropdown-style w-100 dropdown--narrow-angle" [options]="userOptions"></p-dropdown>
+                        </div>
+                        <button type="button" pButton pRipple icon="pi pi-user-edit" label="Chọn người phụ trách" class="ml-3" [matMenuTriggerFor]="menuSelectEmployee"></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <table class="tbl">
+            <thead class="p-datatable-thead">
+            <tr>
+                <th class="ovic-w-50px text-center">#</th>
+                <th>Tên đơn vị</th>
+                <th>Khối</th>
+                <th>Cụm</th>
+                <th class="ovic-w-250px text-center">Người phụ trách</th>
+                <th class="ovic-w-40px text-center">
+                    <p-checkbox [value]="1" [(ngModel)]="selectedAllValues" (ngModelChange)="eventCheckAll($event)"></p-checkbox>
+                </th>
+            </tr>
+            </thead>
+            <tbody class="p-datatable-tbody">
+            <tr *ngIf="!agencies">
+                <td colspan="6">Đang tải dữ liệu</td>
+            </tr>
+            <tr *ngIf="agencies && !agencies.length">
+                <td colspan="6">Không có dữ liệu</td>
+            </tr>
+            <tr *ngFor="let agency of agencies; index as i">
+                <td class="ovic-w-50px text-center">{{ tblIndex + i }}</td>
+                <td>{{ agency.title }}</td>
+                <td></td>
+                <td></td>
+                <td class="ovic-w-250px">
+                    <div class="data-permission-users" *ngIf="agency['__data_permission'] && agency['__data_permission'].length; else emptyUser">
+                        <div class="data-permission-users__column" *ngFor="let p of agency['__data_permission']">
+                            <div class="data-permission-users__column__avatar">
+                                <img [src]="p[ 'employee' ]['avatar']" alt="" *ngIf=" p[ 'employee' ] &&  p[ 'employee' ]['avatar']; else defaultAvatar">
+                            </div>
+                            <b class="data-permission-users__column__name">{{ p[ 'employee' ] ? p[ 'employee' ][ 'display_name' ] : ''}}</b>
+                            <button (click)="needDeleteDataPermission(p.id)" pButton pRipple icon="pi pi-trash" class="data-permission-users__column__button-delete p-button-icon-only p-button-rounded p-button-raised p-button-text p-button-danger"></button>
+                        </div>
+                    </div>
+                    <ng-template #emptyUser>
+                        <div aria-live="polite" class="p-inline-message p-component p-inline-message-info m-0">
+                            <span class="p-inline-message-icon pi pi-info-circle"></span>
+                            <span class="p-inline-message-text">Chưa có chuyên viên</span>
+                        </div>
+                    </ng-template>
+                </td>
+                <td class="ovic-w-40px text-center">
+                    <p-checkbox [value]="agency.id" [(ngModel)]="selectedValues"></p-checkbox>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p-paginator class="p-paginator--custom" [showCurrentPageReport]="true" [rows]="rows" [totalRecords]="recordsTotal" [pageLinkSize]="5" (onPageChange)="paginate($event)"></p-paginator>
+    </ng-template>
+</div>
+
+
+<mat-menu #menuSelectEmployee="matMenu" class="mat-menu-select-user" xPosition="after" yPosition="below">
+    <ng-template matMenuContent>
+        <div class="ovic-nav-menu__wrap position-relative" (click)="preventCloseMenu($event)">
+            <ng-container *ngIf="employeeList && employeeList.length; else showEmptyList">
+                <div class="ovic-nav-menu__user-select">
+                    <div class="ovic-nav-menu__user-select__head"></div>
+                    <div class="ovic-nav-menu__user-select__list">
+                        <button *ngFor="let u of employeeList" mat-menu-item (click)="chooseEmployeeRecord(u,menuSelectEmployee)">
+                            <div class="user-info-component">
+                                <div class="user-info-component__media">
+                                    <img *ngIf="u.avatar; else defaultSvg" class="user-info-component__media__image" [src]="u.avatar" alt="">
+                                    <ng-template #defaultSvg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 297 297">
+                                            <g>
+                                                <path d="M148.51,117.216c32.317,0,58.608-26.291,58.608-58.608S180.827,0,148.51,0c-32.317,0-58.608,26.291-58.608,58.608   S116.193,117.216,148.51,117.216z"/>
+                                                <path d="m227.154,145.618c-0.025-0.008-0.073-0.026-0.098-0.032-7.631-1.864-30.999-5.133-30.999-5.133-2.638-0.812-5.457,0.585-6.406,3.188l-35.174,96.509c-2.029,5.567-9.903,5.567-11.932,0l-35.174-96.509c-0.766-2.102-2.75-3.42-4.876-3.42-0.504,0-24.531,3.369-32.53,5.358-21.858,5.435-35.645,26.929-35.645,49.329v80.302c0,12.034 9.756,21.79 21.79,21.79h184.782c12.034,0 21.79-9.756 21.79-21.79v-80.569c-0.001-22.303-14.328-42.096-35.528-49.023z"/>
+                                                <path d="m161.775,138.613c-1.404-1.53-3.456-2.299-5.532-2.299h-15.485c-2.076,0-4.129,0.77-5.532,2.299-2.173,2.368-2.489,5.789-0.946,8.462l8.278,12.479-3.875,32.69 7.631,20.3c0.744,2.042 3.631,2.042 4.375,0l7.631-20.3-3.875-32.69 8.278-12.479c1.541-2.673 1.225-6.094-0.948-8.462z"/>
+                                            </g>
+                                        </svg>
+                                    </ng-template>
+                                </div>
+                                <div class="user-info-component__info">
+                                    <b class="user-info-component__info__name">{{ u.display_name }}</b>
+                                    <span class="user-info-component__info__email">{{ u.phone }}</span>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #showEmptyList>
+
+            </ng-template>
+        </div>
+    </ng-template>
+</mat-menu>
+
+<ng-template #defaultAvatar>
+    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 53 53">
+        <path style="fill:#E7ECED;" d="M18.613,41.552l-7.907,4.313c-0.464,0.253-0.881,0.564-1.269,0.903C14.047,50.655,19.998,53,26.5,53
+	c6.454,0,12.367-2.31,16.964-6.144c-0.424-0.358-0.884-0.68-1.394-0.934l-8.467-4.233c-1.094-0.547-1.785-1.665-1.785-2.888v-3.322
+	c0.238-0.271,0.51-0.619,0.801-1.03c1.154-1.63,2.027-3.423,2.632-5.304c1.086-0.335,1.886-1.338,1.886-2.53v-3.546
+	c0-0.78-0.347-1.477-0.886-1.965v-5.126c0,0,1.053-7.977-9.75-7.977s-9.75,7.977-9.75,7.977v5.126
+	c-0.54,0.488-0.886,1.185-0.886,1.965v3.546c0,0.934,0.491,1.756,1.226,2.231c0.886,3.857,3.206,6.633,3.206,6.633v3.24
+	C20.296,39.899,19.65,40.986,18.613,41.552z"/>
+        <g><path style="fill:#556080;" d="M26.953,0.004C12.32-0.246,0.254,11.414,0.004,26.047C-0.138,34.344,3.56,41.801,9.448,46.76
+		c0.385-0.336,0.798-0.644,1.257-0.894l7.907-4.313c1.037-0.566,1.683-1.653,1.683-2.835v-3.24c0,0-2.321-2.776-3.206-6.633
+		c-0.734-0.475-1.226-1.296-1.226-2.231v-3.546c0-0.78,0.347-1.477,0.886-1.965v-5.126c0,0-1.053-7.977,9.75-7.977
+		s9.75,7.977,9.75,7.977v5.126c0.54,0.488,0.886,1.185,0.886,1.965v3.546c0,1.192-0.8,2.195-1.886,2.53
+		c-0.605,1.881-1.478,3.674-2.632,5.304c-0.291,0.411-0.563,0.759-0.801,1.03V38.8c0,1.223,0.691,2.342,1.785,2.888l8.467,4.233
+		c0.508,0.254,0.967,0.575,1.39,0.932c5.71-4.762,9.399-11.882,9.536-19.9C53.246,12.32,41.587,0.254,26.953,0.004z"/>
+        </g>
+    </svg>
+</ng-template>

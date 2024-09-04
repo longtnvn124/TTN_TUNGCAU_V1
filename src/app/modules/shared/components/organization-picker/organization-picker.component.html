@@ -1,0 +1,46 @@
+<div class="modal-header">
+  <h4 class="modal-title">Chọn đơn vị</h4>
+  <form class="employees-picker__head" [formGroup]="formGroup">
+    <div class="employees-picker__head__filter__wrap-search">
+      <input type="text" placeholder="Tìm kiếm theo tên" formControlName="search">
+    </div>
+  </form>
+  <button type="button" class="close" (click)="close()"><i class="pi pi-times"></i></button>
+</div>
+<div class="modal-body ovic-modal-body p-0">
+  <div class="employees-picker__body" [class.ovic-is-loading]="isLoading">
+    <table class="tbl w-100">
+      <thead>
+      <tr>
+        <th class="ost-w-30px text-center">#</th>
+        <th>Tên</th>
+        <th class="ovic-w-300px">Mô tả </th>
+        <th class="ovic-w-120px">Trạng thái</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngIf="!data || !data.length">
+        <td colspan="4">Không có đơn vị</td>
+      </tr>
+      <ng-container *ngIf="data && data.length">
+        <tr *ngFor="let d of data" class="tbl-row" [class.tbl-row--active]="d['check']" (click)="checkElement(d)">
+          <td class="ost-w-30px text-center">
+            <i class="pi pi-stop" [class.pi-check-square]="d['check']"></i>
+          </td>
+          <td>{{d.title}}</td>
+          <td class="ovic-w-300px">{{d.description}}</td>
+          <td class="ovic-w-120px" [innerHTML]="d[ '__status_transference' ] | ovicSafeHtml"></td>
+        </tr>
+      </ng-container>
+      </tbody>
+    </table>
+    <p-paginator [showCurrentPageReport]="true" [rows]="rows" [totalRecords]="recordsTotal" [pageLinkSize]="5" (onPageChange)="paginate($event)"></p-paginator>
+    <button *ngIf="loadFail" (click)="loadData()" pButton pRipple type="button" class="p-button p-button-primary" icon="pi pi-spin pi-spinner" label="Tải dữ liệu"></button>
+  </div>
+  <div class="employees-picker__foot"></div>
+</div>
+<div class="modal-footer">
+  <p class="modal-footer__selected-counter" *ngIf="_selected">Đã chọn <span>{{ _selected.length }}</span></p>
+  <button (click)="save()" pButton pRipple type="button" class="p-button p-button-success" icon="pi pi-save" label="Chọn"></button>
+  <button (click)="close()" pButton pRipple type="button" class="p-button p-button-secondary ml-3" icon="pi pi-times" label="Đóng"></button>
+</div>

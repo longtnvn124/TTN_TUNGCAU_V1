@@ -1,0 +1,230 @@
+.ovic-radios {
+	display: flex;
+	list-style: none;
+	justify-content: flex-start;
+	margin: 0;
+	padding: 0;
+	/*background-color: #f1f1f1;*/
+	--ov-prefix-width: 24px;
+	--ov-prefix-height: 24px;
+}
+
+.ovic-radios--horizontal {
+	flex-direction: row;
+	align-items: baseline;
+}
+
+.ovic-radios--vertical {
+	flex-direction: column;
+}
+
+.ovic-radios li {
+	display: inline-block;
+	margin: 0;
+	flex: 1;
+}
+
+.ovic-radios--vertical li + li {
+	margin-top: 10px;
+}
+
+.ovic-radios li.layout-3-columns {
+	max-width: 33.333333333%;
+}
+
+.ov-btn-radio {
+	/*background: transparent;*/
+	border: none;
+	margin: 0;
+	/*padding: 0;*/
+	display: flex;
+	box-shadow: none !important;
+	outline: none !important;
+	font-size: 13px;
+	font-weight: 300;
+	color: #6f6d6d;
+	line-height: 20px;
+	/*transition: all 0.5s ease 0s;*/
+	justify-content: flex-start;
+	align-items: center;
+	background-color: #f1f1f1;
+	/*padding: 10px 10px 0 10px;*/
+  padding:6px;
+  width:100%;
+}
+
+ov-btn-radio:hover {
+	background-color: #cdcdcd;
+}
+
+.ov-btn-radio .ov-prefix {
+	border: 1px solid #dedede;
+	background-color: #ffffff;
+	width: var(--ov-prefix-width);
+	height: var(--ov-prefix-height);
+	min-width: var(--ov-prefix-width);
+	min-height: var(--ov-prefix-height);
+	max-width: var(--ov-prefix-width);
+	max-height: var(--ov-prefix-height);
+	text-align: center;
+	position: relative;
+	transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+	border-radius: 50%;
+	margin-right: 7px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.ov-btn-radio-type--checkbox .ov-prefix {
+	width: 16px;
+	height: 16px;
+	margin-top: 2px;
+	border-radius: 0;
+}
+
+.ov-btn-radio:hover {
+	background-color: #cccccc;
+}
+
+.ov-btn-radio.active {
+	background-color: #007ad9;
+	color: #ffffff;
+	/*border-color: #007ad9;*/
+}
+
+.ov-btn-radio .ov-prefix::before {
+	content: 'A';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	display: inline-block;
+	transform: translate(-50%, -50%);
+	font-size: 14px;
+	line-height: 11px;
+	font-weight: 900;
+	color: #444444;
+}
+
+.ovic-radios__elm:nth-child(2) .ov-btn-radio .ov-prefix::before {
+	content: 'B';
+}
+
+.ovic-radios__elm:nth-child(3) .ov-btn-radio .ov-prefix::before {
+	content: 'C';
+}
+
+.ovic-radios__elm:nth-child(4) .ov-btn-radio .ov-prefix::before {
+	content: 'D';
+}
+
+.ovic-radios__elm:nth-child(5) .ov-btn-radio .ov-prefix::before {
+	content: 'E';
+}
+
+.ovic-radios__elm:nth-child(6) .ov-btn-radio .ov-prefix::before {
+	content: 'F';
+}
+
+.ovic-radios__elm:nth-child(7) .ov-btn-radio .ov-prefix::before {
+	content: 'G';
+}
+
+.ovic-radios__elm:nth-child(8) .ov-btn-radio .ov-prefix::before {
+	content: 'H';
+}
+
+.ovic-radios__elm:nth-child(9) .ov-btn-radio .ov-prefix::before {
+	content: 'I';
+}
+
+.ovic-radios__elm:nth-child(10) .ov-btn-radio .ov-prefix::before {
+	content: 'J';
+}
+
+.ovic-radios__elm:nth-child(11) .ov-btn-radio .ov-prefix::before {
+	content: 'K';
+}
+
+.ovic-radios__elm:nth-child(12) .ov-btn-radio .ov-prefix::before {
+	content: 'L';
+}
+
+.ovic-radios__elm:nth-child(13) .ov-btn-radio .ov-prefix::before {
+	content: 'M';
+}
+
+.ovic-radios__elm:hover {
+	background-color: #ffffff;
+}
+
+.ov-btn-radio.active .ov-prefix::before {
+
+}
+
+.ov-btn-radio.active .ov-prefix::before {
+	/*visibility: visible;*/
+	/*opacity: 1;*/
+	/*color: #ffffff;*/
+}
+
+p.ovic-radios__text {
+	margin-bottom: 0;
+	flex: 1;
+	text-align: left;
+}
+
+.content-inner-html {
+	position: relative;
+}
+
+.content-inner-html::before {
+	content: '';
+	display: block;
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	opacity: 0;
+}
+
+.ovic-radios__tick--correct-answer {
+	width: 12px;
+	height: 12px;
+	display: none;
+}
+
+.ovic-radios__tick--incorrect-answer {
+	width: 10px;
+	height: 10px;
+	display: none;
+}
+
+.wrong-answer .ovic-radios__text {
+	color: #ED1B24;
+}
+
+.wrong-answer .ovic-radios__tick--incorrect-answer {
+	display: inline;
+}
+
+.correct-answer .ovic-radios__text {
+	color: #3AB54A;
+}
+
+.correct-answer .ovic-radios__tick--correct-answer {
+	display: inline;
+}
+
+.ovic-radios__text,
+.ovic-radios__tick,
+.ov-prefix {
+	display: inline;
+	vertical-align: top;
+}
+
+.ovic-radios__tick {
+	padding-left: 10px;
+}

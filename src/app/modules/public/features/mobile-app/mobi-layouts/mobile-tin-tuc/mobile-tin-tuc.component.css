@@ -1,0 +1,20 @@
+.notifi-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding:0 20px 20px;
+}
+
+.notifi-container button {
+  margin-bottom: 14px;
+  background: #0027ff;
+  border: #0027ff;
+
+}
+.notifi-container div{
+  font-size: 15px;
+  font-weight: 500;
+}
+

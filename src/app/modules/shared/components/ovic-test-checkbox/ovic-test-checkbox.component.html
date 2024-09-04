@@ -1,0 +1,87 @@
+<!--<div *ngIf="_question" class="w-100 h-100">-->
+
+<!--  <div class="question-container w-100  " style="height:100vh;background: #fdfdfe">-->
+<!--    <div class="ovic-vertical__inputs ovic-vertical__inputs&#45;&#45;layout-2">-->
+<!--      <div class="question-site-left px-1" style="width:50%">-->
+<!--        <div class="question-header">-->
+<!--          <div class="row">-->
+<!--            <div class="col-12">-->
+
+<!--             <div class="form-row">-->
+<!--               <textarea pInputTextarea [(ngModel)]="_question.question_direction" class="w-100" rows="5"></textarea>-->
+<!--             </div>-->
+
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="question-body">-->
+<!--          <div class="row">-->
+<!--            <div class="col-12">-->
+<!--              <answer-option-group class="h-100 mt-1 d-block" [_answerOption]="_question.answer_option"-->
+<!--                                       [_answer_correct]="_question.answer_correct"></answer-option-group>-->
+<!--            </div>-->
+<!--            <div class="col-12"></div>-->
+<!--          </div>-->
+<!--          <div class="row">-->
+<!--            <div class="col-12">-->
+<!--              <app-questions-and-answers [_children]="_question.children" [cdr]="_question.cdr" [code]="_question.code"-->
+<!--                [part]="_question.part" [question_type]="_question.question_type"-->
+<!--              ></app-questions-and-answers>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="question-site-right px-1" style="width:50%">-->
+
+<!--      </div>-->
+<!--    </div>-->
+
+<!--  </div>-->
+
+<div class="w-100 h-100 ">
+  <div class="question-container">
+    <div class="question-desciption">
+      <p class="text-uppercase"> Câu hỏi: </p>
+      <div>
+        Cho biểu đồ như hình dưới đây:
+      </div>
+    </div>
+    <div class="question-answer">
+      <div class="question-answer__config">
+        <div class="row">
+          <div class="col">
+            <div class="form-row">
+              <label> Cài đặt</label>
+              <div class="form-row__content" >
+                <div class="w-50 p-3 " style="border-right:  1px dashed #cacaca">
+                  <p>Hiển thị đáp án trên 1 dòng:</p>
+                  <div class="config-cols justify-content-between">
+                    <div class="config-cols__item" *ngFor="let item of configCols">
+                      <input type="radio" [id]=" 'configCols' + type_question + item.label " [value]="item.value" [name]="'configCols' + type_question" [(ngModel)]="_question.config.cols">
+                      <span class="mx-2">{{item.label}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="w-50 p-3">
+                  <p>Đảo đáp án:</p>
+                  <div class="config-cols">
+                    <div class="config-cols__item" *ngFor="let item of configRandomQuestion">
+                      <input type="radio" [id]="'configRandom' + type_question + item.label" [value]="item.value" [name]="'configRandom' + type_question" [(ngModel)]="_question.config.invertedAnswer">
+                      <span class="mx-2">{{item.label}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="question-answer--content">
+        <p>TRẢ LỜI: </p>
+        <div class="question-answer--content-ansers">
+          <answer-option-group [question]="_question" [type_answer]="type_question" ></answer-option-group>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,101 @@
+.ovic-show-svg {
+	max-width: 1200px;
+	padding-left: 15px;
+	padding-right: 15px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ovic-show-svg__title {
+	display: block;
+	text-align: center;
+	font-size: 22px;
+	line-height: 24px;
+	font-weight: 700;
+}
+
+.ovic-show-svg__list {
+	list-style: none;
+	display: flex;
+	padding: 0;
+	margin: 0 -10px;
+	flex-wrap: wrap;
+}
+
+.ovic-show-svg__list li {
+	padding: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.ovic-show-svg__list li > span {
+	font-size: 13px;
+}
+
+.ovic-show-svg__button {
+	border: 1px solid #ededed;
+	background-color: #ffffff;
+	border-radius: 6px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0;
+	width: 84px;
+	height: 84px;
+}
+
+.ovic-show-svg__icon {
+	width: 32px;
+	height: 32px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	object-fit: contain;
+}
+
+.ovic-show-svg__form-head {
+	padding: 50px;
+	text-align: center;
+}
+
+.ovic-show-svg__form-head input {
+	width: 100%;
+	font-weight: 400;
+	font-size: 16px;
+	border: 0;
+	outline: 0;
+	border-radius: 6px;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	display: block;
+	-webkit-appearance: none;
+	vertical-align: middle;
+	transition: -webkit-box-shadow 0.3s;
+	transition: box-shadow 0.3s, -webkit-box-shadow 0.3s;
+	line-height: 22px;
+	padding: 20px 70px 20px 30px;
+	background-color: #FFFFFF;
+	-webkit-box-shadow: 0 3px 6px 0 rgb(0 0 0 / 10%), 0 1px 3px 0 rgb(0 0 0 / 8%);
+	box-shadow: 0 3px 6px 0 rgb(0 0 0 / 10%), 0 1px 3px 0 rgb(0 0 0 / 8%);
+}
+
+.ovic-show-svg__form-head__wrap-search {
+	display: inline-block;
+	position: relative;
+	width: 600px;
+}
+
+.ovic-show-svg__form-head__wrap-search > i {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 1;
+	width: 62px;
+	height: 62px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 999px;
+}

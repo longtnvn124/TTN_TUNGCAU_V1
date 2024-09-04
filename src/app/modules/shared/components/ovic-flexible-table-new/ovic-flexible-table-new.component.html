@@ -1,0 +1,93 @@
+<div class="ovic-flexible ovic-flexible-new" [class.enable-checkbox]="enableCheckbox" [class.ovic-flex-table-width--pagination]="pagination">
+    <div class="ovic-flexible-table__head">
+        <div class="text-left align-self-center mr-auto">
+            <h3 class="ovic-sct-title" *ngIf="headLabel">{{headLabel}}</h3>
+        </div>
+        <div class="text-center align-self-center ovic-flexible-head-search" *ngIf="headSearch && headSearch.enable">
+            <div class="ovic-flexible-head-search-inside" [class]="headSearch['button']">
+                <input type="text" class="ovic-text-placeholder" [attr.placeholder]="headSearch['placeholder']" #search>
+                <button (click)="btnHeadSearchClear(search)" pButton pRipple type="button" icon="pi pi-times" class="p-button-danger" *ngIf="search.value"></button>
+                <button *ngIf="headSearch['button']" class="btn" [innerHTML]="headSearch['button']" (click)="btnHeadSearch(search.value)"></button>
+            </div>
+        </div>
+        <div class="text-right d-flex align-self-center" *ngIf="headButtons && headButtons.length">
+            <button *ngFor="let btn of headButtons;" class="btn ovic-topbar-btn" [ngClass]="[ btn['class'] || 'top-bar-btn--default', 'ovic-topbar-btn-name--'+btn.name]" (click)="btnHeaderButtonClick(btn)">
+                <i *ngIf="btn.icon" [ngClass]="btn.icon"></i>{{ btn.label }}
+            </button>
+        </div>
+    </div>
+
+    <div class="ovic-flexible-table__body" [class.ovic-is-loading]="state && !state.isInit && state.isLoading">
+        <div class="ovic-showcase" *ngIf="data && data.length">
+            <!--head section-->
+            <div class="ovic-showcase__head-element">
+                <div class="ovic-showcase__element-wrap-inside">
+                    <div *ngIf="enableCheckbox" class="style-header-table-fix">
+                        <button class="ov-btn-checkbox ov-btn-checkbox--size-sm" [ngClass]=" isAllRowsChecked ? 'checked' : null " (click)="btnToggleAllRowChecked() "></button>
+                    </div>
+                    <ng-container *ngFor="let h of columns">
+                        <span class="ov-showcase-lbl" [ngClass]="[ h.headClass ? h.headClass : '' , h['isFixed'] ? 'style-header-table-fix' : '']" [style.width]="h.width ? h.width : 'auto'"> {{h.label}} </span>
+                    </ng-container>
+                </div>
+            </div>
+            <!--head section-->
+
+            <!--body section-->
+            <div class="ovic-showcase__body-element">
+                <!--row-->
+                <div class="ovic-showcase__element-wrap-inside" *ngFor="let loop of data; let i=index;" [ngClass]=" loop['isActive'] ? 'row-active' : null ">
+                    <div *ngIf="enableCheckbox" class="style-content-table-fix ">
+                        <button class="ov-btn-checkbox ov-btn-checkbox--size-sm" [ngClass]="loop['__oft_row_checked'] ? 'checked' : null " (click)="btnToggleRowChecked(loop) "></button>
+                    </div>
+                    <ng-container *ngFor="let column of columns">
+                        <div class="ov-showcase-cell-content {{ column.columnClass }}" [ngClass]="{ 'has-child-menu' : column['menu'] , 'style-content-table-fix' : column['isFixed']}" [style.width]="column.width ? column.width : 'auto'" [style.max-width]="column.width ? column.width : 'auto'">
+                            <!-- row menu-->
+                            <ng-container *ngIf="!column.menu || !column.menu.length">
+                                <!--Single value-->
+                                <div *ngIf="column['innerHtml']" [innerHTML]="loop[column.field] | ovicSafeHtml "></div>
+                                <div *ngIf="!column['innerHtml']">{{ loop[ column.field ] }}</div>
+                            </ng-container>
+                            <ng-container *ngIf="column.menu && column.menu.length">
+                                <div class="ov-showcase-cell-content__wrap-element-has-child-menu">
+                                    <!--Single value-->
+                                    <div *ngIf="column['innerHtml']" [innerHTML]="loop[column.field] | ovicSafeHtml "></div>
+                                    <div *ngIf="!column['innerHtml']">{{ loop[ column.field ] }}</div>
+                                    <ul class="item-menu">
+                                        <ng-container *ngFor="let menuItem of column.menu;index as i;">
+                                            <li class="menu-item elm-level-1 eml-lv1-{{i}} {{menuItem['class']}}" [ngClass]="{ 'has-child' : menuItem['child'] && menuItem['child'].length }">
+                                                <button *ngIf="!menuItem['child'] || !menuItem['child'].length" class="btn menu-link btn-menu-link {{menuItem['class']}}" [innerHTML]="menuItem['icon'] + menuItem['label']" (click)="btnMenuCLick({ menu :menuItem, item : loop})"></button>
+                                                <button *ngIf="menuItem['child'] && menuItem['child'].length" class="btn menu-link btn-menu-link {{menuItem['class']}}" [innerHTML]="menuItem['icon'] + menuItem['label']" [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{item : loop, menu :menuItem['child'] }"></button>
+                                            </li>
+                                        </ng-container>
+                                    </ul>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </div>
+                <!--row-->
+            </div>
+            <!--body section-->
+        </div>
+        <div class="alert alert-warning ovic-ftb-alert" *ngIf="state && state['isEmpty']" style="margin: 0 auto;">
+            <i class="fa fa-exclamation" aria-hidden="true"></i> {{ emptyMessage }}
+        </div>
+
+        <div class="alert alert-success ovic-ftb-alert" *ngIf="state && state['isInit']" style="margin: 0 auto;">
+            <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i> Đang tải dữ liệu...
+        </div>
+    </div>
+
+    <div class="ovic-flexible-table__foot" *ngIf="pagination">
+        <p-paginator [showCurrentPageReport]="true" [rows]="pagination.rows" [totalRecords]="pagination.recordsTotal" [pageLinkSize]="5" (onPageChange)="eventChangePage($event)"></p-paginator>
+    </div>
+</div>
+
+<mat-menu #appMenu="matMenu">
+    <ng-template matMenuContent let-item="item" let-menu="menu">
+        <ng-container *ngFor="let m of menu">
+            <button class="ovic-flex-table__row-menu-item {{ m['class'] }}" *ngIf="checkRowMenuCondition(m,item,'display')" [ngClass]="{ '--menu-item-is-hide' : checkRowMenuCondition(m,item,'hide')}" mat-menu-item [innerHTML]="m['icon'] + m['label']" (click)="btnMenuCLick({ menu :m, item : item} , checkRowMenuCondition(m,item,'hide'))"></button>
+            <span *ngIf="m['separator']" class="--menu-item-has-separator"></span>
+        </ng-container>
+    </ng-template>
+</mat-menu>

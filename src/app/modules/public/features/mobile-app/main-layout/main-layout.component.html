@@ -1,0 +1,92 @@
+<div class="main-mobile-layout d-flex w-100 h-100 flex-column">
+  <div [style.height]="navbaHeight">
+    <ng-container [ngSwitch]="navbar_switch_mode">
+      <ng-container *ngSwitchDefault>
+        <div class="navbar_mobile">
+          <i class="navbar_mobile-icon-left pi pi-bars" (click)="btnOpenMenu()"></i>
+          <div class="navbar_mobile-center">
+            Ban tuyên giáo Tỉnh UỶ
+          </div>
+          <i class="navbar_mobile-icon-right pi pi-search" (click)="btnSearch()"></i>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'SEARCH'">
+        <div class="intro-x navbar_mobile">
+          <div class="navbar_mobile-icon-right">
+            <i class="navbar_mobile-icon-left  pi pi-arrow-left" (click)="btnMenuGohome()"></i>
+          </div>
+          <div class="w-100 position-relative" style="    padding: 0 4px;">
+            <input type="text" class="navbar_mobile-input" pInputText placeholder="Tìm kiếm..." [(ngModel)]="textSearch"
+                   (ngModelChange)="selectInput($event)"/>
+            <i *ngIf="textSearch" class="clear-search pi pi-times" (click)="btnclearSearch()"></i>
+          </div>
+<!--          <div class="navbar_mobile-icon-right">-->
+<!--            <i class="pi pi-search" (click)="btnsearchData()"></i>-->
+<!--          </div>-->
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'DATA'">
+        <div class="navbar_mobile navbar_mobile-data">
+          <div class="mobile-data-header_left">
+            <!--          <i (click)="btn_backInfo()" class="pi pi-arrow-left"></i>-->
+            <i class="navbar_mobile-icon-left navbar_mobile-icon-data pi pi-arrow-left" (click)="backRoute()"></i>
+            <div class="navbar_mobile-center"
+                 style="color:#fff">{{router_curent ? router_curent.data.title : 'Ban tuyên giáo Thái nguyên'}}</div>
+          </div>
+
+          <i class="navbar_mobile-icon-right navbar_mobile-icon-data pi pi-home" (click)="btnMenuGohome()"></i>
+
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+
+
+  <div class="main-mobile-layout__body h-100" [style.--max-screen-height]="bodyHeight">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<div class="ovic-side-navigation__left" [style.--side-navigation-offset-top]="navigationOffsetTop"
+     [style.--side-navigation-init-right]="initLeft" [style.--side-navigation-size]="menuSize"
+     [@navigationMenuEffect]="navigationMenuState">
+  <ng-container
+    *ngTemplateOutlet="sideNavigationMenuSettings ? sideNavigationMenuSettings.template : null"></ng-container>
+</div>
+<button [@overlayAnimations]="navigationMenuState" class="btn ovic-side-navigation__overlay"
+        (click)="closePanel(sideNavigationMenuSettings)"></button>
+
+
+<ng-template #menu>
+  <div class="closeMenu">
+    <button pButton pRipple icon="pi pi-times" class="p-button-danger border-radius-0" (click)="btnClose()"></button>
+  </div>
+  <div class=" menu-container">
+    <div class="menu-header" (click)="btnMenuGohome()">
+      <div class="menu-header-logo">
+        <img src="assets/svg/bantuyengiao.svg" alt="">
+      </div>
+      <div class="menu-header-content">
+        <div class="menu-header-content_c1">UBND Tỉnh thái nguyên</div>
+        <div class="menu-header-content_c2">Ban Tuyên giao tỉnh uỷ</div>
+      </div>
+    </div>
+
+    <div class="menu-body">
+      <div class="menu-body_item" *ngFor="let item of menuData" (click)="btnClickMenu(item.id)">
+        <i class="menu-body_item-icon {{item.icon}}"></i>
+        <div class="menu-body_item-title">{{item.title}}</div>
+      </div>
+    </div>
+
+    <div class="menu-footer" (click)="btnLogin()">
+      <i class="menu-footer_icon pi pi-sign-in"></i>
+      <div class="menu-footer_title">Đăng nhập</div>
+    </div>
+  </div>
+
+
+</ng-template>
+
+
+<!--<iframe [src]="'https://thainguyen.gov.vn' |ovicSafeResourceUrl" ></iframe>-->

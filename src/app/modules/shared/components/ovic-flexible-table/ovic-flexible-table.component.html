@@ -1,0 +1,171 @@
+<div class="ovic-overlay" [ngClass]="{'active' : tableOverlay}"></div>
+
+<div [attr.class]="headClass.join(' ')">
+    <div class="ovic-flexible-table__head">
+        <div class="row">
+            <div class="{{headTitleClass}} text-left align-self-center">
+                <h3 class="ovic-sct-title" *ngIf="tblLabel">{{tblLabel}}</h3>
+            </div>
+            <div class="{{topsearchClass}} text-center align-self-center ovic-flexible-head-search" *ngIf="headSearch">
+                <div class="ovic-flexible-head-search-inside">
+                    <input type="text" class="ovic-text-placeholder" [attr.placeholder]="headSearchPlaceholder" #input (keydown.tab)="headSearchFindData(input.value)" (keyup.enter)="headSearchFindData(input.value)">
+                    <button class="btn" [innerHTML]="headSearchButton"></button>
+                </div>
+            </div>
+            <div class="{{topRightClass}} text-right align-self-center" *ngIf="topbarRightActions">
+                <ng-container *ngFor="let btn of topbarRightActions; let i = index">
+                    <button *ngIf="btn.type === 'handleEvent' && btn.eventName" class="btn ovic-topbar-btn {{btn.btnClass}}" [innerHTML]="''.concat( btn.icon , btn.label )" (click)="emitterEvent(btn.eventName)"></button>
+                    <button *ngIf="btn.type === 'openRightBox'" class="btn ovic-topbar-btn {{btn.btnClass}}" [innerHTML]="''.concat( btn.icon , btn.label )" (click)="openBox( btn.templateName )"></button>
+                </ng-container>
+                <button *ngIf="enableFilter" class="btn ovic-topbar-btn btn-filter" [innerHTML]="''.concat( filterIcon , filterLabel )" (click)="searchToggle(openedFilterMode)"></button>
+            </div>
+        </div>
+    </div>
+
+    <ng-container *ngIf="!hasError">
+        <div class="ovic-flexible-table__body" *ngIf=" data && data.length" [@mainLayoutEffect]=layoutState>
+
+            <div class="ovic-showcase">
+                <!--head section-->
+                <div class="ovic-showcase__head-element">
+                    <div class="ovic-showcase__element-wrap-inside">
+                        <div *ngIf="enableCheckbox" class="style-header-table-fix">
+                            <button class="ov-btn-checkbox ov-btn-checkbox--size-sm" [ngClass]=" checkAllState ? 'checked' : null " (click)="emitCheckBoxAll() "></button>
+                        </div>
+                        <ng-container *ngFor="let h of cols">
+                            <span class="ov-showcase-lbl {{h.headerClass}}" [style.width]="h.width ? h.width : 'auto'"> {{h.header}} </span>
+                        </ng-container>
+                    </div>
+                    <!--filter section-->
+                    <ng-container *ngIf="openedFilterMode">
+                        <div class="ovic-showcase__element-wrap-inside">
+                            <span *ngIf="enableCheckbox" class="filter-section-check"></span>
+                            <div class="ovic-flexible-input-head {{col.rowClass}}" [style.width]="col.width ? col.width : 'auto'" *ngFor="let col of cols">
+                                <ng-container *ngIf="col.enableFilter && col.filterSetting">
+                                    <!--Type Input-->
+                                    <input *ngIf="col.filterSetting.mode === 'input'" [attr.type]="col.filterSetting.inputType" [name]="col.field.toString()" [placeholder]="col.filterSetting.inputPlaceholder ? col.filterSetting.inputPlaceholder : ''" min="0" class="ovic-flexible-input {{col.filterSetting.inputClass}}" #textFilter (focusout)="changeTextFilter()" (keydown.tab)="changeTextFilter()" (keyup.enter)="changeTextFilter()">
+
+                                    <!--Single Select-->
+                                    <ovic-dropdown *ngIf="col.filterSetting.mode === 'select' && col.filterSetting.selectType ==='single' && col.dataType==='reference'" [options]="col.data" optionId="{{col.dataIndexField}}" optionLabel="{{col.dataLabelField}}" placeholder="------" (onChangeGetValue)="dropChangeData($event , col.field.toString())" [filter]="col.filterSetting.selectSearch"></ovic-dropdown>
+
+                                    <ovic-dropdown *ngIf="col.filterSetting.mode === 'select' && col.filterSetting.selectType ==='single' && col.dataType==='state'" [options]="col.states" optionId="key" optionLabel="value" placeholder="------" (onChangeGetValue)="dropChangeData($event , col.field.toString())" [filter]="col.filterSetting.selectSearch"></ovic-dropdown>
+                                    <ovic-dropdown *ngIf="col.filterSetting.mode === 'select' && col.filterSetting.selectType ==='single' && col.dataType==='state-innerHTML'" [options]="col.states" optionId="key" optionLabel="filterValue" placeholder="------" (onChangeGetValue)="dropChangeData($event , col.field.toString())" [filter]="col.filterSetting.selectSearch"></ovic-dropdown>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <!--filter section-->
+                </div>
+                <!--head section-->
+
+                <!--body section-->
+                <div class="ovic-showcase__body-element">
+
+                    <!--row-->
+                    <div class="ovic-showcase__element-wrap-inside" *ngFor="let row of objects; let i=index" [ngClass]=" row['isActive'] ? 'row-active' : null ">
+                        <div *ngIf="enableCheckbox" class="style-content-table-fix ">
+                            <button class="ov-btn-checkbox ov-btn-checkbox--size-sm" [ngClass]=" row.hasOwnProperty('check') && row.check ? 'checked' : null " (click)="emitCheckBox(i) "></button>
+                        </div>
+                        <ng-container *ngFor="let column of cols">
+                            <div class="ov-showcase-cell-content {{column.rowClass}}" [ngClass]="{ 'has-child-menu' : column.menu }" [style.width]="column.width ? column.width : 'auto'" [style.max-width]="column.width ? column.width : 'auto'">
+                                <!--Single value-->
+                                <ng-container *ngIf="column.field.length===1" [ngSwitch]="column.dataType">
+                                    <span *ngSwitchCase="'text-innerHTML'" [innerHTML]="row[column.field] | ovicSafeHtml "></span>
+                                    <span *ngSwitchCase="'text'">{{ row[ column.field ] }}</span>
+                                    <span *ngSwitchCase="'reference'">{{ getColumnValueOnSingleResource( column.field[ 0 ] , row[ column.field ] ) }}</span>
+                                    <span *ngSwitchCase="'state'" class="ov-col-state {{column.states[row[column.field]] ? column.states[row[column.field]].class : '' }}">{{ column.states[ row[ column.field ] ] ? column.states[ row[ column.field ] ].value : 'No value like ' + row[ column.field ] }}</span>
+                                    <span *ngSwitchCase="'state-innerHTML'" class="ov-col-state {{column.states[row[column.field]].class}}" [innerHTML]="column.states[row[column.field]].value"></span>
+                                </ng-container>
+
+                                <!--Multiple value-->
+                                <ng-container *ngIf="column.field.length>1" [ngSwitch]="column.dataType">
+                                    <span *ngSwitchCase="'text'">
+                                        <ng-container *ngFor="let val of column.field; let i = index">
+                                            <ng-container *ngIf="i>0">{{ column.separator }}</ng-container>
+                                            {{ row[ val ] }}
+                                        </ng-container>
+                                    </span>
+                                    <span *ngSwitchCase="'reference'">{{getColumnValueFromDifferenceResources( column.field , row , ' / ' )}}</span>
+                                </ng-container>
+
+                                <!-- row menu-->
+                                <ul class="item-menu {{column.menu.cssClass}}" [attr.name]="column.menu.name" *ngIf="column.menu">
+                                    <ng-container *ngFor="let menuItem of column.menu.elements ; let elm=index">
+                                        <li class="menu-item elm-level-1 eml-lv1-{{elm}} {{menuItem.liCssClass}}" *ngIf="menuIsValid( menuItem , row )" [ngClass]="{ 'has-child' : menuItem.child }">
+                                            <ng-container *ngIf="menuIsVisible(row[menuItem.visibleDependOn],menuItem.visibleConditions)">
+                                                <a *ngIf="menuItem.type==='link'" [attr.href]="menuItem.link" class="menu-link {{menuItem.cssClass}}" [innerHTML]="menuItem.icon + menuItem.label"></a>
+                                                <a *ngIf="menuItem.type==='route'" [routerLink]="[menuItem.route]" class="menu-link {{menuItem.cssClass}}" [innerHTML]="menuItem.icon + menuItem.label"></a>
+                                                <a *ngIf="menuItem.type==='handleEvent'" (click)="emitterElementEvent( row[primaryField] , menuItem.eventName )" class="menu-link {{menuItem.cssClass}}" [innerHTML]="menuItem.icon + menuItem.label"></a>
+                                            </ng-container>
+                                            <ng-container *ngIf="!menuIsVisible(row[menuItem.visibleDependOn],menuItem.visibleConditions)">
+                                                <a class="invisible-menu {{menuItem.cssClass}}" [innerHTML]="menuItem.icon + menuItem.label"></a>
+                                            </ng-container>
+
+                                            <div class="wrap-child" *ngIf="menuItem.child">
+                                                <ul class="child-menu {{menuItem.child.cssClass}}" [attr.name]="menuItem.child.name">
+                                                    <ng-container *ngFor="let menuChild of menuItem.child.elements; let elmChild=index">
+                                                        <li class="menu-item elm-level-2 eml-lv2-{{elmChild}} {{menuChild.liCssClass}}" *ngIf="menuIsValid( menuChild , row )">
+                                                            <ng-container *ngIf="menuIsVisible(row[menuChild.visibleDependOn],menuChild.visibleConditions)">
+                                                                <a *ngIf="menuChild.type==='link'" [attr.href]="menuChild.link" class="menu-link {{menuChild.cssClass}}" [innerHTML]="menuChild.icon + menuChild.label | ovicSafeHtml "></a>
+                                                                <a *ngIf="menuChild.type==='route'" [routerLink]="[menuChild.route]" class="menu-link {{menuChild.cssClass}}" [innerHTML]="menuChild.icon + menuChild.label | ovicSafeHtml "></a>
+                                                                <a *ngIf="menuChild.type==='handleEvent'" (click)="emitterElementEvent( row[primaryField] , menuChild.eventName )" class="menu-link {{menuChild.cssClass}}" [innerHTML]="menuChild.icon + menuChild.label | ovicSafeHtml "></a>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="!menuIsVisible(row[menuChild.visibleDependOn],menuChild.visibleConditions)">
+                                                                <a class="invisible-menu {{menuChild.cssClass}}" [innerHTML]="menuChild.icon + menuChild.label"></a>
+                                                            </ng-container>
+                                                        </li>
+                                                    </ng-container>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ng-container>
+                                </ul>
+                                <!-- row menu-->
+
+                            </div>
+                        </ng-container>
+                    </div>
+                    <!--row-->
+
+                </div>
+
+                <!--body section-->
+            </div>
+
+        </div>
+
+        <div class="alert alert-warning ovic-ftb-alert" role="alert" *ngIf="data && data.length < 1 " style="margin: 0 auto;">
+            <i class="fa fa-exclamation" aria-hidden="true"></i> Danh sách rỗng
+        </div>
+
+        <div class="alert alert-success ovic-ftb-alert" role="alert" *ngIf="!data" style="margin: 0 auto;">
+            <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i> Đang tải danh sách...
+        </div>
+
+    </ng-container>
+
+    <ng-container *ngIf="hasError">
+        <div class="alert alert-warning ovic-ftb-alert" role="alert" *ngIf="data && data.length < 1 " style="margin: 0 auto;">
+            <i class="fa fa-exclamation" aria-hidden="true"></i> Mất kết nối với server
+            <button class="btn btn-success">Tải lại dữ liệu</button>
+        </div>
+    </ng-container>
+
+</div>
+
+<ng-container *ngFor="let tempf of templates">
+    <ng-container [ngSwitch]="tempf.width">
+        <div *ngSwitchCase="600" class="ovic-flexible-right-section layout-600" (mouseenter)="tableOverlay = true " (mouseleave)="tableOverlay = false" [ngClass]="{'active' : blockOpened === tempf.name }" [@rightSection600]="blockOpened === tempf.name ? layoutState : 'close'">
+            <ng-container *ngTemplateOutlet="tempf.template"></ng-container>
+        </div>
+        <div *ngSwitchCase="700" class="ovic-flexible-right-section layout-700" (mouseenter)="tableOverlay = true " (mouseleave)="tableOverlay = false" [ngClass]="{'active' : blockOpened === tempf.name }" [@rightSection700]="blockOpened === tempf.name ? layoutState : 'close'">
+            <ng-container *ngTemplateOutlet="tempf.template"></ng-container>
+        </div>
+        <div *ngSwitchCase="800" class="ovic-flexible-right-section layout-800" (mouseenter)="tableOverlay = true " (mouseleave)="tableOverlay = false" [ngClass]="{'active' : blockOpened === tempf.name }" [@rightSection800]="blockOpened === tempf.name ? layoutState : 'close'">
+            <ng-container *ngTemplateOutlet="tempf.template"></ng-container>
+        </div>
+        <div *ngSwitchDefault class="ovic-flexible-right-section layout-500" (mouseenter)="tableOverlay = true " (mouseleave)="tableOverlay = false" [ngClass]="{'active' : blockOpened === tempf.name }" [@rightSection500]="blockOpened === tempf.name ? layoutState : 'close'">
+            <ng-container *ngTemplateOutlet="tempf.template"></ng-container>
+        </div>
+    </ng-container>
+</ng-container>

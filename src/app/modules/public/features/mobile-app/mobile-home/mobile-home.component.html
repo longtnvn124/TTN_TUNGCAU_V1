@@ -1,0 +1,126 @@
+
+  <div class="mobile-body">
+<!--    <div class="header-container" style="width:100%">-->
+<!--      <div class="header-icon" *ngFor="let item of iconHeader">-->
+<!--        <a (click)="btnSelectIconHeader(item.id)" >-->
+<!--          <img src="{{item.img}}" alt="">-->
+<!--        </a>-->
+<!--      </div>-->
+<!--    </div>-->
+    <!--      <a [routerLink]="['/mobile/cong-thong-tin']" [queryParams]="{param:1}">-->
+    <div *ngIf="slides ?? 0 > 0" class="slide-mobile-app w-100 h-100 " style="margin-top: 20px;">
+      <p-galleria class="slide-ctm" [autoPlay]="true" [value]="slides" [numVisible]="1" [circular]="true"
+                  [showItemNavigators]="false" [showIndicators]="true"
+                  [showThumbnails]="false" [showIndicatorsOnItem]="true"
+                  [containerStyle]="{ 'width': '100%','height':'150px' }">
+        <ng-template pTemplate="item" let-item>
+          <img alt="" [src]="item.path " style="width: 100%; height:100% ; max-height:150px ;display: block;object-fit: cover"/>
+        </ng-template>
+      </p-galleria>
+
+    </div>
+
+    <div class="nhanvat_slide_mobile" style="margin-top: 20px;">
+      <div class="nhanvat_header" style="margin-bottom:6px">
+        <div class="nhanvat_header-title">
+          Nhân vật lịch sử
+        </div>
+        <div class=" nhanvat_header-full-content" (click)="showfullNhanvat()">
+          Xem tất cả
+        </div>
+      </div>
+      <div class="slide-nhanvat-mobile intro-x">
+        <div class=" nhanvat_item " *ngFor="let nhanvat of nhanvatLichSu" (click)="btnSelectNhanvat(nhanvat)">
+          <img class="nhanvat_item-img"
+               [src]="nhanvat['_file_url']? nhanvat['_file_url']: 'src/assets/images/placeholder.jpg'" alt="">
+          <div class="nhanvat_item-title">
+            {{nhanvat.bietdanh}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="vr360_slide_mobile ">
+      <div class="vr360_header">
+        <div class="vr360_header-title">
+          Di tích lịch sử VR360
+        </div>
+        <div class=" vr360_header-full-content" (click)="showfullvr()">
+          Xem tất cả
+        </div>
+      </div>
+
+
+      <div class="vr360_mobile-content row row-cols-2 mx-0 p-0 intro-x">
+        <div
+          class="ngulieu_item d-flex flex-wrap flex-row justify-content-between align-items-center col-sm-6 col-md-4 col-lg-3"
+          *ngFor="let item of ngulieuvr" (click)="btnSelectNgulieu(item)">
+          <div class="w-100 d-inline-block  bg-white ovic--parent-image position-relative"
+               style="border: 1px solid #adc6e3">
+            <div class='head-card_hover w-100 bg-image hover-zoom' style="cursor: pointer;">
+              <div class="position-relative w-100 st-image img-child-max-width" style="overflow: hidden">
+                <img class="w-100 h-100 ovic-img-zoom"
+                     [src]="item['_img_thumbnail'] ? item['_img_thumbnail'] : 'assets/images/placeholder-3x2.jpg'"
+                     alt="">
+              </div>
+              <div class="m-1">
+                <div
+                  class="headding-card text_hover vr-360_mobile-title" >
+                  {{item.title}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="slides ?? 0 > 0" class="slide-mobile-app w-100 h-100 " style="margin-top: 20px;">
+      <p-galleria class="slide-ctm" [autoPlay]="true" [value]="slides" [numVisible]="1" [circular]="true"
+                  [showItemNavigators]="false" [showIndicators]="true"
+                  [showThumbnails]="false" [showIndicatorsOnItem]="true"
+                  [containerStyle]="{ 'width': '100%','height':'150px' }">
+        <ng-template pTemplate="item" let-item>
+          <img [src]="item.path " alt=""
+               style="width: 100%; height:100% ; max-height:150px ;display: block;object-fit: cover"/>
+        </ng-template>
+      </p-galleria>
+
+    </div>
+
+    <div class="chuyende-mobile">
+      <div class="vr360_header">
+        <div class="vr360_header-title">
+          Bài giảng 31 chuyên đề
+        </div>
+        <div class=" vr360_header-full-content" (click)="showfull31chuyende()">
+          Xem tất cả
+        </div>
+      </div>
+      <div class="chuyende-container intro-x">
+        <div class="d-flex flex-row mb-1 chuyende-container_item"
+             *ngFor="let chuyende of dataChuyenDeChild, let i = index" (click)="btnSelectChuyende(chuyende)">
+          <div class="chuyende-side-left">
+            <img
+              alt="" [src]="chuyende.file_scorm ? 'assets/icon-png/compression.png': chuyende.video ?'assets/icon-png/video-marketing.png': 'assets/icon-png/documents.png' "
+              class="chuyende-side-left-icon position-relative" style="width: 42px;height: 42px;">
+          </div>
+
+          <div class="chuyende-content">
+            <div class="chuyende-title">{{chuyende.title}}</div>
+            <div class="chuyende-tooltip d-flex ">
+              <div class="chuyende-tooltip-left">
+                <i class="pi pi-heart mr-2"></i>
+                <i class="pi pi-external-link"></i>
+              </div>
+              <div class="chuyende-tooltip-right mr-1">
+                300 lượt xem
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+

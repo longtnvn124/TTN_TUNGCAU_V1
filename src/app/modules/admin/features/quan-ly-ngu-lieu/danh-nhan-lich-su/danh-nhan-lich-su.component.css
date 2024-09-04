@@ -1,0 +1,61 @@
+.header-container {
+  height: 60px;
+  border: 1px solid #ccc;
+  /*border-radius: 4px;*/
+  background-color: #fff;
+  padding:10px;
+  margin-bottom:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.tbl-title {
+  margin: 0 auto 0 0;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 700;
+  padding: 5px;
+}
+
+.st-image {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.btn-ctm {
+  border: 1px solid #e0e0e0;
+  min-height: 42px;
+}
+
+/*.head-card_hover:hover {*/
+/*  background-color: #fff;*/
+/*  opacity: 0.3;*/
+/*}*/
+
+.txt-label-nomal {
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.scroll-ctn-right {
+  width: 100%;
+  max-height: 100%;
+  /*overflow-x: hidden;*/
+  /*overflow-y: auto;*/
+}
+
+@media (width > 1400px) {
+  .custom-col-lg-2 {
+    flex: 0 0 calc(20%); /* Để hiển thị 5 cột trên một hàng */
+    max-width: calc(20%); /* Để hiển thị 5 cột trên một hàng */
+  }
+}
+@media(width<500px){
+  .st-image{
+    margin-top: 0;
+  }
+}

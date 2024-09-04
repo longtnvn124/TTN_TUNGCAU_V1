@@ -1,0 +1,154 @@
+
+.container-search{
+  width:100%;
+  height: calc(var(--max-screen-height, 100vh));
+  background: #f3f3f3;
+  overflow: hidden;
+  overflow-y: auto;
+}
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  height: 12%;
+  background: #fff;
+  padding: 0 4px 8px 4px;
+}
+
+.navbar-icon-left, .navbar-icon-right i {
+  color: #BD0D04;
+  font-size: 16px;
+  padding: 10px;
+}
+
+.navbar-input {
+  width: 100%;
+
+  /*padding: 0 10px;*/
+}
+
+.navbar-input input {
+  width: 100%;
+  border-radius: 40px;
+  border: 1px solid red;
+  content: 'tìm kiếm';
+  /*padding: 0 14px;*/
+  font-size: 14px;
+  height: 36px;
+  box-shadow: none;
+}
+
+.search-content-container {
+  width: 100%;
+  height: var(--max-screen-height, 100vh);
+
+}
+
+/*.filter-drop-item:hover{*/
+/*  background: #e83e3e;*/
+/*  color:#fff;*/
+/*}*/
+
+.filter-active {
+  display: block;
+}
+
+.filter-Inactive {
+  display: block;
+}
+
+.mobile-bg-search {
+  position: absolute;
+  width: 250px;
+  bottom: 20px;
+  left: 10px;
+}
+
+.header-search-container{
+  width: 100%;
+  height: 100%;
+  padding: 20px 8px 10px 8px;
+  overflow: hidden;
+  overflow-y: auto;
+
+}
+  /*background:#fbfbfb;*/
+
+.header-search{
+  display: flex;
+  font-size: 15px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #BD0D04;
+  font-weight: 500;
+  font-style: oblique;
+}
+.header-search-left{
+  color:#39393994;
+}
+.header-search-left span{
+  font-weight:400;
+}
+
+.header-search-right{
+
+}
+.header-search-right i {
+  font-size: 16px;
+  color:#BD0D04;
+}
+/*-----------------------css drop filter-------------------------------*/
+
+
+.filter-drop {
+  display: none;
+  position: absolute;
+  min-width: 160px;
+  overflow: auto;
+  right: 10px;
+  top: calc(70px + 45px);
+  border: 1px solid #ccc;
+  /*border-radius: 6px;*/
+  background: #fff;
+  font-size: 14px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  list-style: none;
+  padding: 0;
+  z-index: 9999;
+}
+
+.filter-drop li:last-child {
+  border-bottom: none;
+}
+
+.filter-drop-item {
+  padding: 4px;
+  border-bottom: 1px solid #ccc;
+  color: #393939;
+}
+
+.filter-drop-item-active {
+  background: #e83e3e !important;
+  color: #fff;
+}
+
+.filter-active {
+  display: block !important;
+}
+
+
+.filter-drop-bottom_item{
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 8px;
+  background: #f1f1f1;
+  border-radius: 20px;
+  margin-bottom: 2px;
+}

@@ -1,0 +1,18 @@
+table {
+	border-collapse: collapse;
+	min-width: 100%;
+	table-layout: fixed;
+	box-sizing: border-box;
+}
+
+.filter-by-staff-control {
+	width: 240px;
+}
+
+.filter-by-group-control {
+	width: 300px;
+}
+
+.data-permission-table::after {
+	font-size: 18px;
+}

@@ -1,0 +1,69 @@
+.ovic-data-percentage-piker {
+    display: block;
+}
+
+.tbl-opp-title {
+    display: inline-block;
+}
+
+.ovic-data-percentage-content {
+    display: block;
+    margin: 0;
+    padding: 5px 15px 0;
+    border: 1px solid #edebe6;
+    background-color: #fbfaf9;
+}
+
+.ovic-dp-row {
+    display: flex;
+    list-style: none;
+    padding: 10px 0;
+}
+
+.ovic-dp-row + .ovic-dp-row {
+    border-top: 1px solid #edebe6;
+}
+
+.ovic-dp-col {
+    color: #323131;
+    font-size: 13px;
+    padding: 0;
+}
+
+.ovic-dp-row-head .ovic-dp-col{
+    font-weight: 700;
+}
+
+.ovic-dp-col-index {
+    width: 60px;
+    text-align: center;
+}
+
+.ovic-dp-col-title {
+    flex: 1 1;
+}
+
+.ovic-dp-col-percent {
+    width: 120px;
+    text-align: center;
+}
+
+.wrap-btns {
+    margin-top: 5px;
+    display: block;
+    border: 1px solid #edebe6;
+    background-color: #fbfaf9;
+    text-align: center;
+}
+
+.wrap-btns .btn {
+    color: #545454;
+}
+
+.ov-i-input{
+    display: inline-block;
+    max-width: 100%;
+    border: none;
+    background: transparent;
+    color: #ec2727;
+}

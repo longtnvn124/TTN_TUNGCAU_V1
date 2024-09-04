@@ -1,0 +1,162 @@
+<div class="test-member ovic-scroll-style">
+  <div class="test-member__body">
+    <div class="test-member__form intro-y">
+      <h2
+        class="test-member__form__heading">{{ !emailValidator.openFormDetail ? 'Thông tin thí sinh' : 'Thông tin thí sinh' }}</h2>
+      <div class="test-member__form__controls"
+           [class.ictu-is-loading--circle-black]="emailValidator.onChecking || isLoading">
+        <form [formGroup]="formGroup" class="test-member__from-wrap">
+          <div class="test-member__from__row intro-y" *ngIf="emailValidator.openFormDetail">
+            <div class="test-member__from__col test-member-size--max">
+              <fieldset [class.fieldset--error]="f['full_name'].touched && f['full_name'].invalid"
+                        [class.fieldset--invalid]="f['full_name'].touched && f['full_name'].valid">
+                <legend><label>Họ và tên</label></legend>
+                <input type="text" class="test-member__form__input" placeholder="Vd: Nguyễn Văn A"
+                       formControlName="full_name" autocomplete="off">
+              </fieldset>
+            </div>
+            <div class="test-member__from__col test-member-size--sex">
+              <fieldset>
+                <legend><label>Giới tính</label></legend>
+                <button [class.--active]="f[ 'sex' ].value === 'nu'" (click)="changeUserSex('nu')" type="button" pButton
+                        pRipple class="test-member__from__input-btn p-button-center" label="Nữ"
+                        icon="fa fa-female"></button>
+                <button [class.--active]="f[ 'sex' ].value === 'nam'" (click)="changeUserSex('nam')" type="button"
+                        pButton pRipple class="test-member__from__input-btn p-button-center" label="Nam"
+                        icon="fa fa-male"></button>
+              </fieldset>
+            </div>
+          </div>
+          <div class="test-member__from__row intro-y">
+            <div *ngIf="emailValidator.openFormDetail" class="test-member__from__col test-member-size--dob">
+              <fieldset [class.fieldset--error]="f['dob'].touched && f['dob'].invalid"
+                        [class.fieldset--invalid]="f['dob'].touched && f['dob'].valid">
+                <legend><label>Ngày tháng năm sinh</label></legend>
+                <p-inputMask formControlName="dob" mask="99/99/9999" placeholder="__/__/____"
+                             slotChar="dd/mm/yyyy"></p-inputMask>
+                <span class="test-member__from__col__span"
+                      *ngIf="f['dob'].touched && f['dob'].invalid">{{ f['dob'].getError('theDateDoesNotExist') ? 'Ngày không tồn tại' : 'Định dạng ngày chưa đúng' }}</span>
+              </fieldset>
+            </div>
+            <div *ngIf="emailValidator.openFormDetail" class="test-member__from__col test-member-size--dob">
+              <fieldset
+                [ngClass]="{ 'fieldset--error' : f['phone'].touched && f['phone'].invalid , 'fieldset--invalid' : f['phone'].touched && f['phone'].valid }">
+                <legend><label>Số điện thoại</label></legend>
+                <input type="text" class="test-member__form__input" placeholder="Vd: 0112233445" formControlName="phone"
+                       autocomplete="off">
+              </fieldset>
+            </div>
+            <div class="test-member__from__col test-member-size--max position-relative">
+              <fieldset
+                [ngClass]="{ 'fieldset--error' : f['email'].touched && f['email'].invalid , 'fieldset--invalid' : f['email'].touched && f['email'].valid }">
+                <legend><label>Email</label></legend>
+                <input type="text" class="test-member__form__input p-disabled" placeholder="Email của bạn "
+                       formControlName="email" autocomplete="off">
+              </fieldset>
+              <button *ngIf="emailValidator.error; else showCheckValue" class="test-member__form__recheck" pButton
+                      pRipple icon="pi pi-refresh"></button>
+              <ng-template #showCheckValue>
+                <i class="test-member__form__recheck-result pi-check-circle pi text-success"></i>
+              </ng-template>
+            </div>
+          </div>
+          <div class="test-member__from__row intro-y" *ngIf="emailValidator.openFormDetail">
+            <!--                    <div class="test-member__from__col test-member-size&#45;&#45;max" style="width:calc(100% - 300px);">-->
+            <!--                      <fieldset [class.fieldset&#45;&#45;error]="f['school'].touched && f['school'].invalid" [class.fieldset&#45;&#45;invalid]="f['school'].touched && f['school'].valid">-->
+            <!--                        <legend><label>Trường</label></legend>-->
+            <!--&lt;!&ndash;                        <input type="text" class="test-member__form__input" placeholder="Tên trường ..." formControlName="school" autocomplete="off">&ndash;&gt;-->
+            <!--                            <p-dropdown class="text-member_form__dropdown" [style]="{'width':'100%', 'z-index':'999999'}" [options]="schools" formControlName="school"  optionLabel="name" optionValue="name" placeholder="Chọn trường ..."></p-dropdown>-->
+            <!--                      </fieldset>-->
+            <!--                    </div>-->
+            <!--                    <div class="test-member__from__col test-member-size&#45;&#45;classify">-->
+            <!--                      <fieldset>-->
+            <!--                        <legend><label>Phân loại</label></legend>-->
+            <!--                        <button [class.&#45;&#45;active]="f[ 'people_classify' ].value === 0 " (click)="changePeopleClassify(0)" type="button" pButton pRipple class="test-member__from__input-btn p-button-center" label="Sinh viên " icon="fa fa-id-card-o"></button>-->
+            <!--                        <button [class.&#45;&#45;active]="f[ 'people_classify' ].value === 1 " (click)="changePeopleClassify(1)" type="button" pButton pRipple class="test-member__from__input-btn p-button-center" label="Cán bộ" icon="fa fa-graduation-cap"></button>-->
+            <!--                      </fieldset>-->
+            <!--                    </div>-->
+            <!--                    <div class="test-member__from__col test-member-size&#45;&#45;max">-->
+            <!--                      <fieldset [class.fieldset&#45;&#45;error]="f['class'].touched && f['class'].invalid" [class.fieldset&#45;&#45;invalid]="f['class'].touched && f['class'].valid">-->
+            <!--                        <legend><label>Lớp, khoá </label></legend>-->
+            <!--                        <input type="text" class="test-member__form__input" placeholder="vd: Kinh tế quản trị - K17B, ..." formControlName="class" autocomplete="off">-->
+            <!--                      </fieldset>-->
+            <!--                    </div>-->
+          </div>
+          <!--                  <div class="test-member__from__row intro-y" *ngIf="emailValidator.openFormDetail && f[ 'people_classify' ].value === 0">-->
+          <!--                    <div class="test-member__from__col test-member-size&#45;&#45;max">-->
+          <!--                      <fieldset [class.fieldset&#45;&#45;error]="f['class'].touched && f['class'].invalid" [class.fieldset&#45;&#45;invalid]="f['class'].touched && f['class'].valid">-->
+          <!--                        <legend><label>Lớp, khoá </label></legend>-->
+          <!--                        <input type="text" class="test-member__form__input" placeholder="vd: Kinh tế quản trị - K17B, ..." formControlName="class" autocomplete="off">-->
+          <!--                      </fieldset>-->
+          <!--                    </div>-->
+          <!--                  </div>-->
+          <!--                  <div class="test-member__from__row intro-y" *ngIf="emailValidator.openFormDetail && f[ 'people_classify' ].value === 1">-->
+          <!--                    <div class="test-member__from__col test-member-size&#45;&#45;max">-->
+          <!--                      <fieldset [class.fieldset&#45;&#45;error]="f['units'].touched && f['units'].invalid" [class.fieldset&#45;&#45;invalid]="f['units'].touched && f['units'].valid">-->
+          <!--                        <legend><label>Đơn vị</label></legend>-->
+          <!--                        <input type="text" class="test-member__form__input" placeholder="Tên đơn vị ..." formControlName="units" autocomplete="off">-->
+          <!--                      </fieldset>-->
+          <!--                    </div>-->
+          <!--                  </div>-->
+
+
+<!--          <div class="test-member__from__row intro-y"-->
+<!--               *ngIf="emailValidator.openFormDetail && f[ 'people_classify' ].value === 1">-->
+<!--            <div class="test-member__from__col test-member-size&#45;&#45;max">-->
+<!--              <fieldset [class.fieldset&#45;&#45;error]="f['units'].touched && f['units'].invalid"-->
+<!--                        [class.fieldset&#45;&#45;invalid]="f['units'].touched && f['units'].valid">-->
+<!--                <legend><label>Đơn vị</label></legend>-->
+<!--                <input type="text" class="test-member__form__input" placeholder="Tên đơn vị ..." formControlName="units"-->
+<!--                       autocomplete="off">-->
+<!--              </fieldset>-->
+<!--            </div>-->
+<!--          </div>-->
+
+
+          <div class="test-member__from__row intro-y" *ngIf="emailValidator.openFormDetail">
+            <div class="test-member__from__col test-member-size--max">
+              <fieldset [class.fieldset--error]="f['donvi'].touched && f['donvi'].invalid"
+                        [class.fieldset--invalid]="f['donvi'].touched && f['donvi'].valid">
+                <legend><label>Đơn vị công tác</label></legend>
+                <input type="text" class="test-member__form__input" placeholder="Vd: Đơn vị..."
+                       formControlName="donvi" autocomplete="off">
+              </fieldset>
+            </div>
+          </div>
+
+          <ng-container *ngIf="emailValidator.openFormDetail">
+            <div class="test-member__from__row intro-y">
+              <div class="test-member__from__col test-member-size--max pb-0 justify-content-center">
+                <button (click)="assignContestantInfo()"
+                        *ngIf="formGroup.valid && emailValidator.checked; else disableButton"
+                        class="p-button-success test-member__from__btn-submit" pButton pRipple icon="pi pi-file-edit"
+                        label="Ghi danh"></button>
+                <ng-template #disableButton>
+                  <button disabled class="p-button-success test-member__from__btn-submit ovic-button--disabled" pButton
+                          pRipple icon="pi pi-file-edit" label="Ghi danh"></button>
+                </ng-template>
+              </div>
+            </div>
+          </ng-container>
+
+          <div class="test-member__from__row intro-y" *ngIf="!emailValidator.openFormDetail">
+            <div class="test-member__from__col test-member-size--max pb-0 justify-content-center">
+              <button (click)="goToTest(true)"
+                      *ngIf="!emailValidator.isContestantIdEmpty && emailValidator.checked; else disableGoToTestButton"
+                      class="p-button-success test-member__from__btn-submit" pButton pRipple icon="pi pi-file-edit"
+                      label="Bắt đầu bài thi"></button>
+              <ng-template #disableGoToTestButton>
+                <button disabled class="p-button-success test-member__from__btn-submit ovic-button--disabled" pButton
+                        pRipple icon="pi pi-file-edit" label="Bắt đầu bài thi"></button>
+              </ng-template>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="paper-background" style="background-image: url('assets/images/paper-crack-2.png');background-size:cover;">
+    <!--    <div class="paper-background" style="background-image: url('assets/images/paper-crack-2.png');transform: rotate(180deg);">-->
+
+  </div>
+</div>

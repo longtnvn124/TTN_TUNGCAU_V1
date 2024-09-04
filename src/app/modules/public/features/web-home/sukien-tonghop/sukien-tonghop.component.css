@@ -1,0 +1,67 @@
+.text-in-line{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sukien_title{
+  margin-top: 50px;
+  margin-bottom: 20px;
+  font-size: 28px;
+  color: #3A4E42;
+  font-weight: 800;
+  text-align: center;
+  line-height: 1.2;
+}
+.sukien_desc{
+  width:100%;
+  font-size: 70%;
+  text-align: justify;
+}
+.sukien_desc p img{
+  width:100%;
+}
+
+.item-Sukien{
+  position: relative;
+  overflow: hidden;
+}
+.item-Sukien:hover{
+  cursor: pointer;
+}
+/*.ovic-img-zoom {*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*  transition: transform 0.3s ease;*/
+/*}*/
+
+/*.ovic-img-zoom:hover {*/
+/*  transform: scale(1.1);*/
+/*}*/
+
+/*==========================================*/
+.ngulieuso__title h3{
+  color:#3A4E42;
+  font-weight:400;
+  font-size:18px;
+}
+.ngulieuso_item_title {
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #3f604d;
+}
+.sukien_desc div{
+  font-weight: 400;
+}
+.sukien_desc div span{
+  font-weight: 300;
+}
+.btn-bd-rd-50{
+  border-radius:50%;
+}
+
+.data-mobile-item-right_tag-name{
+  background: #f39393;
+}

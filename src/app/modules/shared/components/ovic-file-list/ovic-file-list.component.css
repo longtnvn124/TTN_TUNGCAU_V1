@@ -1,0 +1,139 @@
+.ovic-reorder-list {
+    width: 100%;
+    max-width: 100%;
+    border: dashed 1px #979797;
+    min-height: 56px;
+    display: block;
+    background: white;
+    border-radius: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+.ovic-reorder-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    padding: 0 15px;
+}
+
+.ovic-reorder-item:not(.elm-button):hover {
+    background-color: #ededed;
+}
+
+.ovic-reorder-item__inner {
+    padding: 11px 0;
+    border-bottom: dashed 1px #979797;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    cursor: pointer;
+    background: transparent;
+    font-size: 14px;
+    width: 100%;
+}
+
+.ovic-reorder-item.no-preview,
+.ovic-reorder-item.no-preview:hover {
+    background-color: #ffffff !important;
+}
+
+.ovic-reorder-item.no-preview .ovic-reorder-item__inner {
+    cursor: default;
+}
+
+.ovic-reorder__icon {
+    width: 30px;
+    font-size: 0;
+    line-height: 0;
+    align-self: flex-start;
+}
+
+.ovic-reorder__icon i {
+    font-size: 21px;
+}
+
+.ovic-reorder__info {
+    flex: 1 1;
+    font-size: 13px;
+    line-height: 1;
+    color: #666666;
+}
+
+.ovic-reorder__file-name {
+    color: #444444;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 0;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.ovic-reorder-item:last-child .ovic-reorder-item__inner {
+    border: none;
+}
+
+.ovic-reorder-list.cdk-drop-list-dragging .ovic-reorder-item:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.ovic-reorder__btn-unset-file {
+    font-size: 19px;
+    line-height: 1;
+    padding: 4px 0 4px 11px;
+    text-align: center;
+    color: #888888;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.ovic-reorder__btn-unset-file:hover {
+    color: orangered;
+}
+
+.ovic-reorder__btn-add-file {
+    color: #333333;
+    background-color: #f6f6f6;
+    border-color: #eeeeee;
+    font-size: 0;
+    padding: 7px;
+    line-height: 0;
+    display: block;
+    width: 100%;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.ovic-reorder__btn-add-file:hover {
+    color: #eeeeee;
+    background-color: #459e59;
+    border-color: #459e59;
+}
+
+.ovic-reorder__btn-add-file i {
+    font-size: 20px;
+    color: inherit;
+}
+.ovic-reorder-item__empty-mes{
+    padding: 16px;
+    margin: 0;
+    text-align: center;
+}

@@ -1,0 +1,10 @@
+<div class="ovic-navigation">
+    <ul class="ovic-navigation__list">
+        <li class="ovic-navigation__list-eml {{btn_nav.class}}" *ngFor="let btn_nav of navigator.navs; let i = index ">
+            <button type="button" class="ovic-navigation__nav-link" (click)="navClick(btn_nav.page)" *ngIf=" !btn_nav.isActive && btn_nav.type === 'button'">{{btn_nav.title}}</button>
+            <span class="ovic-navigation__nav-link" *ngIf="btn_nav.isActive || btn_nav.type !== 'button'">{{btn_nav.title}}
+                <i class="last-page-in-mobile" *ngIf="btn_nav.isActive"> / {{navigator.lastsPage}}</i>
+            </span>
+        </li>
+    </ul>
+</div>

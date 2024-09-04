@@ -1,0 +1,35 @@
+.ovic-input-address-four-layouts {
+	padding: 15px;
+	border: 1px solid #ced4da;
+	border-radius: 4px;
+}
+
+.ovic-input-address-four-layouts__row {
+	display: flex;
+	justify-content: space-between;
+	margin-left: -5px;
+	margin-right: -5px;
+}
+
+.ovic-input-address-four-layouts__col {
+	flex: 1 1 auto;
+	min-width: 30%;
+	max-width: 100%;
+	width: 100%;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.ovic-is-loading {
+	user-select: none;
+}
+
+.ovic-input-address-four-layouts__col input {
+	border-radius: 0;
+	border: none;
+	margin-top: 20px;
+	height: auto;
+	line-height: 1.5;
+	border-bottom: 1px solid #ced4da;
+	padding: 0 0 5px;
+}

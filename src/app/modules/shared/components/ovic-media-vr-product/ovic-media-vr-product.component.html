@@ -1,0 +1,9 @@
+<div class="w-100 h-100">
+  <iframe [src]="link |ovicSafeResourceUrl" class="h-100 w-100 border-0 d-block"></iframe>
+  <div class="onRight-bottom">
+    <button *ngIf="isHome" pButton pRipple icon="pi pi-home" class="btn-round p-button-secondary m-2 " style="background: #eb4c1a;border: #eb4c1a;border-radius:50%"
+            (click)="gobackhome()"></button>
+  </div>
+</div>
+
+

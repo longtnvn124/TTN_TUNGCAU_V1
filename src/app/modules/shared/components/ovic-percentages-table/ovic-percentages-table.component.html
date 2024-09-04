@@ -1,0 +1,144 @@
+<div class="ovic-data-percentage-piker {{styleClass}}">
+    <ul class="ovic-data-percentage-content" *ngIf="selected && selected.length">
+        <li class="ovic-dp-row ovic-dp-row-head">
+            <span class="ovic-dp-col ovic-dp-col-index">#</span>
+            <span class="ovic-dp-col ovic-dp-col-title">Tên cá nhân/ tổ chức</span>
+            <span class="ovic-dp-col ovic-dp-col-percent">Tỉ lệ sở hưu</span>
+        </li>
+        <li class="ovic-dp-row" *ngFor="let _rate of selected; let i=index">
+            <span class="ovic-dp-col ovic-dp-col-index">{{i + 1}}</span>
+            <span class="ovic-dp-col ovic-dp-col-title">{{_rate.name}}</span>
+            <span class="ovic-dp-col ovic-dp-col-percent">{{_rate.percent}}%</span>
+        </li>
+    </ul>
+    <div class="wrap-btns">
+        <button type="button" class="btn" (click)="openPanel(pickerTemplateRef)">
+            <i class="fa fa-wrench" aria-hidden="true"></i>
+            <span class="ovic-dtpk-result">{{label}}</span>
+        </button>
+    </div>
+</div>
+
+<ng-template #pickerTemplateRef let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-title">{{fomrTitle}}</h4>
+        <button type="button" class="close" aria-describedby="modal-title" (click)="exitForm()"><span
+                aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body ovic-modal-body">
+        <p-table #tbl [value]="_data" [paginator]="true" [rows]="5" [responsive]="true" [rowHover]="true"
+                 styleClass="ovic-data-picker-tbl {{styleClass}}" [globalFilterFields]="filters" *ngIf="settings">
+            <ng-template pTemplate="caption">
+                <div class="ovic-data-picker-wrap-main-caption">
+                    <ng-container *ngIf="settings.tabs.length>1">
+                        <ul class="list-change">
+                            <li *ngFor="let tab of settings.tabs ; let i=index;" class="elm-tab"
+                                [ngClass]="{active : tabActive === tab.slug }" (click)="changeTabActive(tab.slug)">
+                                <span>Chọn {{tab.label}}</span></li>
+                        </ul>
+                    </ng-container>
+                    <h3 class="ovic-f-title" *ngIf="settings.tabs.length < 1">{{fomrTitle}}</h3>
+                    <input type="text" pInputText size="50" placeholder="Tìm kiếm" *ngIf="filters"
+                           (input)="tbl.filterGlobal($event.target['value'], 'contains')">
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="padding: 0; text-align: center; width: 30px;">TT</th>
+                    <th *ngFor="let col of columns" [style.width]="col.width" class="{{col.classes}}"
+                        [colSpan]="col[tabActive].colSpan" [ngStyle]="{display : col[tabActive].display}">
+                        {{col.header}}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-option let-rowIndex="rowIndex">
+                <tr (click)="chooseValue(option.id)" class="ovic-data-picker-row"
+                    [ngClass]="{selected : option.selected}">
+                    <td style="padding: 0; text-align: center; width: 30px;">{{rowIndex + 1 }}</td>
+                    <td *ngFor="let col of columns" [style.width]="col.width" class="{{col.classes}}"
+                        [colSpan]="col[tabActive].colSpan" [ngStyle]="{display : col[tabActive].display}">
+                        <span *ngIf="col.field.length==1">
+                           {{option[col.field[0]]}}
+                        </span>
+                        <span *ngIf="col.field.length>1">
+                            <ng-container *ngFor="let elm of col.field; let i = index">
+                                {{ i > 0 ? col.separator : '' }} {{option[elm]}}
+                            </ng-container>
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <hr class="mt-4 mb-4">
+        <div class="ovic-data-picker-tbl ui-table ui-widget ui-table-responsive" *ngIf="settings">
+            <div class="ui-table-caption ui-widget-header">
+                <div class="ovic-data-picker-wrap-caption">
+                    <h3 class="tbl-title">{{settings.selectedListTitle}}</h3>
+                </div>
+            </div>
+            <div class="ui-table-wrapper">
+                <table role="grid">
+                    <thead class="ui-table-thead">
+                    <tr>
+                        <th style="padding: 0; text-align: center; width: 30px;">*</th>
+                        <th class="text-left">Tên cá nhân/ tổ chức</th>
+                        <th class="text-left" style="width: 145px">Tỉ lệ sở hữu(%)</th>
+                    </tr>
+                    </thead>
+                    <tbody class="ui-table-tbody">
+                    <tr *ngFor="let d of selected ; let index=index; ">
+                        <td style="width: 30px;" class="p-0 text-center">
+                            <button class="btn-remove" (click)="removeElementFromList( index )">
+                                <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                        <td class="text-left" *ngIf="d.id === 0 || d.slug === 'organization'">
+                            <span>{{d['name']}}</span>
+                        </td>
+                        <td class="text-left" *ngIf="d.id !== 0 && d.slug === 'personal'">
+                             <span>
+                                 {{d['name']}}
+                                 <i class="i-detail">( <ng-container
+                                         *ngFor="let col of columns; let i=index">{{col.field[0] !== 'name' ? d[col.field[0]] : ''}}{{col.field[0] !== 'name' && i !== 0 ? ' | ' : ''}}</ng-container> )</i>
+                            </span>
+                        </td>
+                        <td class="text-left">
+                            <input #inputPercentRef
+                                   type="number"
+                                   class="ov-i-input"
+                                   (focusout)="updatePercent(d.id , d.slug ,inputPercentRef)"
+                                   [value]="d.percent"
+                            >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0; text-align: center; width: 30px;">
+                            <button class="btn-added" (click)="addCustomElementToList(inputRef)">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                        <td [attr.colspan]="2">
+                            <input type="text" class="input-text-field" #inputRef
+                                   placeholder="{{settings.inputPlaceholder}}"
+                                   (keydown.enter)="addCustomElementToList(inputRef)"
+                            >
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="clearfix w-100 mt-4"></div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="process()">
+            <i class="fa fa-floppy-o" aria-hidden="true"></i>Lưu lại
+        </button>
+        <button type="button" class="btn btn-cancel" (click)="exitForm()">
+            <i class="fa fa-ban" aria-hidden="true"></i>Hủy thao tác
+        </button>
+    </div>
+</ng-template>

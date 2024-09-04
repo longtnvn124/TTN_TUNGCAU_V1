@@ -1,0 +1,69 @@
+<div class="ovic-notifications-box position-relative" #overlayAnchor>
+    <!--<button pRipple class="btn ovic-notifications-box__btn" type="button" (click)="panel.toggle($event)">-->
+    <ng-container *ngIf="!contentDropDown">
+        <button class="btn ovic-notifications-box__btn" type="button" (click)="openNavContent(template)">
+            <div class="ovic-notifications-box__btn__wrap-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell icon-sm">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <!--<i class="fa fa-bell" aria-hidden="true"></i>-->
+                <span class="ovic-notifications-box__btn__label-inner" *ngIf="countNotifications"></span>
+            </div>
+        </button>
+        <ng-template #template>
+            <div class="ovic-navigation-content">
+                <div class="ovic-navigation-content__head">
+                    <h4 class="ovic-navigation-content__head__title">{{ 'systems.notificationText' | translate }}</h4>
+                    <button (click)="closeNavMenu()" class="ovic-navigation-content__head__close-button btn">
+                        <i class="pi pi-times"></i>
+                    </button>
+                </div>
+                <div class="ovic-navigation-content__body">
+                    <ng-container *ngTemplateOutlet="list_content"></ng-container>
+                </div>
+                <div class="ovic-navigation-content__foot">
+                    <button class="text-muted btn-read-more" (click)="goToListNotifications()">
+                        <i class="pi pi-check"></i>{{ 'systems.viewAll' | translate }}</button>
+                </div>
+            </div>
+        </ng-template>
+    </ng-container>
+    <ng-container *ngIf="contentDropDown">
+        <button class="btn ovic-notifications-box__btn" type="button" (click)="panel.toggle($event)">
+            <i class="fa fa-bell" aria-hidden="true"></i>
+        </button>
+        <p-overlayPanel #panel styleClass="notifications__overlay-panel --element-show-right" [appendTo]="overlayAnchor">
+            <div class="ovic-notifications-box__head-popup">
+                <h3 class="ovic-notifications-box__head-popup__title">{{ 'systems.notificationText' | translate }}</h3>
+                <button class="ovic-notifications-box__head-popup__btn-mark-all-as-read" (click)="markAllAsRead()">{{ 'systems.markAllAsRead' | translate }}</button>
+            </div>
+            <ng-container *ngTemplateOutlet="list_content"></ng-container>
+            <button class="ovic-notifications-box__btn-view-all btn" type="button" pRipple (click)="goToListNotifications()">{{ 'systems.viewAll' | translate }}</button>
+        </p-overlayPanel>
+    </ng-container>
+</div>
+
+<ng-template #list_content>
+    <ng-container *ngIf="!errorLoading && data">
+        <ul class="ovic-notifications-box__list-message ovic-student-scroll-style" [ngClass]="[ isLoading ? 'ovic-is-loading overflow-hidden' : '']">
+            <li class="--notify-element-index-{{ i }}" *ngFor="let node of data, index as i">
+                <div class="ovic-notifications-box__notice-content">
+                    <button class="ovic-notifications-box__notice-content__inner" (click)="getDetail(node)">
+                        <div class="ovic-notifications-box__notice-content__left">
+                            <img [src]="node.avatar" alt="">
+                        </div>
+                        <div class="ovic-notifications-box__notice-content__right">
+                            <h6 class="ovic-notifications-box__notice-content__head-text" [innerHTML]="node.title | removeHtmlTags"></h6>
+                            <p class="ovic-notifications-box__notice-content__text" [innerHTML]="node.message | removeHtmlTags"></p>
+                            <span class="ovic-notifications-box__notice-content__date"><i class="fa fa-clock-o" aria-hidden="true"></i>{{node[ '__time' ] || '____'}}</span>
+                        </div>
+                    </button>
+                </div>
+            </li>
+        </ul>
+    </ng-container>
+    <div class="ovic-notifications-box__wrap-error" *ngIf="errorLoading" [ngClass]="[ isLoading ? 'ovic-is-loading' : '']">
+        <button class="p-button" pRipple pButton [label]="'systems.reload' | translate" icon="pi pi-refresh" (click)="loadData()"></button>
+    </div>
+</ng-template>

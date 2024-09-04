@@ -1,0 +1,61 @@
+<div class="ovic-preview-file-full-size__panel">
+    <ng-container [ngSwitch]="mediaType">
+        <div *ngSwitchCase="'audio'" class="d-flex position-relative justify-content-center align-items-center w-100 h-100 ovic-preview-file-full-size--bg-audio">
+            <button class="btn btn-closed btn-closed--normal btn-closed--top-right btn-closed--svg-icon" (click)="onHide($event)">
+                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="94.926px" height="94.926px" viewBox="0 0 94.926 94.926">
+                    <g>
+                        <path d="M55.931,47.463L94.306,9.09c0.826-0.827,0.826-2.167,0-2.994L88.833,0.62C88.436,0.224,87.896,0,87.335,0c-0.562,0-1.101,0.224-1.498,0.62L47.463,38.994L9.089,0.62c-0.795-0.795-2.202-0.794-2.995,0L0.622,6.096c-0.827,0.827-0.827,2.167,0,2.994l38.374,38.373L0.622,85.836c-0.827,0.827-0.827,2.167,0,2.994l5.473,5.476c0.397,0.396,0.936,0.62,1.498,0.62s1.1-0.224,1.497-0.62l38.374-38.374l38.374,38.374c0.397,0.396,0.937,0.62,1.498,0.62s1.101-0.224,1.498-0.62l5.473-5.476c0.826-0.827,0.826-2.167,0-2.994L55.931,47.463z"/>
+                    </g>
+                </svg>
+            </button>
+            <plyr plyrType="audio" [plyrPlaysInline]="true" [plyrCrossOrigin]="true" [plyrSources]="mediaSource"></plyr>
+        </div>
+        <div *ngSwitchCase="'video'" class="d-flex position-relative justify-content-center align-items-center w-100 h-100 ovic-preview-file-full-size--bg-audio">
+            <button class="btn btn-closed btn-closed--normal btn-closed--top-right btn-closed--svg-icon" (click)="onHide($event)">
+                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="94.926px" height="94.926px" viewBox="0 0 94.926 94.926">
+                    <g>
+                        <path d="M55.931,47.463L94.306,9.09c0.826-0.827,0.826-2.167,0-2.994L88.833,0.62C88.436,0.224,87.896,0,87.335,0c-0.562,0-1.101,0.224-1.498,0.62L47.463,38.994L9.089,0.62c-0.795-0.795-2.202-0.794-2.995,0L0.622,6.096c-0.827,0.827-0.827,2.167,0,2.994l38.374,38.373L0.622,85.836c-0.827,0.827-0.827,2.167,0,2.994l5.473,5.476c0.397,0.396,0.936,0.62,1.498,0.62s1.1-0.224,1.497-0.62l38.374-38.374l38.374,38.374c0.397,0.396,0.937,0.62,1.498,0.62s1.101-0.224,1.498-0.62l5.473-5.476c0.826-0.827,0.826-2.167,0-2.994L55.931,47.463z"/>
+                    </g>
+                </svg>
+            </button>
+            <plyr ovicVideoAspectRatio16x9 plyrType="video" [plyrPlaysInline]="true" [plyrCrossOrigin]="true" [plyrSources]="mediaSource"></plyr>
+        </div>
+        <img *ngSwitchCase="'image'" alt="" ngxViewer #imgObject (load)="imageObjectReady(imgObject)" [viewerOptions]="viewerOptions" [src]="mediaSource[0].src | ovicSafeUrl" (viewerHide)="onHide($event)" (viewerHidden)="onHide($event)" class="d-none">
+        <p *ngSwitchCase="'text'" class="p-text-content" [innerHTML]="textContent"></p>
+        <div *ngSwitchCase="'pdf'" class="d-flex position-relative justify-content-center align-items-center w-100 h-100 ovic-pdf-viewer-container flex-column bg-white">
+            <button class="btn btn-closed btn-closed--normal btn-closed--top-left btn-closed--svg-icon" (click)="onHide($event)">
+                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="94.926px" height="94.926px" viewBox="0 0 94.926 94.926">
+                    <g>
+                        <path d="M55.931,47.463L94.306,9.09c0.826-0.827,0.826-2.167,0-2.994L88.833,0.62C88.436,0.224,87.896,0,87.335,0c-0.562,0-1.101,0.224-1.498,0.62L47.463,38.994L9.089,0.62c-0.795-0.795-2.202-0.794-2.995,0L0.622,6.096c-0.827,0.827-0.827,2.167,0,2.994l38.374,38.373L0.622,85.836c-0.827,0.827-0.827,2.167,0,2.994l5.473,5.476c0.397,0.396,0.936,0.62,1.498,0.62s1.1-0.224,1.497-0.62l38.374-38.374l38.374,38.374c0.397,0.396,0.937,0.62,1.498,0.62s1.101-0.224,1.498-0.62l5.473-5.476c0.826-0.827,0.826-2.167,0-2.994L55.931,47.463z"/>
+                    </g>
+                </svg>
+            </button>
+            <pdf-viewer [src]="mediaSource[0].src" [render-text]="true" [(page)]="pdfPage" [zoom]="pdfZoom" [rotation]="pdfRotation" [show-all]="pdfShowAll" [autoresize]="true" [fit-to-page]="true" style="display: block;position: relative;height: 100%;width: 100%;"></pdf-viewer>
+            <div class="pdf-doc-control">
+                <button class="btn" type="button" (click)="pdfControlShowAll()">
+                    <i class="fa fa-columns" aria-hidden="true" *ngIf="pdfShowAll"></i>
+                    <i class="fa fa-window-maximize" aria-hidden="true" *ngIf="!pdfShowAll"></i>
+                </button>
+                <button class="btn" type="button" (click)="pdfControlRotation()">
+                    <i class="fa fa-repeat" aria-hidden="true"></i>
+                </button>
+                <div class="pdf-doc-control__element">
+                    <button class="btn" type="button" (click)="pdfControlPrevPage()" *ngIf="!pdfShowAll">
+                        <i class="fa fa-step-backward" aria-hidden="true"></i>
+                    </button>
+                    <input type="text" [(ngModel)]="pdfPage">
+                    <button class="btn" type="button" (click)="pdfControlNextPage()" *ngIf="!pdfShowAll">
+                        <i class="fa fa-step-forward" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <button class="btn" type="button" (click)="pdfControlZoomIn()">
+                    <i class="fa fa-search-minus" aria-hidden="true"></i>
+                </button>
+                <button class="btn" type="button" (click)="pdfControlZoomOut()">
+                    <i class="fa fa-search-plus" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </ng-container>
+</div>
+<div class="--style--options" [innerHTML]="'<style>html {overflow: hidden !important;}</style>' | ovicSafeHtml"></div>

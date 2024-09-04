@@ -1,0 +1,99 @@
+<div class="shift-component-wrap position-relative" [class.ovic-is-loading]="isLoading"
+     style=" background-image: url('assets/images/sokhoahocvacongnghe.jpg')">
+  <div class="headerTinhtn">
+    <div class="text-center">
+      <p class="m-0">UBND TỈNH THÁI NGUYÊN </p>
+      <p class="m-0 font-weight-bold"> SỞ KHOA HỌC VÀ CÔNG NGHỆ</p>
+      <P class="m-0">***</P>
+    </div>
+  </div>
+  <div class="shift-container container h-100 position-relative flex-column">
+    <!--    <div class="py-4">Cuộc thi <span class="">"Trường học của sự đa dạng và bao trùm"</span></div>-->
+    <div class="header_label" >
+      <div class="text-center">
+        <p class="pnumber1 m-0">UBND TỈNH THÁI NGUYÊN </p>
+        <p class="pnumber2 m-0 font-weight-bold"> SỞ KHOA HỌC VÀ CÔNG NGHỆ</p>
+        <P class="m-0">***</P>
+      </div>
+    </div>
+    <div class="total_container">
+
+
+      <div class="total-item">
+        <div class="total-thisinh">{{ totalThisinh }}</div>
+        <div class="total-label">Thí sinh đã làm bài thi</div>
+      </div>
+    </div>
+    <div class="dotthi-container" style="width: calc(100% - 6px - 6px);border: 1px solid #39393940;">
+      <div class="dotthi-container__title p-2">
+        <div class="dotthi-container__title__heading">Cuộc thi <span
+          class="">"Cải cách hành chính năm 2024"</span></div>
+        <div class="dotthi-container__title__buttons">
+          <!--          <button style="padding: 10px;" pButton pRipple label="Trang chủ" class="btn-logout " icon="pi pi-home" iconPos="right" (click)="backHome()"></button>-->
+        </div>
+      </div>
+      <div *ngIf="dsDotthi && dsDotthi.length>0, else nodata" class="dotthi-container__body h-100 border-top-1">
+        <div *ngFor="let item of dsDotthi" class="dotthi-item p-3">
+          <div class="dotthi-item__logo box">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="lucide w-12 h-12 text-pending">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <path d="m9 15 2 2 4-4"></path>
+            </svg>
+          </div>
+          <div class="dotthi-item__body ml-4 w-100">
+            <div>
+              <p class="dot-thi-item__row font-size-13px dotthi-item__body-title text-left">{{ item.title }}</p>
+            </div>
+            <div>
+              <p class="dot-thi-item__row font-size-13px dotthi-item__body-time text-left mb-0 text-primary">
+                <span>Thời gian bắt đầu</span>{{ item.startAt }}
+              </p>
+            </div>
+            <div>
+              <p class="dot-thi-item__row font-size-13px dotthi-item__body-time text-left mb-0 text-danger">
+                <span>Kết thúc</span>{{ item.closeAt }}
+              </p>
+            </div>
+            <div>
+              <p class="dot-thi-item__row font-size-13px dotthi-item__body-count-question text-left mb-0">
+                <span>Số câu hỏi</span>{{ item.totalQuestion }} câu </p>
+            </div>
+            <div>
+              <p class="dot-thi-item__row font-size-13px dotthi-item__body_time-doit text-left mb-0">
+                <span>Thời gian làm bài</span>{{ item.totalTime }} phút
+            </div>
+          </div>
+          <div class="dotthi-item__button">
+            <button [disabled]="item.state === -1" pRipple pButton [label]="item.button.label" [icon]="item.button.icon"
+                    [ngClass]="item.button.class" class="border-radius-0 p-button-center justify-content-center"
+                    (click)="btnTest(item)"></button>
+          </div>
+        </div>
+      </div>
+      <ng-template #nodata>
+        <div class="dotthi-container__body h-100 border-top-1">
+          <div style="padding: 20px;font-size: 15px;font-weight: 400;"> Không có dữ liệu</div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <!--  <div class="svg_content svg-left">-->
+  <!--    <img class="svg-img" src="/assets/images/banner_sp.jpg.png" alt="">-->
+  <!--  </div>-->
+  <!--  <div class="svg_content svg-right">-->
+  <!--    <img class="svg-img" src="/assets/icon-png/left-icon.png" alt="">-->
+  <!--  </div>-->
+  <div class="copyright">
+  <!--    <div style="border-radius: 20px;background: #fff;padding: 2px 8px;">-->
+  <!--      Copyright @ 2024 by-->
+  <!--      <a href="https://ictu.vn/" target="_blank">ICTU.VN</a>-->
+  <!--    </div>-->
+    <div style="border-radius: 20px;background: #fff;padding: 2px 8px;">
+      Copyright @ 2024 by Sở KH&CN tỉnh Thái Nguyên
+    </div>
+  </div>
+</div>
+

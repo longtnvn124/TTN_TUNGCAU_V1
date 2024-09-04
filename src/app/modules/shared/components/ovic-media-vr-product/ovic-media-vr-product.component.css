@@ -1,0 +1,10 @@
+.onRight-bottom {
+  float: left;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+
+  right: 20px;
+  bottom: 50px;
+  z-index: 100;
+}

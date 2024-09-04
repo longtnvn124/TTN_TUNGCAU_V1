@@ -1,0 +1,29 @@
+.ngulieuso__title h3{
+  color: #3A4E42;
+  font-weight: 400;
+  font-size: 16px;
+}
+.ngulieuso_item_title {
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #3f604d;
+}
+
+
+.header-custom {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1e7e34;
+}
+.nhanvat-title{
+  padding: 0;
+  margin: 0;
+  font-size:20px;
+  font-weight:700;
+}

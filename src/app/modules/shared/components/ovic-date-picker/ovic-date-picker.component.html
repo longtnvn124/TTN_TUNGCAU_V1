@@ -1,0 +1,2 @@
+<label *ngIf="label">{{label}}</label>
+<p-calendar [dateFormat]="dateFormat" [locale]="locale" [placeholder]="placeholder" (onInput)="input($event)" (onSelect)="change($event)" [(ngModel)]="value"></p-calendar>

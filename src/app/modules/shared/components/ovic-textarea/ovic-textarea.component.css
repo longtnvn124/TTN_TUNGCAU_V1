@@ -1,0 +1,16 @@
+.ovic-textarea-input {
+    max-width: 100%;
+    border-radius: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #444444;
+    line-height: 18px;
+    background-color: #ffffff;
+    border: 2px dashed #6f6f6f;
+}
+
+.ovic-textarea-input--full-width {
+    width: 100%;
+}
