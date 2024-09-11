@@ -20,7 +20,7 @@
 <ng-template #fromUpdate>
   <div class="ovic-side-navigation-content">
     <div class="ovic-side-navigation-content__head">
-      <h4 class="ovic-side-navigation-content__head__title">{{formActive ? formActive.title : ''}}</h4>
+      <h4 class="ovic-side-navigation-content__head__title">{{ formActive ? formActive.title : '' }}</h4>
       <button (click)="closeForm()" pButton pRipple type="button" icon="pi pi-times"
               class="p-button-rounded p-button-danger p-button-text close ovic-side-navigation-content__head__btn-close"></button>
     </div>
@@ -31,8 +31,8 @@
             <div class="col-12">
               <p class="form-row">
                 <label>Tên ngân hàng<span class="ovic-mark">*</span></label>
-<!--                <input type="text" placeholder="Tên ngân hàng..." formControlName="title" [ngClass]="btn_checkAdd === 'Cập nhật' ? 'p-disabled':''">-->
-                <input type="text" placeholder="Tên ngân hàng..." formControlName="title" >
+                <!--                <input type="text" placeholder="Tên ngân hàng..." formControlName="title" [ngClass]="btn_checkAdd === 'Cập nhật' ? 'p-disabled':''">-->
+                <input type="text" placeholder="Tên ngân hàng..." formControlName="title">
               </p>
             </div>
 
@@ -40,7 +40,7 @@
           <div class="row">
             <div class="col-12">
               <p class="form-row">
-                <label >Mô tả</label>
+                <label>Mô tả</label>
                 <textarea formControlName='desc' placeholder="Mô tả ..." autocomplete="off" cols="30"
                           rows="2"></textarea>
               </p>
@@ -58,9 +58,10 @@
             <div class="col-6">
               <p class="form-row">
                 <label>Đảo vị trí câu hỏi<span class="ovic-mark">*</span></label>
-                <p-dropdown class="w-100" [options]="randomQuestion" optionValue="value" optionLabel="label"></p-dropdown>
-<!--                <input type="number" placeholder="vd:60, 90, ..." formControlName="time_per_test"-->
-<!--                       autocomplete="off">-->
+                <p-dropdown class="w-100" [options]="randomQuestion" optionValue="value" formControlName="random_question"
+                            optionLabel="label"></p-dropdown>
+                <!--                <input type="number" placeholder="vd:60, 90, ..." formControlName="time_per_test"-->
+                <!--                       autocomplete="off">-->
               </p>
             </div>
           </div>
@@ -79,19 +80,19 @@
                             icon="pi pi-th-large" (click)="selectChangeTb('tungcau')" label="Từng câu"></button>
                   </div>
                   <div class="test-per-times">
-                      <div *ngIf="changeTb === 'cabai'" class="row">
-                        <div class="col-12">
-                          <div class="form-row">
-                            <label>Thời gian làm bài <span class="ovic-mark">*</span></label>
-                            <input type="number" placeholder="vd:60, 90, ..." formControlName="time_per_test">
-                          </div>
+                    <div *ngIf="changeTb === 'cabai'" class="row m-0">
+                      <div class="col-12">
+                        <div class="form-row mt-0">
+                          <label>Thời gian làm bài(Được tính theo phút)<span class="ovic-mark">*</span></label>
+                          <input type="number" placeholder="vd:10, 20, ..." formControlName="time_per_test">
                         </div>
                       </div>
-                    <div *ngIf="changeTb === 'tungcau'" class="row">
-                      <div class="col-12">
-                        <div class="form-row">
-                          <label>Thời gian làm bài <span class="ovic-mark">*</span></label>
-                          <input type="number" placeholder="vd:60, 90, ..." formControlName="time_per_test_tungcau">
+                    </div>
+                    <div *ngIf="changeTb === 'tungcau'" class="row m-0">
+                      <div class="col-12 m-0">
+                        <div class="form-row mt-0">
+                          <label>Thời gian làm bài(Được tính theo giây) <span class="ovic-mark">*</span></label>
+                          <input type="number" placeholder="vd:10 , 15, ..." formControlName="time_per_test_tungcau">
                         </div>
                       </div>
                     </div>

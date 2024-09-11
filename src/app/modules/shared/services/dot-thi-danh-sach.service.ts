@@ -97,16 +97,11 @@ export class DotThiDanhSachService {
 
   listActivatedShifts(configs: { with?: string, orderby?: string, order?: string } = null): Observable<Shift[]> {
     const conditions: OvicConditionParam[] = [
-      {
-        conditionName: 'is_deleted',
-        condition: OvicQueryCondition.equal,
-        value: '0'
-      },
+
       {
         conditionName: 'status',
         condition: OvicQueryCondition.equal,
         value: '1',
-        orWhere: 'and'
       }
     ];
     const fromObject: IctuQueryParams = {paged: 1, limit: -1, orderby: 'time_start', order: 'ASC'};

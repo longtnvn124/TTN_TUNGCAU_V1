@@ -149,7 +149,6 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     const y = new Date().getFullYear();
     this.lastFourYearsAgo = [y - 4, y - 3, y - 2, y - 1];
-    loadShift
   }
 
   loadTable(year: string, title: string, sum: number) {

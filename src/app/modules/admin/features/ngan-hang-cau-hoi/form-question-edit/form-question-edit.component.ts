@@ -17,6 +17,7 @@ export class FormQuestionEditComponent implements OnInit {
 
 
   @Input() set bankQuestion(bank:NganHangDe){
+    console.log(bank)
     this.loadInit(bank);
   }
 
@@ -52,6 +53,7 @@ export class FormQuestionEditComponent implements OnInit {
 
   loadInit(bank:NganHangDe){
     this._bank = bank;
+    this.resetForm();
     this.loadQuestion(bank.id);
   }
 
@@ -228,7 +230,6 @@ export class FormQuestionEditComponent implements OnInit {
         this.notificationService.isProcessing(true);
         this.nganHangCauHoiService.update(this.objectEdit.id, formcover).subscribe({
           next: () => {
-
             this.loadQuestion(this._bank.id);
             this.notificationService.isProcessing(false);
             this.notificationService.toastSuccess('Thao tác thành công');

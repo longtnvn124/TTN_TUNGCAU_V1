@@ -20,14 +20,18 @@ const routes: Routes = [
     path: 'clear',
     component: ClearComponent
   },
+  // {
+  //   path: "test",
+  //   loadChildren: () => import('@modules/public/features/test-v2/test-v2.module').then(m => m.TestV2Module)
+  // },
   {
     path: "test",
-    loadChildren: () => import('@modules/public/features/test-v2/test-v2.module').then(m => m.TestV2Module)
+    loadChildren: () => import('@modules/public/features/test-v3/test-v3.module').then(m => m.TestV3Module)
   },
-  {
-    path         : 'dev' ,
-    loadChildren : () => import('@modules/public/features/dev/dev.module').then( m => m.DevModule )
-  },
+  // {
+  //   path         : 'dev' ,
+  //   loadChildren : () => import('@modules/public/features/dev/dev.module').then( m => m.DevModule )
+  // },
   {
     path:"home",
     component:HomeDhtnComponent

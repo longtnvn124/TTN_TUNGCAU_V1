@@ -220,6 +220,7 @@ import {InputTextareaModule} from "primeng/inputtextarea";
     OvicResizeDropdowDirective,
     OvicTestCheckboxComponent,
 
+
   ],
   imports: [
     EditorModule,

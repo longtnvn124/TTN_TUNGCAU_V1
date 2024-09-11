@@ -7,12 +7,13 @@ export const environment = {
 // run locall
 
 const realm       = 'ttn_dhtn';
-const host        = 'https://api-dev.ictu.vn';
+const host        = 'https://bandanvan.ictu.vn';
+// const host        = 'https://api-dev.ictu.vn';
 // const host        = 'https://tnu.vn';
 
-const port        = '10091';
-const port_socket = '10092';
-const ws_url      = [ 'w' , 's' , 's' , ':' , '/' , '/' , 'a' , 'p' , 'i' , '-' , 'd' , 'e' , 'v' , '.' , 'i' , 'c' , 't' , 'u' , '.' , 'v' , 'n' ];
+const port        = '9087';
+const port_socket = '9088';
+const ws_url      =  'wss://bandanvan.ictu.vn' ;
 
 export const getHost         = () : string => host;
 export const getRoute        = ( route : string ) : string => [].concat( host , [ ':' , port , '/' , realm , '/api/' , route ] ).join( '' );
@@ -21,7 +22,7 @@ export const getLinkDrive    = ( id : string ) : string => [].concat( host , [ '
 export const getLinkMedia    = ( id : string ) : string => [].concat( host , [ ':' , port , '/' , realm , '/api/uploads/' , id ] ).join( '' );
 export const getFileDir      = () : string => [].concat( host , [ ':' , port , '/' , realm , '/api/uploads/folder/' ] ).join( '' );
 export const getLinkDownload = ( id : number | string ) : string => [].concat( host , [ ':' , port , '/' , realm , '/api/uploads/file/' , id ? id.toString( 10 ) : '' ] ).join( '' );
-export const getWsUrl        = () : string => ws_url.join( '' ) + ':' + port_socket;
+export const getWsUrl        = () : string => ws_url+ ':' + port_socket;
 export const wsPath          = '/sso/socket';
 
 const acceptFileType = [

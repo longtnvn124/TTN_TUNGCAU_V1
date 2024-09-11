@@ -121,6 +121,10 @@ export class DotThiDanhSachComponent implements OnInit {
   };
   module_quill: any = MODULES_QUILL;
 
+  status = [
+    {value:0,label:'Chưa kích hoạt'},
+    {value:1,label:'Đang kích hoạt'},
+  ]
   constructor(
     private dotThiDanhSachService: DotThiDanhSachService,
     private notificationService: NotificationService,
@@ -184,7 +188,7 @@ export class DotThiDanhSachComponent implements OnInit {
           m['__title_converted'] = `<b>${m.title}</b><br>`;
           m['__time_converted'] = this.strToTime(m.time_start) + ' - ' + this.strToTime(m.time_end);
           m['__bank_coverted'] = this.nganHangDe && m.bank_id && this.nganHangDe.find(f => f.id === m.bank_id) ? this.nganHangDe.find(f => f.id === m.bank_id).title : '';
-          m['__status_converted'] = !timeszone ? this.statusOptions[1].color : this.statusOptions[0].color;
+          m['__status_converted'] =  this.statusOptions[m.status].color;
           return m;
         })
         this.recordsTotal = recordsTotal;

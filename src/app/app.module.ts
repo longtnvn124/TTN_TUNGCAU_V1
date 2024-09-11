@@ -65,7 +65,7 @@ export function HttpLoaderFactory( httpClient : HttpClient ) {
 				useFactory : HttpLoaderFactory ,
 				deps       : [ HttpClient ]
 			}
-		} )
+		} ),
 	] ,
 	providers    : [
 		FormBuilder ,

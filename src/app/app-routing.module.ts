@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule , Routes } from '@angular/router';
 import { ModuleGuard } from '@core/guards/module.guard';
+import {TestV3GuardGuard} from "@modules/public/features/test-v3/test-v3-guard.guard";
 
 const routes : Routes = [
 
@@ -11,8 +12,9 @@ const routes : Routes = [
   } ,
   {
     path         : 'test' ,
-    loadChildren :( )=> import('@modules/public/features/test-v2/test-v2.module').then(m=>m.TestV2Module)
-    // loadChildren : () => import('@modules/public/features/test-v2/test-v2.module').then( m => m.TestV2Module )
+    // loadChildren :( )=> import('@modules/public/features/test-v2/test-v2.module').then(m=>m.TestV2Module)
+    // canActivate  : [TestV3GuardGuard],
+    loadChildren : () => import('@modules/public/features/test-v3/test-v3.module').then( m => m.TestV3Module )
   } ,
   {
     path         : '' ,

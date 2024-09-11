@@ -18,10 +18,13 @@ export class ModuleGuard implements CanActivate {
 			void this.router.navigate( [ '/login' ] , { queryParams } );
 			return false;
 		}
-		if ( !this.auth.useCases || this.auth.useCases.length === 0 ) {
-			void this.router.navigate( [ 'unauthorized' ] );
+		if ( (!this.auth.useCases && this.auth.roles.find(f=>f.name === 'thi-sinh')) || (this.auth.useCases.length === 0 && this.auth.roles.find(f=>f.name === 'thi-sinh')) ) {
+			void this.router.navigate( [ '/test/shift' ] );
 			return false;
-		}
+		}else if ( !this.auth.useCases || this.auth.useCases.length === 0 ) {
+      void this.router.navigate( [ 'unauthorized' ] );
+      return false;
+    }
 		return true;
 	}
 }

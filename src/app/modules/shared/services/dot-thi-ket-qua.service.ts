@@ -48,7 +48,7 @@ export class DotThiKetQuaService {
     return this.http.get<Dto>(this.api, {params}).pipe(map(res => res.data && res.data[0] ? res.data[0] : null));
   }
 
-  createShiftTest(data: { shift_id: number, thisinh_id: number, question_ids: number[], time_start: string, time: number }): Observable<number> {
+  createShiftTest(data: { shift_id: number, thisinh_id: number, question_ids: number[], time_start: string, time?: number }): Observable<number> {
     return this.http.post<Dto>(this.api, data).pipe(map(res => res.data));
   }
 

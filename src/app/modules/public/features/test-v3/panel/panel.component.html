@@ -1,0 +1,42 @@
+<div class="w-100 h-100 position-relative" style="background-color: #db0a0a;z-index:10000">
+  <div class="img-top-left">
+    <img src="assets/images/bandanvan/left-top.png" alt="">
+  </div>
+  <div class="img-right-bottom">
+    <img src="assets/images/bandanvan/right-bottom.png" alt="">
+  </div>
+  <div class="img-top-right">
+    <img src="assets/images/bandanvan/dot-ground.png" alt="">
+  </div>
+  <ng-container [ngSwitch]="pageChange">
+    <ng-container *ngSwitchCase="'loading'">
+      <div class="loading-container">
+        <div class="loading-item">
+
+          <div class="loading-item__icon  pi pi-spin">
+            <i class="fa fa-spinner" aria-hidden="true"></i>
+
+          </div>
+          <div class="loading-item__content">
+            Vui lòng chờ
+          </div>
+
+        </div>
+
+
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'admin'">
+      <app-pannel-by-mc></app-pannel-by-mc>
+    </ng-container>
+    <ng-container *ngSwitchCase="'contestant'">
+      <app-pannel-by-contestant></app-pannel-by-contestant>
+
+    </ng-container>
+  </ng-container>
+
+
+
+</div>
+
+

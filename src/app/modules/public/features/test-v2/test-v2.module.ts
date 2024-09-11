@@ -25,8 +25,9 @@ import {TabViewModule} from "primeng/tabview";
     CheckEmailComponent
   ],
   exports: [
-    GroupsRadioComponent
-  ] ,
+    GroupsRadioComponent,
+    PanelComponent
+  ],
   imports: [
     CommonModule,
     TestV2RoutingModule,

@@ -2,7 +2,7 @@ import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {NganHangDeService} from "@shared/services/ngan-hang-de.service";
 import {NotificationService} from "@core/services/notification.service";
 import {NganHangDe} from "@shared/models/quan-ly-ngan-hang";
-import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {FormType, NgPaginateEvent, OvicForm, OvicTableStructure} from "@shared/models/ovic-models";
 import {debounceTime, filter, forkJoin, Subject, Subscription} from "rxjs";
 import {OvicButton} from "@core/models/buttons";
@@ -17,6 +17,22 @@ import {AuthService} from "@core/services/auth.service";
 interface FormNganHangDe extends OvicForm {
   object: NganHangDe;
 }
+
+const PinableValidator = (control: AbstractControl): ValidationErrors | null => {
+  const typeControl = control.get('type_test');
+  if (typeControl.valid) {
+    if (typeControl.value === 'cabai') {
+      const isInvalid = control.get('time_per_test').value > 0;
+      return isInvalid ? null : {pinableError: 'Time is valid'};
+    } else {
+      const isInvalid = control.get('time_per_test_tungcau').value > 0;
+      return isInvalid ? null : {pinableError: 'Time is valid'};
+    }
+  }
+  return null;
+}
+
+
 @Component({
   selector: 'app-ngan-hang-de',
   templateUrl: './ngan-hang-de.component.html',
@@ -56,6 +72,16 @@ export class NganHangDeComponent implements OnInit {
       header: 'Tên Ngân hàng',
       sortable: false,
 
+    },
+
+    {
+      fieldType: 'normal',
+      field: ['__type_converted'],
+      innerData: true,
+      header: 'Hình thức thi ',
+      sortable: false,
+      headClass: 'ovic-w-150px text-center',
+      rowClass: 'ovic-w-150px text-center'
     },
     {
       fieldType: 'normal',
@@ -164,21 +190,22 @@ export class NganHangDeComponent implements OnInit {
   constructor(
     private nganHangDeService: NganHangDeService,
     private notificationService: NotificationService,
-    private fb: FormBuilder,
     private themeSettingsService: ThemeSettingsService,
     private serverTimeService : ServerTimeService ,
     private danhsachdoithiServicer:DotThiDanhSachService,
-    private auth: AuthService
+    private auth: AuthService,
+    private fb: FormBuilder,
   ) {
     this.formSave = this.fb.group({
       title: ['', Validators.required],
       desc: [''],
       number_questions_per_test: [null,Validators.required],
-      time_per_test: [null, Validators.required],
-      time_per_test_tungcau: [null, Validators.required],
+      time_per_test: [0],
+      time_per_test_tungcau: [0],
       type_test: ['cabai', Validators.required],
-      ramdom_quetion: [0, Validators.required],
-    });
+      random_question: [0, Validators.required],
+    },{ validators: PinableValidator});
+
     const observeProcessFormData = this.OBSERVE_PROCESS_FORM_DATA.asObservable().pipe(debounceTime(100)).subscribe(form => this.__processFrom(form));
     this.subscription.add(observeProcessFormData);
     const observeProcessCloseForm = this.notificationService.onSideNavigationMenuClosed().pipe(filter(menuName => menuName === this.menuName && this.needUpdate)).subscribe(() => this.loadData(this.page));
@@ -206,8 +233,9 @@ export class NganHangDeComponent implements OnInit {
         this.listData = data.map(m => {
           m['__ten_converted'] = `<b>${m.title}</b><br>` + m.desc;
           // m['__time_exam'] = (m.time_per_test/60) + ' phút';
-          m['__time_exam'] = m.time_per_test + ' phút';
+          m['__time_exam'] = m.type_test === 'cabai' ?(m.time_per_test + ' phút') : (m.time_per_test_tungcau + 's / 1 câu') ;
           m['__status_exam'] = m.total >= m.number_questions_per_test ?  this.statusList[0].color: this.statusList[1].color;
+          m['__type_converted'] = m.type_test  === 'cabai' ? 'Cả bài':'Từng câu';
           return m;
         });
         this.dataTitle = this.listData ? this.listData.map(m=>m.title):null;
@@ -237,7 +265,7 @@ export class NganHangDeComponent implements OnInit {
 
   private __processFrom({data, object, type}: FormNganHangDe) {
 
-    if (this.f['time_per_test'].value>0 && this.f['number_questions_per_test'].value>0){
+    // if (this.f['time_per_test'].value>0 && this.f['number_questions_per_test'].value>0){
       if(type === FormType.ADDITION){
         if (this.dataTitle.includes(this.f['title'].value)){
           this.notificationService.toastWarning('Tên ngân hàng đề đã tồn tại');
@@ -268,18 +296,18 @@ export class NganHangDeComponent implements OnInit {
           error: () => this.notificationService.toastError('Thao tác thất bại', 'Thông báo')
         })
       }
-    }else if(this.f['time_per_test'].value<=0){
-      this.f['time_per_test'].setValue(null);
-      this.notificationService.toastWarning("Vui Lòng nhập đúng định dạng");
-    }
-    else if(this.f['number_questions_per_test'].value<=0){
-      this.f['number_questions_per_test'].setValue(null);
-      this.notificationService.toastWarning("Vui Lòng nhập đúng định dạng");
-    }else{
-      this.f['time_per_test'].setValue(null);
-      this.f['number_questions_per_test'].setValue(null);
-      this.notificationService.toastWarning("Vui Lòng nhập đúng định dạng");
-    }
+    // }else if(this.f['time_per_test'].value<=0){
+    //   this.f['time_per_test'].setValue(null);
+    //   this.notificationService.toastWarning("Vui Lòng nhập đúng định dạng");
+    // }
+    // else if(this.f['number_questions_per_test'].value<=0){
+    //   this.f['number_questions_per_test'].setValue(null);
+    //   this.notificationService.toastWarning("Vui Lòng nhập đúng định dạng");
+    // }else{
+    //   this.f['time_per_test'].setValue(null);
+    //   this.f['number_questions_per_test'].setValue(null);
+    //   this.notificationService.toastWarning("Vui Lòng nhập đúng định dạng");
+    // }
 
   }
 
@@ -315,14 +343,15 @@ export class NganHangDeComponent implements OnInit {
           desc: '',
           number_questions_per_test: 0,
           time_per_test: 0,
-          ramdom_question:0,
+          random_question:0,
           type_test:'cabai',
           time_per_test_tungcau:0,
+
 
         });
         break;
       case 'EDIT_DECISION':
-        this.changeTb = decision.type_test;
+        this.selectChangeTb(decision.type_test);
         this.btn_checkAdd = "Cập nhật";
         const object1 = this.listData.find(u => u.id === decision.id);
         this.formSave.reset({
@@ -330,17 +359,21 @@ export class NganHangDeComponent implements OnInit {
           desc: object1.desc,
           number_questions_per_test: object1.number_questions_per_test,
           time_per_test: object1.time_per_test,
+          random_question:object1.random_question,
+          type_test:object1.type_test,
+          time_per_test_tungcau:object1.time_per_test_tungcau,
         })
         this.formActive = this.listForm[FormType.UPDATE];
         this.formActive.object = object1;
         this.preSetupForm(this.menuName);
+
         break;
 
       case 'DELETE_DECISION':
         this.checkdotthi(decision.id);
         break;
       case 'EDIT_QUESTION_DECISION':
-        this.bankQuestionSelect = decision;
+        this.bankQuestionSelect = {...decision};
         this.notificationService.openSideNavigationMenu({
           name:this.menuName,
           template: this.formAddQuestion,
@@ -357,6 +390,7 @@ export class NganHangDeComponent implements OnInit {
   saveForm() {
     const titleInput = this.f['title'].value.trim();
     this.f['title'].setValue(titleInput);
+    console.log(this.formSave.value);
     if (this.formSave.valid) {
       if (titleInput !== '') {
         this.formActive.data = this.formSave.value;
@@ -407,10 +441,17 @@ export class NganHangDeComponent implements OnInit {
     ;
   }
   }
-  selectChangeTb(type:'cabai' | 'tungcau'){
+  selectChangeTb(type:string){
     console.log(type)
     this.changeTb = type;
     this.f['type_test'].setValue(type);
+
+    if(type === 'cabai'){
+      this.f['time_per_test_tungcau'].setValue(0);
+    }else{
+      this.f['time_per_test'].setValue(0);
+    }
   }
+  //------------------------------------------------
 
 }

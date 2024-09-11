@@ -1,0 +1,186 @@
+<div class="panel_mc_contaner container" >
+
+  <ng-container [ngSwitch]="testView">
+    <ng-container *ngSwitchCase="'question'">
+      <div *ngIf="bank" class="panel_mc_header">
+        <div class="panel_mc_header-item">
+          <div class="panel_mc_header-item__img">
+            <img [src]="user.avatar" alt="">
+          </div>
+          <div class="panel_mc_header-item__name">
+            {{user.display_name}}
+          </div>
+        </div>
+        <div class="panel_mc_header-item">
+          <div class="counter-clock-wrap">
+            <div class="d-inline timer">{{ getFormattedTime() }}</div>
+          </div>
+          <button pButton pRipple  class="p-button-rounded p-button-help"
+                  [icon]="time_clone_for_end === bank.time_per_test_tungcau || time_clone_for_end === 0 ? 'pi pi-play':'pi pi-spin pi-spinner' "
+                  (click)="startTimer(time_clone_for_end)">
+
+          </button>
+        </div>
+        <div *ngIf="time_clone_for_end === 0,else isNext" class="panel_mc_header-item">
+          <button pRipple pButton icon="pi pi-check-circle" label="Kết quả" iconPos="right" class="btn-check-data-question p-button-success" (click)="btnViewTestQuestion()"></button>
+        </div>
+        <ng-template #isNext>
+          <div  class="panel_mc_header-item">
+            <button pRipple pButton icon="pi pi-check-circle" label="Kết quả" iconPos="right" class="btn-check-data-question p-button-success p-disabled" ></button>
+          </div>
+        </ng-template>
+
+      </div>
+      <div class="panel_mc_content ovic-scroll-style">
+        <div *ngIf="questionSelect" class="panel_mc_content_question">
+          <div class="panel_mc_content_question-head">
+            Câu {{ curentQuestionNumber + 1 }}:
+          </div>
+          <div class="panel_mc_content_question-title">
+            <div [innerHTML]="questionSelect.title |ovicSafeHtml"></div>
+          </div>
+        </div>
+        <div *ngIf="questionSelect" class="panel_mc_content_answerOption">
+          <div *ngIf="!viewAnswer else showAnswer">
+            <groups-radio [options]="questionSelect.answer_options" [freeze]="questionSelect['__freeze']" [options_sty]="questionSelect.options_sty"></groups-radio>
+
+          </div>
+          <ng-template #showAnswer>
+            <groups-radio [options]="questionSelect.answer_options" [correctAnswer]="questionSelect['__answer_coverted']" [freeze]="questionSelect['__freeze']" [options_sty]="questionSelect.options_sty"></groups-radio>
+
+          </ng-template>
+        </div>
+      </div>
+      <div *ngIf="bankQuestions" class="panel_mc_footer">
+        <ng-container *ngIf="curentQuestionNumber>0 else notReturnQuestion">
+          <button pButton pRipple icon="pi pi-arrow-left" iconPos="left" label="Câu trước" class="p-button-secondary " (click)="btnReturnQuestion()"></button>
+
+        </ng-container>
+        <ng-template #notReturnQuestion>
+          <button pButton pRipple icon="pi pi-arrow-left" iconPos="left" label="Câu trước" class="p-button-secondary p-disabled"></button>
+        </ng-template>
+        <ng-container *ngIf="time_clone_for_end === 0,else isEnd" >
+          <button  pButton pRipple icon="pi pi-arrow-right" iconPos="right" [label]="curentQuestionNumber === (bankQuestions.length -1) ? 'Kết thúc bài thi' :'Câu tiếp theo'" (click)="btnNextQuestion()"></button>
+
+        </ng-container>
+        <ng-template #isEnd>
+          <button pButton pRipple icon="pi pi-arrow-right" iconPos="right" label="Câu tiếp theo" class="p-disabled"></button>
+
+        </ng-template>
+      </div>
+
+    </ng-container>
+    <ng-container *ngSwitchCase="'data_question'">
+      <div class="data-container">
+        <div class="data-header">
+          <div>HỘI THI</div>
+          <div>“DÂN VẬN KHÉO” TỈNH THÁI NGUYÊN NĂM 2024</div>
+          <div>PHẦN THI KIẾN THỨC</div>
+          <div>KẾT QUẢ</div>
+        </div>
+        <div class="data-body">
+          <p-table [value]="shiftTest" [loading]="table_loading" [lazy]="table_loading" styleClass="p-datatable-gridlines"  >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Đội thi</th>
+                <th class="text-center ovic-w-200px">Câu hỏi</th>
+                <th class="text-center ovic-w-200px">Đáp án chọn</th>
+                <th class="text-center ovic-w-200px">Điểm</th>
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-item>
+              <tr>
+                <td>{{ item['__name_coverted'] }}</td>
+                <td class="text-center" *ngFor="let item2 of item['__question_converted']">
+                  {{item2['ordering'] + 1 }}
+                </td>
+                <td class="text-center" *ngFor="let item2 of item['__question_converted']">
+                  {{item2['anser']}}
+                </td>
+                <td class="text-center" *ngFor="let item2 of item['__question_converted']">
+                  {{item2['score']}}
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" >
+              <tr>
+                <td colspan="20">Chưa có dữ liệu thí sinh</td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+        </div>
+        <div class="data-footer">
+          <button pRipple pButton class="p-button-secondary" icon="pi pi-arrow-left" label="Quay lại" (click)="btnReturnQuestionView()"></button>
+          <button pRipple pButton class="p-button-success" icon="pi pi-replay" label="tải lại" (click)="loadDataShiftTestByShiftIdAndquestionId()" ></button>
+          <button pRipple pButton class="" icon="pi pi-arrow-right" iconPos="right" label="Câu tiếp theo " (click)="btnNextQuestionView()"></button>
+        </div>
+      </div>
+
+
+    </ng-container>
+    <ng-container *ngSwitchCase="'loading'"></ng-container>
+    <ng-container *ngSwitchCase="'data_all'">
+      <div class="data-container">
+        <div class="data-header">
+          <div>HỘI THI</div>
+          <div>“DÂN VẬN KHÉO” TỈNH THÁI NGUYÊN NĂM 2024</div>
+          <div>PHẦN THI KIẾN THỨC</div>
+          <div>KẾT QUẢ</div>
+        </div>
+        <div class="data-body">
+          <p-table [value]="shiftTest" [loading]="table_loading" [lazy]="table_loading"   styleClass="p-datatable-gridlines"  >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Đội thi</th>
+                <th class="text-center ovic-w-100px">Câu 1</th>
+                <th class="text-center ovic-w-100px">Câu 2</th>
+                <th class="text-center ovic-w-100px">Câu 3</th>
+                <th class="text-center ovic-w-100px">Câu 4</th>
+                <th class="text-center ovic-w-100px">Câu 5</th>
+                <th class="text-center ovic-w-100px">Tổng điểm</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item let-index>
+              <tr>
+                <td>{{ item['__name_coverted'] }}</td>
+                <td>{{item['__score_question_1']}}</td>
+                <td>{{item['__score_question_2']}}</td>
+                <td>{{item['__score_question_3']}}</td>
+                <td>{{item['__score_question_4']}}</td>
+                <td>{{item['__score_question_5']}}</td>
+                <td>{{item['__total_score']}}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" >
+              <tr>
+                <td colspan="20">Chưa có dữ liệu thí sinh</td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+        </div>
+        <div class="data-footer">
+          <button pButton pRipple label="thoát" icon="pi pi-sign-out" (click)="btnOutTest()" ></button>
+        </div>
+      </div>
+
+    </ng-container>
+  </ng-container>
+
+</div>
+
+
+
+
+
+<ng-template #notifiTest>
+  <div class="notifi-container">
+    <div class="title">Thông báo</div>
+    <div class="content">Hết thời gian</div>
+    <div class="btn_notifi">
+      <button pRipple pButton label="Xem đáp án " (click)="btnSubmitTimeEnd()" ></button>
+    </div>
+  </div>
+</ng-template>

@@ -1,45 +1,49 @@
-import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {NotificationService} from '@core/services/notification.service';
-import {NganHangCauHoiService} from '@shared/services/ngan-hang-cau-hoi.service';
-import {Shift, ShiftTests} from '@shared/models/quan-ly-doi-thi';
-import {forkJoin, interval, merge, Observable, of, Subject, switchMap, takeUntil} from 'rxjs';
-import {NganHangCauHoi, NganHangDe} from '@shared/models/quan-ly-ngan-hang';
-import {NganHangDeService} from '@shared/services/ngan-hang-de.service';
-import {DotThiDanhSachService} from '@shared/services/dot-thi-danh-sach.service';
-import {DotThiKetQuaService, ShiftTestScore} from '@shared/services/dot-thi-ket-qua.service';
-import {DateTimeServer, ServerTimeService} from '@shared/services/server-time.service';
-import {HelperService} from '@core/services/helper.service';
-import {AuthService} from '@core/services/auth.service';
-import {
-  KEY_NAME_CONTESTANT_EMAIL,
-  KEY_NAME_CONTESTANT_ID,
-  KEY_NAME_CONTESTANT_PHONE,
-  KEY_NAME_SHIFT_ID
-} from '@shared/utils/syscat';
-import {OvicButton} from '@core/models/buttons';
-import {catchError} from 'rxjs/operators';
+import {Component, HostListener, OnInit} from '@angular/core';
+import {NganHangCauHoi, NganHangDe} from "@shared/models/quan-ly-ngan-hang";
+import {Shift, ShiftTests} from "@shared/models/quan-ly-doi-thi";
+import {forkJoin, interval, merge, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
+import {Router} from "@angular/router";
+import {NotificationService} from "@core/services/notification.service";
+import {NganHangCauHoiService} from "@shared/services/ngan-hang-cau-hoi.service";
+import {NganHangDeService} from "@shared/services/ngan-hang-de.service";
+import {DotThiDanhSachService} from "@shared/services/dot-thi-danh-sach.service";
+import {DotThiKetQuaService, ShiftTestScore} from "@shared/services/dot-thi-ket-qua.service";
+import {DateTimeServer, ServerTimeService} from "@shared/services/server-time.service";
+import {AuthService} from "@core/services/auth.service";
+import {HelperService} from "@core/services/helper.service";
 import {ThiSinhTracking, ThisinhTrackingService} from "@shared/services/thisinh-tracking.service";
+import {io, Socket} from "socket.io-client";
+import {APP_CONFIGS, getWsUrl, wsPath} from "@env";
+import {KEY_NAME_SHIFT_ID} from "@shared/utils/syscat";
+import {OvicButton} from "@core/models/buttons";
 
 interface ContestantInfo {
   phone: string;
   testName: string;
-  email: string;
+  name: string;
   score: string;
   number_correct: number;
   strokeDasharray: string;
   totalQuestion: number;
   answered: number;
+  timeOfTheTest?:string;
 }
 
 type ClientAnswer = { [T: number]: number[] };
 
+interface details {
+  question_id : number,
+  answer_ids  : number[],
+  time_end    : number
+}
+
 @Component({
-  selector: 'app-panel',
-  templateUrl: './panel.component.html',
-  styleUrls: ['./panel.component.css']
+  selector: 'app-pannel-by-contestant',
+  templateUrl: './pannel-by-contestant.component.html',
+  styleUrls: ['./pannel-by-contestant.component.css']
 })
-export class PanelComponent implements OnInit, OnDestroy {
+export class PannelByContestantComponent implements OnInit {
+
 
   @HostListener('window:resize', ['$event']) onResize(): void {
     this.isSmallScreen = window.innerWidth <= 500;
@@ -56,19 +60,22 @@ export class PanelComponent implements OnInit, OnDestroy {
     }
 
   }
+
   checkStartExam:boolean= false;
   isSmallScreen: boolean = window.innerWidth <= 500;
   mode: 'PANEL' | 'TEST_RESULT' | 'LOADING' = 'LOADING';
   contestantInfo: ContestantInfo = {
-    email: '',
+    name: '',
     phone: '',
     testName: '',
     score: '',
     number_correct: 0,
     strokeDasharray: '0 200',
     totalQuestion: 0,
-    answered: 0
+    answered: 0,
+    timeOfTheTest: ''
   };
+  bank:NganHangDe;
   btnExamSelect: number = 1;// questtion select
   shift: Shift;
   shiftTest: ShiftTests;
@@ -103,17 +110,37 @@ export class PanelComponent implements OnInit, OnDestroy {
     private thisinhTrackingService:ThisinhTrackingService
   ) {
   }
-
+  private socket : Socket;
   ngOnInit(): void {
+
+    this.socket = io( getWsUrl() , {
+      path : wsPath ,
+      auth : {
+        token : this.authService.accessToken ,
+        realm : APP_CONFIGS.realm
+      }
+    } );
+    // this.socket.connect();
+    this.socket.on( '' , () => {
+      console.log('mie');
+    })
+
+    this.socket.on( 'batdauthi' , (data) => {
+      console.log('mie');
+    })
+
+    this.socket.on( 'cau-1' , () => {
+      console.log('mie');
+    })
+
     this.checkInit();
   }
 
   checkInit() {
     const shift_id: number = this.authService.getOption(KEY_NAME_SHIFT_ID);
-    const contestant: number = this.authService.getOption(KEY_NAME_CONTESTANT_ID);
-    if (!Number.isNaN(shift_id) && !Number.isNaN(contestant)) {
+
+    if (!Number.isNaN(shift_id)) {
       this._validInfo.shift_id = shift_id;
-      this._validInfo.contestant = contestant;
       this._initTest();
     } else {
       void this.router.navigate(['/test/shift']);
@@ -122,12 +149,14 @@ export class PanelComponent implements OnInit, OnDestroy {
 
   private _initTest() {
     this.notificationService.isProcessing(true);
-    this.contestantInfo.email = this.authService.getOption(KEY_NAME_CONTESTANT_EMAIL);
-    this._recheckData(this._validInfo.shift_id, this._validInfo.contestant).subscribe({
+    this._recheckData(this._validInfo.shift_id, this.authService.user.id).subscribe({
       next: ([shiftTest, shift]) => {
+        console.log(shiftTest);
+        console.log(shift);
         if (shiftTest && shift) {
           this.shift = shift;
           this.shiftTest = shiftTest;
+          this.contestantInfo.name = this.authService.user.display_name;
           this.contestantInfo.testName = shift.title;
           this.answerQuestions = shiftTest.details || {};
           this.remainingTimeClone = shiftTest.time;
@@ -182,11 +211,6 @@ export class PanelComponent implements OnInit, OnDestroy {
     }));
   }
 
-  private _updateSomething(newShiftTests: ShiftTests): Observable<ShiftTests> {
-
-    return of(newShiftTests);
-  }
-
   private createNewShiftTest(shift: Shift, contestant: number): Observable<ShiftTests> {
     return forkJoin<[NganHangDe, NganHangCauHoi[], DateTimeServer]>([
       this.nganHangDeService.getDataById(shift.bank_id),
@@ -196,56 +220,30 @@ export class PanelComponent implements OnInit, OnDestroy {
       return this.shiftTestsService.createShiftTest({
         shift_id: shift.id,
         thisinh_id: contestant,
-        question_ids: this.randomQuestions(questions.map(u => u.id), nganHangDe.number_questions_per_test),
+        question_ids:nganHangDe.random_question  === 1 ?  this.randomQuestions(questions.map(u => u.id), nganHangDe.number_questions_per_test) : questions.map(u => u.id),
         time_start: this.helperService.formatSQLDateTime(this.helperService.dateFormatWithTimeZone(dateTime.date)),
-        time: Math.max(nganHangDe.time_per_test, 1) * 60
+        // time: Math.max(nganHangDe.time_per_test, 1) * 60
       }).pipe(switchMap(id => this.shiftTestsService.getShiftTestById(id)));
     }));
   }
 
-  startTimer(remainingTime: number): void {
-    const closer$: Observable<string> = merge(
-      this.destroy$,
-      this.timeCloser$
-    );
+  private _updateSomething(newShiftTests: ShiftTests): Observable<ShiftTests> {
 
-    this.mode = 'PANEL';
-
-    let couter = 0;
-    const perious = 20;
-    interval(1000).pipe(takeUntil(closer$)).subscribe(() => {
-      if (remainingTime > 0) {
-        remainingTime--;
-        this.remainingTimeClone = Math.max(remainingTime, 0);
-      } else {
-        this.remainingTimeClone = 0;
-        this.stopTimer();
-        this.isTimeOver = true;
-        this.updateTimeLeft(0);
-      }
-      if (++couter === perious) {
-        // this.updateTimeLeft(this.remainingTimeClone);// tính h sinh viên time giarm theo 20s 1 laamf
-        couter = 0;
-      }
-    });
+    return of(newShiftTests);
   }
-
-  getFormattedTime(): string {
-    const minutes: number = Math.floor(this.remainingTimeClone / 60);
-    const seconds: number = this.remainingTimeClone % 60;
-    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-  }
-
-  stopTimer(): void {
-    this.timeCloser$.next('close');
-  }
-
   randomQuestions(questions: number[], length: number): number[] {
     const shuffledArray = questions.sort(() => Math.random() - 0.5);
     shuffledArray.length = Math.min(length, shuffledArray.length);
     return shuffledArray;
   }
 
+
+
+  getFormattedTime(): string {
+    const minutes: number = Math.floor(this.remainingTimeClone / 60);
+    const seconds: number = this.remainingTimeClone % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }
   startTheTest() {
     this.checkStartExam = true;
     this.openStartTheTestDialog = false;
@@ -259,7 +257,6 @@ export class PanelComponent implements OnInit, OnDestroy {
         this.questions = questions.map(item => {
           const answered: number[] = this.answerQuestions[item.id];
           item['__answered'] = answered && Array.isArray(answered) ? answered.join() : null;
-          console.log( item['__answered'])
           return item;
         });
         this.startTimer(this.shiftTest.time);
@@ -324,6 +321,9 @@ export class PanelComponent implements OnInit, OnDestroy {
       });
     }
   }
+  stopTimer(): void {
+    this.timeCloser$.next('close');
+  }
 
   private completeTheTest(): Observable<ShiftTestScore> {
     const trackingData = {
@@ -342,27 +342,8 @@ export class PanelComponent implements OnInit, OnDestroy {
 
 
   btnOutTest() {
-    this.authService.setOption(KEY_NAME_CONTESTANT_ID, 0);
     this.authService.setOption(KEY_NAME_SHIFT_ID, 0);
-    this.authService.setOption(KEY_NAME_CONTESTANT_EMAIL, '');
     void this.router.navigate(['/test/shift']);
-  }
-
-  saveMyAnswers(session: number) {
-    this.shiftTestsService.update(this.shiftTest.id, {
-      details: this.answerQuestions,
-      time: this.remainingTimeClone
-    }).pipe(
-      switchMap(() => of(session)),
-      catchError(() => of(0))
-    ).subscribe((_session: number) => {
-      if (_session === this.btnSaveMyAnswers.session) {
-        this.btnSaveMyAnswers.enable = false;
-        this.notificationService.toastSuccess('Hệ thống đã lưu bài làm ở thời điểm hiện tại');
-      } else {
-        this.btnSaveMyAnswers.enable = true;
-      }
-    });
   }
 
   updateTimeLeft(time: number) {
@@ -382,40 +363,37 @@ export class PanelComponent implements OnInit, OnDestroy {
     this.timeCloser$.complete();
   }
 
-  // timeEndExam:number= 120;
-  // getTimeByEndExam(){
-  //   const minutes: number = Math.floor(this.timeEndExam / 60);
-  //   const seconds: number = this.timeEndExam % 60;
-  //   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-  // }
-  //
-  // startTimeByEndExam(time:number){
-  //   const closer$: Observable<string> = merge(
-  //     this.destroy$,
-  //     this.timeCloser$
-  //   );
-  //   this.submitTheTest(false);
-  //   interval(1000).pipe(takeUntil(closer$)).subscribe(() => {
-  //     if (time > 0) {
-  //       time--;
-  //     } else {
-  //       this.isTimeOver = false;
-  //       this.mode="TEST_RESULT"
-  //     }
-  //   });
-  // }
-
-  btnSelectQuestion(num: number) {
-    this.btnExamSelect = num;
-
-  }
 
   userTrackingData(data:ThiSinhTracking ) {
     return this.thisinhTrackingService.createTracking(data).subscribe();
   }
 
+  startTimer(remainingTime: number): void {
+    const closer$: Observable<string> = merge(
+      this.destroy$,
+      this.timeCloser$
+    );
 
-  checkpush(){
-    this.shiftTestsService.update(18,{score:10}).subscribe();
+    this.mode = 'PANEL';
+
+    let couter = 0;
+    const perious = 20;
+    interval(1000).pipe(takeUntil(closer$)).subscribe(() => {
+      if (remainingTime > 0) {
+        remainingTime--;
+        this.remainingTimeClone = Math.max(remainingTime, 0);
+      } else {
+        this.remainingTimeClone = 0;
+        this.stopTimer();
+        this.isTimeOver = true;
+        this.updateTimeLeft(0);
+      }
+      if (++couter === perious) {
+        // this.updateTimeLeft(this.remainingTimeClone);// tính h sinh viên time giarm theo 20s 1 laamf
+        couter = 0;
+      }
+    });
   }
+
+
 }

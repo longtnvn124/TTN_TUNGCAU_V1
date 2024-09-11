@@ -1,35 +1,34 @@
 <div class="shift-component-wrap position-relative" [class.ovic-is-loading]="isLoading"
      style=" background-image: url('assets/images/sokhoahocvacongnghe.jpg')">
-  <div class="headerTinhtn">
-    <div class="text-center">
-      <p class="m-0">UBND TỈNH THÁI NGUYÊN </p>
-      <p class="m-0 font-weight-bold"> SỞ KHOA HỌC VÀ CÔNG NGHỆ</p>
-      <P class="m-0">***</P>
-    </div>
-  </div>
+<!--  <div class="headerTinhtn">-->
+<!--    <div class="text-center">-->
+<!--      <p class="m-0">UBND TỈNH THÁI NGUYÊN </p>-->
+<!--      <p class="m-0 font-weight-bold"> SỞ KHOA HỌC VÀ CÔNG NGHỆ</p>-->
+<!--      <P class="m-0">***</P>-->
+<!--    </div>-->
+<!--  </div>-->
   <div class="shift-container container h-100 position-relative flex-column">
     <!--    <div class="py-4">Cuộc thi <span class="">"Trường học của sự đa dạng và bao trùm"</span></div>-->
-    <div class="header_label" >
-      <div class="text-center">
-        <p class="pnumber1 m-0">UBND TỈNH THÁI NGUYÊN </p>
-        <p class="pnumber2 m-0 font-weight-bold"> SỞ KHOA HỌC VÀ CÔNG NGHỆ</p>
-        <P class="m-0">***</P>
-      </div>
-    </div>
-    <div class="total_container">
+<!--    <div class="header_label">-->
+<!--      <div class="text-center">-->
+<!--        <p class="pnumber1 m-0">UBND TỈNH THÁI NGUYÊN </p>-->
+<!--        <p class="pnumber2 m-0 font-weight-bold"> SỞ KHOA HỌC VÀ CÔNG NGHỆ</p>-->
+<!--        <P class="m-0">***</P>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="total_container">-->
 
 
-      <div class="total-item">
-        <div class="total-thisinh">{{ totalThisinh }}</div>
-        <div class="total-label">Thí sinh đã làm bài thi</div>
-      </div>
-    </div>
+<!--      <div class="total-item">-->
+<!--        <div class="total-thisinh">{{ totalThisinh }}</div>-->
+<!--        <div class="total-label">Thí sinh đã làm bài thi</div>-->
+<!--      </div>-->
+<!--    </div>-->
     <div class="dotthi-container" style="width: calc(100% - 6px - 6px);border: 1px solid #39393940;">
       <div class="dotthi-container__title p-2">
-        <div class="dotthi-container__title__heading">Cuộc thi <span
-          class="">"Cải cách hành chính năm 2024"</span></div>
+        <div class="dotthi-container__title__heading">Cuộc thi <span class="">"Cải cách hành chính năm 2024"</span></div>
         <div class="dotthi-container__title__buttons">
-          <!--          <button style="padding: 10px;" pButton pRipple label="Trang chủ" class="btn-logout " icon="pi pi-home" iconPos="right" (click)="backHome()"></button>-->
+                    <button style="padding: 10px;" pButton pRipple label="Trang chủ" class="btn-logout " icon="pi pi-home" iconPos="right" (click)="backHome()"></button>
         </div>
       </div>
       <div *ngIf="dsDotthi && dsDotthi.length>0, else nodata" class="dotthi-container__body h-100 border-top-1">
@@ -87,12 +86,12 @@
   <!--    <img class="svg-img" src="/assets/icon-png/left-icon.png" alt="">-->
   <!--  </div>-->
   <div class="copyright">
-  <!--    <div style="border-radius: 20px;background: #fff;padding: 2px 8px;">-->
-  <!--      Copyright @ 2024 by-->
-  <!--      <a href="https://ictu.vn/" target="_blank">ICTU.VN</a>-->
-  <!--    </div>-->
+    <!--    <div style="border-radius: 20px;background: #fff;padding: 2px 8px;">-->
+    <!--      Copyright @ 2024 by-->
+    <!--      <a href="https://ictu.vn/" target="_blank">ICTU.VN</a>-->
+    <!--    </div>-->
     <div style="border-radius: 20px;background: #fff;padding: 2px 8px;">
-      Copyright @ 2024 by Sở KH&CN tỉnh Thái Nguyên
+      Copyright @ 2024 by Trung tâm phát triển phần mềm - <a href="https://ictu.vn" target="_blank">ictu.vn</a>
     </div>
   </div>
 </div>

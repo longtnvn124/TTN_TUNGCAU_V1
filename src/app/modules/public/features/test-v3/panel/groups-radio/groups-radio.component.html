@@ -1,0 +1,25 @@
+<ul class="ovic-radios">
+  <li class="position-relative"  ovicMediaLoader *ngFor="let question of options ; let i=index"
+      [class.wrong-answer]="correctAnswerSet && !correctAnswerSet.has(question.id) && selectedSet.has(question.id)"
+      [class.correct-answer]="correctAnswerSet && correctAnswerSet.has(question.id) && selectedSet.has(question.id)"
+      [ngClass]=" inputType==='radio' ? 'ovic-radios__elm layout-1-columns' : ''.concat('ovic-radios__elm ','layout-',options_sty.toString(),'-columns')"
+  >
+    <!--    [class.wrong-answer]="correctAnswerSet && !correctAnswerSet.has(question.id) && selectedSet.has(question.id)"-->
+    <!--    [class.correct-answer]="correctAnswerSet && correctAnswerSet.has(question.id) && selectedSet.has(question.id)"-->
+
+    <button pRipple pButton class="ov-btn-radio ov-btn-radio-type--{{inputType}} content-inner-html"
+            [ngClass]="{'active' : selectedSet.has(question.id)}"
+            (click)="updateValue(question)">
+      <div class="d-flex align-items-center">
+        <span class="ov-prefix"></span>
+        <div class="ovic-radios__text" [innerHTML]="question.value | ovicSafeHtml"></div>
+      </div>
+      <div *ngIf="correctAnswer && correctAnswerSet.has(question.id)" class="icon-correct-ansser " >
+        <i [ngClass]="correctAnswerSet.has(question.id) ? 'pi pi-check-circle': 'd-none'" class="icon-correct-ansser_i" ></i>
+      </div>
+    </button>
+
+
+  </li>
+</ul>
+

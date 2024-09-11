@@ -1,0 +1,53 @@
+<div class="shift-container">
+  <div class="img-top-left">
+    <img src="assets/images/bandanvan/left-top.png" alt="">
+  </div>
+  <div class="img-top-right">
+    <img src="assets/images/bandanvan/dot-ground.png" alt="">
+  </div>
+  <div class="img-right-bottom">
+    <img src="assets/images/bandanvan/right-bottom.png" alt="">
+  </div>
+  <div class="img-ovan-center">
+    <img src="assets/images/bandanvan/ovan.png" alt="">
+  </div>
+
+  <div class="shift-content">
+    <div class="shift-content-header">
+      <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">
+      <div>BAN DÂN VẬN TỈNH UỶ THÁI NGUYÊN</div>
+    </div>
+    <div class="shift-content-top">
+        <div>HỘI THI</div>
+        <div>“DÂN VẬN KHÉO” TỈNH THÁI NGUYÊN NĂM 2024</div>
+        <div>PHẦN THI KIẾN THỨC</div>
+    </div>
+    <div class="shift-content-body">
+      <div class="shift-data">
+        <div class="shift-data_item" *ngFor="let item of dsDotthi" [ngClass]="">
+          <div>{{item.title}}</div>
+          <button pRipple pButton label="Vào thi" (click)="btnTest(item)"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-logout">
+    <button pButton pRipple icon="pi pi-sign-out" iconPos="right" class="p-button-secondary" label="Đăng xuất" (click)="signOut()"></button>
+  </div>
+
+  <div class="copy-right">
+    <div class="copy-right_img">
+      <img src="assets/images/logo-tnu.png" alt="">
+    </div>
+    <div class="copy-right_content">
+      <div> Nền tảng thiết kể bời ICTU Software</div>
+      <ul>
+        <li>  <span>Trường Đại học Công nghệ Thông tin và Truyền thông</span></li>
+        <li>  <span>Website: <a style="color:#fff" href="https://ictu.edu.vn" target="_blank">ictu.edu.vn</a> | Email: ttptpm@ictu.vn | Tel: 0855-891-892</span></li>
+        <li>  <span>Xã Quyết Thắng, TP. Thái Nguyên, tỉnh Thái Nguyên</span></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
