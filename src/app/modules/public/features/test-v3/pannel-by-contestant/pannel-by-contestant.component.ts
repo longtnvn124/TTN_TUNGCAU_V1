@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {NganHangCauHoi, NganHangDe} from "@shared/models/quan-ly-ngan-hang";
 import {Shift, ShiftTests} from "@shared/models/quan-ly-doi-thi";
 import {forkJoin, interval, merge, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
@@ -14,8 +14,13 @@ import {HelperService} from "@core/services/helper.service";
 import {ThiSinhTracking, ThisinhTrackingService} from "@shared/services/thisinh-tracking.service";
 import {io, Socket} from "socket.io-client";
 import {APP_CONFIGS, getWsUrl, wsPath} from "@env";
-import {KEY_NAME_SHIFT_ID} from "@shared/utils/syscat";
+import {KEY_NAME_SHIFT_ID, SM_MODAL_OPTIONS} from "@shared/utils/syscat";
 import {OvicButton} from "@core/models/buttons";
+import {User} from "@core/models/user";
+import {Question} from "@shared/models/test-question";
+import {ShiftTestQuestion, ShiftTestQuestionService} from "@shared/services/shift-test-question.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {map} from "rxjs/operators";
 
 interface ContestantInfo {
   phone: string;
@@ -43,6 +48,7 @@ interface details {
   styleUrls: ['./pannel-by-contestant.component.css']
 })
 export class PannelByContestantComponent implements OnInit {
+  @ViewChild('notifiTest', {static: true}) notifiTest: TemplateRef<any>;
 
 
   @HostListener('window:resize', ['$event']) onResize(): void {
@@ -60,9 +66,12 @@ export class PannelByContestantComponent implements OnInit {
     }
 
   }
+  testView             :'loading'|'question'|'data_question'|'data_all' = "loading" ;
 
   checkStartExam:boolean= false;
   isSmallScreen: boolean = window.innerWidth <= 500;
+
+
   mode: 'PANEL' | 'TEST_RESULT' | 'LOADING' = 'LOADING';
   contestantInfo: ContestantInfo = {
     name: '',
@@ -76,16 +85,24 @@ export class PannelByContestantComponent implements OnInit {
     timeOfTheTest: ''
   };
   bank:NganHangDe;
-  btnExamSelect: number = 1;// questtion select
-  shift: Shift;
-  shiftTest: ShiftTests;
-  answerQuestions: ClientAnswer = {};
-  openStartTheTestDialog: boolean = false;
-  destroy$: Subject<string> = new Subject<string>();
-  questions: NganHangCauHoi[];
-  remainingTimeClone: number = 0; // 30 minutes in seconds
-  isTimeOver: boolean = false;
-  timeCloser$: Subject<string> = new Subject<string>();
+  bankQuestions:NganHangCauHoi[];
+
+  shift                   : Shift;
+  shiftTest               : ShiftTests;
+  answerQuestions         : ClientAnswer = {};
+  openStartTheTestDialog  : boolean = false;
+  destroy$                : Subject<string> = new Subject<string>();
+  questions               : NganHangCauHoi[];
+  remainingTimeClone      : number = 0; // 30 minutes in seconds
+  isTimeOver              : boolean = false;
+  timeCloser$             : Subject<string> = new Subject<string>();
+
+  user:User;
+  questionSelect        : NganHangCauHoi;
+  curentQuestionNumber  : number = -1;
+  viewAnswer            : boolean = false;
+  shiftTestQuestion     : ShiftTestQuestion;
+  isSubmitTimeEnd       : boolean=false;
 
   private _validInfo: { shift_id: number, contestant: number } = {shift_id: 0, contestant: 0};
 
@@ -107,8 +124,11 @@ export class PannelByContestantComponent implements OnInit {
     private serverTimeService: ServerTimeService,
     private authService: AuthService,
     private helperService: HelperService,
-    private thisinhTrackingService:ThisinhTrackingService
+    private thisinhTrackingService:ThisinhTrackingService,
+    private shiftTestQuestionSercice:ShiftTestQuestionService,
+    private modalSerivice : NgbModal
   ) {
+    this.user = this.authService.user;
   }
   private socket : Socket;
   ngOnInit(): void {
@@ -121,16 +141,20 @@ export class PannelByContestantComponent implements OnInit {
       }
     } );
     // this.socket.connect();
-    this.socket.on( '' , () => {
-      console.log('mie');
+    this.socket.on( 'connect' , () => {
+      console.log('connent');
     })
 
     this.socket.on( 'batdauthi' , (data) => {
-      console.log('mie');
+      console.log(data);
+      this.shiftTestQuestion =data as ShiftTestQuestion;
+      console.log( this.shiftTestQuestion);
+      this.socketStartQuestion(this.shiftTestQuestion);
     })
 
-    this.socket.on( 'cau-1' , () => {
-      console.log('mie');
+    this.socket.on( 'ketthucthi' , () => {
+      console.log('ketthucthi');
+      this.socketEndQuestions()
     })
 
     this.checkInit();
@@ -149,26 +173,34 @@ export class PannelByContestantComponent implements OnInit {
 
   private _initTest() {
     this.notificationService.isProcessing(true);
-    this._recheckData(this._validInfo.shift_id, this.authService.user.id).subscribe({
-      next: ([shiftTest, shift]) => {
-        console.log(shiftTest);
-        console.log(shift);
+    this._recheckData(this._validInfo.shift_id, this.authService.user.id).pipe(switchMap(m=>{
+      const bank_id = m[1].bank_id;
+      return forkJoin([
+        of(m[0]),
+        of(m[1]),
+        this.nganHangDeService.getDataById(bank_id),
+        this.nganHangCauHoiService.getDataByBankId(bank_id)
+      ])
+    })).subscribe({
+      next: ([shiftTest, shift,bank,bankQuestion]) => {
+        this.bank = bank;
+        this.bankQuestions = bankQuestion.map(m=>{
+          m['__answer_coverted'] = m.correct_answer.join(',');
+          m['__freeze'] = false;
+          return m;
+        })
+        if(shiftTest.state === 0){
+          this.shiftTestsService.update(shiftTest.id ,{state:1}).subscribe();
+        }
+
         if (shiftTest && shift) {
           this.shift = shift;
           this.shiftTest = shiftTest;
-          this.contestantInfo.name = this.authService.user.display_name;
-          this.contestantInfo.testName = shift.title;
-          this.answerQuestions = shiftTest.details || {};
-          this.remainingTimeClone = shiftTest.time;
-          this.contestantInfo.totalQuestion = shiftTest.question_ids.length;
-          this.contestantInfo.answered = Object.keys(this.answerQuestions).length;
-          this.contestantInfo.strokeDasharray = [Math.floor(((this.contestantInfo.answered * 113) / this.contestantInfo.totalQuestion)), 200].join(' ');
           if (shiftTest.state === 2) {
-            this.contestantInfo.score = shiftTest.score.toFixed(2);
-            this.contestantInfo.number_correct = shiftTest.number_correct;
-            this.mode = 'TEST_RESULT';
+            this.socketEndQuestions()
+            this.testView = 'data_all';
           } else {
-            this.openStartTheTestDialog = true;
+            this.testView = "loading";
           }
         }
         this.notificationService.isProcessing(false);
@@ -214,14 +246,16 @@ export class PannelByContestantComponent implements OnInit {
   private createNewShiftTest(shift: Shift, contestant: number): Observable<ShiftTests> {
     return forkJoin<[NganHangDe, NganHangCauHoi[], DateTimeServer]>([
       this.nganHangDeService.getDataById(shift.bank_id),
-      this.nganHangCauHoiService.getDataByBankId(shift.bank_id, null, 'id'),
+      this.nganHangCauHoiService.getDataByBankId(shift.bank_id, null, ),
       this.serverTimeService.getTime()
     ]).pipe(switchMap(([nganHangDe, questions, dateTime]) => {
       return this.shiftTestsService.createShiftTest({
         shift_id: shift.id,
+        state:1,
         thisinh_id: contestant,
         question_ids:nganHangDe.random_question  === 1 ?  this.randomQuestions(questions.map(u => u.id), nganHangDe.number_questions_per_test) : questions.map(u => u.id),
         time_start: this.helperService.formatSQLDateTime(this.helperService.dateFormatWithTimeZone(dateTime.date)),
+
         // time: Math.max(nganHangDe.time_per_test, 1) * 60
       }).pipe(switchMap(id => this.shiftTestsService.getShiftTestById(id)));
     }));
@@ -236,8 +270,6 @@ export class PannelByContestantComponent implements OnInit {
     shuffledArray.length = Math.min(length, shuffledArray.length);
     return shuffledArray;
   }
-
-
 
   getFormattedTime(): string {
     const minutes: number = Math.floor(this.remainingTimeClone / 60);
@@ -269,58 +301,9 @@ export class PannelByContestantComponent implements OnInit {
     });
   }
 
-  onAnswerQuestion(questionId: number, answers: number[]) {
-    if (Array.isArray(answers)) {
-      if (answers.length) {
-        this.answerQuestions[questionId] = answers;
-        this.triggerSaveMyAnswers();
-      } else {
-        delete this.answerQuestions[questionId];
-        this.triggerSaveMyAnswers();
-      }
-    }
-    this.contestantInfo.answered = Object.keys(this.answerQuestions).length;
-    this.enableSubmitButton = this.contestantInfo.answered === this.contestantInfo.totalQuestion;
-    this.contestantInfo.strokeDasharray = [Math.floor(((this.contestantInfo.answered * 113) / this.contestantInfo.totalQuestion)), 200].join(' ');
-  }
 
-  triggerSaveMyAnswers() {
-    this.btnSaveMyAnswers.session += 1;
-    this.btnSaveMyAnswers.enable = true;
-  }
 
-  async submitTheTest(needConfirm: boolean = false): Promise<void> {
-    this.isTimeOver = false;
-    let running: boolean = false;
-    if (needConfirm) {
-      const headText: string = 'Thông báo';
-      const confirm: OvicButton = await this.notificationService.confirmRounded(`<p class="text-danger">Xác nhận nộp bài</p>`, headText);
-      if (confirm.name === 'yes') {
-        running = true;
-      }
-    } else {
-      running = true;
-    }
-    if (running) {
-      this.checkStartExam=false;
-      this.notificationService.isProcessing(true);
-      this.completeTheTest().subscribe({
-        next: (result: ShiftTestScore) => {
-          this.notificationService.isProcessing(false);
-          this.mode = 'TEST_RESULT';
-          this.contestantInfo.score = result.score.toFixed(2);
-          this.contestantInfo.number_correct = result.number_correct;
-          this.notificationService.toastSuccess('Nộp bài thành công');
-          this.stopTimer();
 
-        },
-        error: () => {
-          this.notificationService.isProcessing(false);
-          this.notificationService.toastError('Nộp bài thất bại');
-        }
-      });
-    }
-  }
   stopTimer(): void {
     this.timeCloser$.next('close');
   }
@@ -346,9 +329,9 @@ export class PannelByContestantComponent implements OnInit {
     void this.router.navigate(['/test/shift']);
   }
 
-  updateTimeLeft(time: number) {
-    this.shiftTestsService.update(this.shiftTest.id, {time}).subscribe();
-  }
+  // updateTimeLeft(time: number) {
+  //   this.shiftTestsService.update(this.shiftTest.id, {time}).subscribe();
+  // }
 
   ngOnDestroy(): void {
     if (this.mode === 'PANEL') {
@@ -374,8 +357,6 @@ export class PannelByContestantComponent implements OnInit {
       this.timeCloser$
     );
 
-    this.mode = 'PANEL';
-
     let couter = 0;
     const perious = 20;
     interval(1000).pipe(takeUntil(closer$)).subscribe(() => {
@@ -385,8 +366,12 @@ export class PannelByContestantComponent implements OnInit {
       } else {
         this.remainingTimeClone = 0;
         this.stopTimer();
-        this.isTimeOver = true;
-        this.updateTimeLeft(0);
+        // this.isTimeOver = true;
+        // this.updateTimeLeft(0);
+        this.isSubmitTimeEnd= true;
+        this.btnViewTemplaceNotifi();
+        console.log(this.bankQuestions.find(f=>f.id === this.shiftTestQuestion.question_id));
+        this.updateTestQuestion(this.shiftTestQuestion,this.questionSelect.id);
       }
       if (++couter === perious) {
         // this.updateTimeLeft(this.remainingTimeClone);// tính h sinh viên time giarm theo 20s 1 laamf
@@ -394,6 +379,116 @@ export class PannelByContestantComponent implements OnInit {
       }
     });
   }
+  socketStartQuestion(data:ShiftTestQuestion){
+    this.modalSerivice.dismissAll()
+    this.viewAnswer= false;
+    this.curentQuestionNumber = this.bankQuestions.findIndex(f=>f.id == data.question_id);
+    this.questionSelect = {...this.bankQuestions.find(f=>f.id === data.question_id)};
+    this.testView = "question";
+    this.remainingTimeClone = this.bank.time_per_test_tungcau;
+    this.startTimer(this.remainingTimeClone);
+  }
 
+  onAnswerQuestion(questionId: number, answers: number[]) {
+    console.log(questionId)
+    console.log(answers);
+    console.log(this.bankQuestions.find(f=>f.id === questionId ))
+    const bankCurrent = this.bankQuestions.find(f=>f.id === questionId )
+    if(this.remainingTimeClone>0){
+      this.bankQuestions.find(f=>f.id === questionId)['__anserByContestant'] = answers;
+      this.questionSelect['__anserByContestant'] = answers;
+      this.questionSelect['__anserByContestant_convent'] = answers.join(',');
+      // console.log(answers === bankCurrent.correct_answer);
+      if (JSON.stringify(answers) === JSON.stringify(bankCurrent.correct_answer)){
+        this.shiftTestQuestionSercice.update(this.shiftTestQuestion.id, {answer:answers,score:5}).subscribe();
+      }else{
+        this.shiftTestQuestionSercice.update(this.shiftTestQuestion.id, {answer:answers,score:0}).subscribe();
+      }
+    }
+
+    // if (Array.isArray(answers)) {
+    //   if (answers.length) {
+    //     this.answerQuestions[questionId] = answers;
+    //     this.triggerSaveMyAnswers();
+    //   } else {
+    //     delete this.answerQuestions[questionId];
+    //     this.triggerSaveMyAnswers();
+    //   }
+    // }
+    // this.contestantInfo.answered = Object.keys(this.answerQuestions).length;
+    // this.enableSubmitButton = this.contestantInfo.answered === this.contestantInfo.totalQuestion;
+    // this.contestantInfo.strokeDasharray = [Math.floor(((this.contestantInfo.answered * 113) / this.contestantInfo.totalQuestion)), 200].join(' ');
+  }
+
+  btnViewTemplaceNotifi(){
+    this.modalSerivice.open(this.notifiTest,SM_MODAL_OPTIONS);
+  }
+  btnSubmitTimeEnd(){
+    this.isSubmitTimeEnd = false;
+    this.viewAnswer= true;
+    this.modalSerivice.dismissAll();
+
+  }
+  updateTestQuestion(data :ShiftTestQuestion,question_id:number){
+
+
+    const bankCurrent =  this.bankQuestions.find(f=>f.id === question_id);
+
+    if (JSON.stringify(bankCurrent['__anserByContestant']) === JSON.stringify(bankCurrent.correct_answer)){
+      this.shiftTestQuestionSercice.update(this.shiftTestQuestion.id, {answer:bankCurrent['__anserByContestant'],score:5}).subscribe();
+    }else{
+      this.shiftTestQuestionSercice.update(this.shiftTestQuestion.id, {answer:bankCurrent['__anserByContestant'],score:0}).subscribe();
+    }
+  }
+
+
+  dataShiftTests:ShiftTests[]= [];
+  table_loading:boolean=false;
+  socketEndQuestions(){
+    this.table_loading=true;
+    this.notificationService.isProcessing(true);
+    this.shiftTestQuestionSercice.getDataByShiftTestId(this.shiftTest.id).subscribe({
+      next:(data)=>{
+        console.log(data);
+        let total = 0;
+        const question_ids = this.shiftTest.question_ids.map((a,index)=>{
+            const shiftTestQuestionsmap = data ? data.find(f=>f.question_id === a): null;
+
+            total = total +(shiftTestQuestionsmap ? shiftTestQuestionsmap.score : 0);
+            this.shiftTest['__cau_'+ (index + 1)] = shiftTestQuestionsmap ? shiftTestQuestionsmap.score : 0;
+
+          return a;
+        })
+        this.shiftTest['__total']= total;
+        this.shiftTest['__name_coverted'] = this.authService.user.display_name;
+        // this.dataShiftTests = shifttest.map(m=>{
+        //   const thisinh = m['users'];
+        //   m['__name_coverted'] = thisinh ? thisinh['display_name'] :'Đội';
+        //   const shiftTestQuestionsmap = shiftTestQuestions &&  shiftTestQuestions.length>0 ? shiftTestQuestions.filter(f=>f.shift_test_id === m.id): [];
+        //   let total =0;
+        //   m.question_ids.map((a,index)=>{
+        //     const question =shiftTestQuestionsmap.find(c=>c.question_id === a);
+        //     total = total + question.score;
+        //     m[ '__cau_'+ index + 1 ] = question.score;
+        //     return shiftTestQuestionsmap.find(c=>c.question_id === a)
+        //   })
+        //
+        //   m['_total'] =total;
+        //   return m;
+        // })
+        this.dataShiftTests.push(this.shiftTest);
+        console.log(this.dataShiftTests);
+        this.notificationService.isProcessing(false);
+        this.table_loading=false;
+
+
+      },
+      error:()=>{
+        this.table_loading=false;
+        this.notificationService.isProcessing(false);
+
+      }
+    })
+  }
 
 }

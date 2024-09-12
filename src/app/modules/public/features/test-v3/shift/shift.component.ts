@@ -11,6 +11,7 @@ import {Router} from "@angular/router";
 import {DotThiKetQuaService} from "@shared/services/dot-thi-ket-qua.service";
 import {forkJoin} from "rxjs";
 import {KEY_NAME_SHIFT_ID} from "@shared/utils/syscat";
+import {User} from "@core/models/user";
 
 type ShiftState = -1 | 0 | 1; // 0: chưa tới thời gian thi | 1 trong thời gian cho phép thi | -1 : quá hạn thời gian được phép thi
 
@@ -40,17 +41,14 @@ export class ShiftComponent implements OnInit {
     '1'  : { state : 1 , label : 'Vào thi' , icon : 'pi pi-check-square' , class : 'p-button-success' }
   };
 
-  presentTime= new Date().getTime();
-
-  userData = this.auth.user;
-
-  dsDotthi : DotThiKhaDung[];
-
-  checkInterval : any;
-
-  checkthisinhState2 : any;
-
-  isLoading : boolean = false;
+  presentTime         : number= new Date().getTime();
+  userData            : User = this.auth.user;
+  dsDotthi            : DotThiKhaDung[];
+  checkInterval       : any;
+  checkthisinhState2  : any;
+  isLoading           : boolean = false;
+  user                : User;
+  viewLogout          : boolean = false;
   constructor(
     private helperService : HelperService ,
     private dotThiDanhSachService : DotThiDanhSachService ,
@@ -62,7 +60,9 @@ export class ShiftComponent implements OnInit {
     private router : Router,
     private shiftTestsService: DotThiKetQuaService,
 
-  ) { }
+  ) {
+    this.user = this.auth.user;
+  }
 
   ngOnInit(): void {
     // if (this.auth.isLoggedIn()){
@@ -204,7 +204,7 @@ export class ShiftComponent implements OnInit {
       }
     })
   }
-  btnLogout(){
-
+  btnViewLogOut(check:boolean){
+    this.viewLogout= check;
   }
 }

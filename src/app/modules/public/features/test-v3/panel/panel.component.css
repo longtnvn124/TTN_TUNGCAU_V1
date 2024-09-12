@@ -18,15 +18,23 @@
   z-index:-1;
 }
 .img-top-right{
+  position: absolute;
+  bottom: 0;
+  z-index: -1;
+  right: 12%;
+  top: 31%;
+
+}
+.img-ovan-center{
   position:absolute;
-  bottom:0;
-  z-index:-1;
-  right: 5%;
-  top: 35px;
+  left: 25%;
+  top: 30%;
+  width: 400px;
+  z-index: -1;
 
 }
 
-.img-top-left img,.img-right-bottom img{
+.img-top-left img,.img-right-bottom img, .img-ovan-center img{
 width:100%;
 }
 

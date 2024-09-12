@@ -15,11 +15,20 @@
           <div class="counter-clock-wrap">
             <div class="d-inline timer">{{ getFormattedTime() }}</div>
           </div>
-          <button pButton pRipple  class="p-button-rounded p-button-help"
-                  [icon]="time_clone_for_end === bank.time_per_test_tungcau || time_clone_for_end === 0 ? 'pi pi-play':'pi pi-spin pi-spinner' "
-                  (click)="startTimer(time_clone_for_end)">
+          <ng-container *ngIf="time_clone_for_end === bank.time_per_test_tungcau || time_clone_for_end === 0 else isSpinner">
+            <button
+              pButton pRipple  class="p-button-rounded p-button-help"
+              icon="pi pi-play" (click)="callSocketStartQuestion()">
 
-          </button>
+            </button>
+            <button pButton pRipple label="check end" (click)="loadDataShiftTestByShiftIdAndquestionId()"></button>
+          </ng-container>
+
+          <ng-template #isSpinner>
+            <button pButton pRipple  class="p-button-rounded p-button-help" icon="pi pi-spin pi-spinner"></button>
+          </ng-template>
+
+
         </div>
         <div *ngIf="time_clone_for_end === 0,else isNext" class="panel_mc_header-item">
           <button pRipple pButton icon="pi pi-check-circle" label="Kết quả" iconPos="right" class="btn-check-data-question p-button-success" (click)="btnViewTestQuestion()"></button>
@@ -42,11 +51,12 @@
         </div>
         <div *ngIf="questionSelect" class="panel_mc_content_answerOption">
           <div *ngIf="!viewAnswer else showAnswer">
-            <groups-radio [options]="questionSelect.answer_options" [freeze]="questionSelect['__freeze']" [options_sty]="questionSelect.options_sty"></groups-radio>
+            <app-groups-radio [options]="questionSelect.answer_options" [freeze]="questionSelect['__freeze']" [options_sty]="questionSelect.options_sty"></app-groups-radio>
+<!--            <groups-radio [options]="questionSelect.answer_options" [freeze]="questionSelect['__freeze']" [options_sty]="questionSelect.options_sty"></groups-radio>-->
 
           </div>
           <ng-template #showAnswer>
-            <groups-radio [options]="questionSelect.answer_options" [correctAnswer]="questionSelect['__answer_coverted']" [freeze]="questionSelect['__freeze']" [options_sty]="questionSelect.options_sty"></groups-radio>
+            <app-groups-radio [options]="questionSelect.answer_options" [correctAnswer]="questionSelect['__answer_coverted']" [freeze]="questionSelect['__freeze']" [options_sty]="questionSelect.options_sty"></app-groups-radio>
 
           </ng-template>
         </div>
@@ -92,11 +102,9 @@
             <ng-template pTemplate="body" let-item>
               <tr>
                 <td>{{ item['__name_coverted'] }}</td>
+                <td class="text-center">{{item['__question_number']}}</td>
                 <td class="text-center" *ngFor="let item2 of item['__question_converted']">
-                  {{item2['ordering'] + 1 }}
-                </td>
-                <td class="text-center" *ngFor="let item2 of item['__question_converted']">
-                  {{item2['anser']}}
+                  {{item2['__answer_converted']}}
                 </td>
                 <td class="text-center" *ngFor="let item2 of item['__question_converted']">
                   {{item2['score']}}
@@ -145,12 +153,12 @@
             <ng-template pTemplate="body" let-item let-index>
               <tr>
                 <td>{{ item['__name_coverted'] }}</td>
-                <td>{{item['__score_question_1']}}</td>
-                <td>{{item['__score_question_2']}}</td>
-                <td>{{item['__score_question_3']}}</td>
-                <td>{{item['__score_question_4']}}</td>
-                <td>{{item['__score_question_5']}}</td>
-                <td>{{item['__total_score']}}</td>
+                <td class="text-center">{{item['__score_question_1']}}</td>
+                <td class="text-center">{{item['__score_question_2']}}</td>
+                <td class="text-center">{{item['__score_question_3']}}</td>
+                <td class="text-center">{{item['__score_question_4']}}</td>
+                <td class="text-center">{{item['__score_question_5']}}</td>
+                <td class="text-center">{{item['__total_score']}}</td>
               </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage" >

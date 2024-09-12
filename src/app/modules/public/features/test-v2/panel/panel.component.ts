@@ -198,7 +198,7 @@ export class PanelComponent implements OnInit, OnDestroy {
         thisinh_id: contestant,
         question_ids: this.randomQuestions(questions.map(u => u.id), nganHangDe.number_questions_per_test),
         time_start: this.helperService.formatSQLDateTime(this.helperService.dateFormatWithTimeZone(dateTime.date)),
-        time: Math.max(nganHangDe.time_per_test, 1) * 60
+        time: Math.max(nganHangDe.time_per_test, 1) * 60,
       }).pipe(switchMap(id => this.shiftTestsService.getShiftTestById(id)));
     }));
   }

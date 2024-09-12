@@ -12,11 +12,38 @@
     <img src="assets/images/bandanvan/ovan.png" alt="">
   </div>
 
-  <div class="shift-content">
-    <div class="shift-content-header">
-      <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">
-      <div>BAN DÂN VẬN TỈNH UỶ THÁI NGUYÊN</div>
+  <div class="login-container">
+    <div *ngIf="!viewLogout else notView" class="login-user" (click)="btnViewLogOut(true)">
+      <img [src]="user.avatar" alt="">
+      <div class="">{{user.display_name}}</div>
     </div>
+    <ng-template #notView>
+      <div class="login-user" (click)="btnViewLogOut(false)">
+        <img [src]="user.avatar" alt="">
+        <div class="">{{user.display_name}}</div>
+      </div>
+      <div class="login-logout" (click)="signOut()">
+        <div class="logout-icon">
+          <i class="pi pi-sign-out"></i>
+        </div>
+        <div>Đăng xuất</div>
+      </div>
+    </ng-template>
+
+
+  </div>
+
+  <div class="bandanvan-logo">
+    <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">
+    <div>TỈNH UỶ THÁI NGUYÊN</div>
+    <div>BAN DÂN VẬN</div>
+  </div>
+
+  <div class="shift-content">
+<!--    <div class="shift-content-header">-->
+<!--      <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">-->
+<!--      <div>BAN DÂN VẬN TỈNH UỶ THÁI NGUYÊN</div>-->
+<!--    </div>-->
     <div class="shift-content-top">
         <div>HỘI THI</div>
         <div>“DÂN VẬN KHÉO” TỈNH THÁI NGUYÊN NĂM 2024</div>
@@ -32,9 +59,6 @@
     </div>
   </div>
 
-  <div class="btn-logout">
-    <button pButton pRipple icon="pi pi-sign-out" iconPos="right" class="p-button-secondary" label="Đăng xuất" (click)="signOut()"></button>
-  </div>
 
   <div class="copy-right">
     <div class="copy-right_img">

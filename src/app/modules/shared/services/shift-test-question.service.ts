@@ -83,12 +83,12 @@ export class ShiftTestQuestionService {
     return this.http.get<Dto>(this.api, {params}).pipe(map(res => res.data));
   }
 
-  getDataByShiftTestIdsAndquestion_id(shiftTest_ids:number[],question_id?:number):Observable<ShiftTestQuestion[]>
+  getDataByShiftTestIdsAndquestion_id(shiftTest_ids:number[],question_id?:number,thisinh_id?:number):Observable<ShiftTestQuestion[]>
   {
     const conditions: OvicConditionParam[] = [
 
     ];
-    if (question_id)
+    if (question_id || question_id != null)
     {
       conditions.push({
         conditionName:'question_id',
@@ -96,6 +96,15 @@ export class ShiftTestQuestionService {
         value:question_id.toString()
       })
     }
+    if (thisinh_id)
+    {
+      conditions.push({
+        conditionName:'thisinh_id',
+        condition:OvicQueryCondition.equal,
+        value:thisinh_id.toString()
+      })
+    }
+
     const fromObject = {
       paged: 1,
       limit: -1,
@@ -104,6 +113,43 @@ export class ShiftTestQuestionService {
     }
     const params = this.httpParamsHelper.paramsConditionBuilder(conditions, new HttpParams({fromObject}));
     return this.http.get<Dto>(this.api, {params}).pipe(map(res => res ? res.data : []));
+  }
+  getDataByShiftTestId(shiftTest_id:number):Observable<ShiftTestQuestion[]>
+  {
+    const conditions: OvicConditionParam[] = [
+      {
+        conditionName:'shift_test_id',
+        condition:OvicQueryCondition.equal,
+        value:shiftTest_id.toString()
+      }
+    ];
+
+
+    const fromObject = {
+      paged: 1,
+      limit: -1,
+    }
+    const params = this.httpParamsHelper.paramsConditionBuilder(conditions, new HttpParams({fromObject}));
+    return this.http.get<Dto>(this.api, {params}).pipe(map(res => res ? res.data : []));
+  }
+
+
+
+  callSocketStart(shift_id:number,question_id:number):Observable<any>{
+    const fromObject = {
+      shift_id:shift_id.toString(10),
+      question_id:question_id.toString(10)
+    }
+    // const params =this.httpParamsHelper.paramsConditionBuilder([],new HttpParams({fromObject})) ;
+    // const params =new HttpParams({fromObject})
+    return this.http.post<Dto>(this.api +'start-test/', fromObject);
+  }
+  callSocketEnd(shift_id:number):Observable<any> {
+    const fromObject = {
+      shift_id: shift_id.toString(10),
+    }
+    const params =this.httpParamsHelper.paramsConditionBuilder([],new HttpParams({fromObject})) ;
+    return this.http.post<Dto>(this.api + 'end-test/', fromObject);
   }
 
 }

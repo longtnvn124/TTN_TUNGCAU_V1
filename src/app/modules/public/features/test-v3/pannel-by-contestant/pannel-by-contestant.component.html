@@ -1,131 +1,147 @@
-<div class="w-100 h-100 position-relative" style="background-color: #5a725c52;">
-  <ng-container [ngSwitch]="mode">
-    <ng-container *ngSwitchCase="'PANEL'">
-      <div class="d-flex justify-content-center align-items-center h-100 flex-column">
-        <div class="container screen-container">
-          <div class="header_container">
-            <div class="info_container-new">
-              <div class="info_container-head-new d-flex justify-content-center align-items-center">
-                <div class="info-avatar d-flex justify-content-center align-items-center">
-                  <i class="fa fa-user-circle-o mr-1" aria-hidden="true"></i><span class="info_container-head-new__phone-number">{{contestantInfo.name}}</span>
-                </div>
-              </div>
-              <div class="counter-clock-wrap d-flex justify-content-center align-items-center">
-                <div class="d-inline timer">{{ getFormattedTime() }}</div>
-              </div>
-              <div class="header-btn-controls d-flex align-items-center">
-                <div class="e-learning-panel__test-progress-step">
-                  <span class="e-learning-panel__test-progress-step__step-number">{{contestantInfo.answered}}/{{contestantInfo.totalQuestion}}</span>
-                  <svg class="e-learning-panel__test-progress-step__svg">
-                    <circle class="e-learning-panel__test-progress-step__svg__circle" [attr.stroke-dasharray]="contestantInfo.strokeDasharray" cx="21" cy="21" r="18" stroke-width="4" fill="none" role="slider" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"></circle>
-                  </svg>
-                </div>
-                <button *ngIf="enableSubmitButton; else disableSubmitButton" pButton pRipple label="Nộp bài" class="ml-2" (click)="submitTheTest(true)"></button>
-                <ng-template #disableSubmitButton>
-                  <button disabled pButton pRipple label="Nộp bài" class="ml-2 --invisible-button"></button>
-                </ng-template>
-              </div>
-            </div>
-            <div class=" space-item"></div>
-          </div>
-          <div class="exam-container">
-            <!--                        <div class="exam-container__full-questions exam">-->
-            <div class="exam-02">
-              <p-tabView [scrollable]="true" class="tabview-exam">
-                <p-tabPanel *ngFor="let question of questions, index as i" header="Câu {{i+1}}">
-                  <div  class="exam-container__item" >
-                    <!--                              <div class="exam-container__item-label">Câu {{i + 1}}:-->
-                    <div class="exam-container__item-label">
-                      <div class="--fw-500 d-inline" [innerHTML]="question.title | htmlDecode"></div>
-                    </div>
-                    <groups-radio [options]="question.answer_options" inputType="checkbox" [default]="question['__answered']" (onChange)="onAnswerQuestion(question.id, $event)" [options_sty]="question.options_sty"></groups-radio>
-                  </div>
-                </p-tabPanel>
+<div class="panel_mc_contaner container" >
 
-              </p-tabView>
-            </div>
-            <!--                        <div class="exam">-->
-            <!--                          <button *ngFor="let question of questions, index as i" pButton pRipple class="p-button-icon btn-questions" label="{{i+1}}"-->
-            <!--                          [ngClass]=" btnExamSelect === i+1 ? 'p-button-primary' : 'ovic-button-none-selected'" (click)="btnSelectQuestion(i+1)"-->
-            <!--                          ></button>-->
-            <!--                        </div>-->
-            <!--                        <div  class="exam-container__item" *ngFor="let question of questions, index as i"  [ngClass]=" btnExamSelect === i+1 ? 'd-block ' : 'd-none'"  >-->
-            <!--                            <div class="exam-container__item-label">Câu {{i + 1}}:-->
-            <!--                                <div class="font-weight-bold d-inline" [innerHTML]="question.title | htmlDecode"></div>-->
-            <!--                            </div>-->
-            <!--                            <groups-radio [options]="question.answer_options" inputType="checkbox" [default]="question['__answered']" (onChange)="onAnswerQuestion(question.id, $event)" [options_sty]="question.options_sty"></groups-radio>-->
-            <!--                        </div>-->
+  <ng-container [ngSwitch]="testView">
+    <ng-container *ngSwitchCase="'question'">
+      <div *ngIf="bank" class="panel_mc_header">
+        <div class="panel_mc_header-item">
+          <div class="panel_mc_header-item__img">
+            <img [src]="user.avatar" alt="">
+          </div>
+          <div class="panel_mc_header-item__name">
+            {{user.display_name}}
           </div>
         </div>
-      </div>
-    </ng-container>
+        <div class="panel_mc_header-item">
+          <div class="counter-clock-wrap">
+            <div class="d-inline timer">{{ getFormattedTime() }}</div>
+          </div>
 
-    <ng-container *ngSwitchCase="'TEST_RESULT'">
-      <div class="results-container border">
-        <h4 class="text-center font-weight-bold my-2 text-uppercase font-weight-bold primary-font-family">Kết quả</h4>
-        <table *ngIf="shiftTest" class="tbl-in-dialog w-100">
-          <tr>
-            <td class="font-weight-bold">Thí sinh :</td>
-            <td>{{contestantInfo.name}}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold">Bài thi:</td>
-            <td>{{contestantInfo.testName}}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold">Điểm:</td>
-            <td style="color: var(--primary)">{{contestantInfo.score}}</td>
-          </tr>
-          <tr>
-            <td class="font-weight-bold">Số câu trả lời đúng:</td>
-            <td style="color: var(--success)">{{contestantInfo.number_correct}}</td>
-          </tr>
-        </table>
-        <div class="d-flex justify-content-center align-items-center my-2">
-          <button pRipple pButton icon="pi pi-sign-out" label="Thoát" iconPos="right" class="p-button-danger p-button-text" (click)="btnOutTest()"></button>
         </div>
-        <!--              <button pRipple pButton label="check" (click)="checkpush()"></button>-->
+        <div class="panel_mc_header-item"></div>
+
       </div>
+      <div class="panel_mc_content ovic-scroll-style">
+        <div *ngIf="questionSelect" class="panel_mc_content_question">
+          <div class="panel_mc_content_question-head">
+            Câu {{ curentQuestionNumber + 1 }}:
+          </div>
+          <div class="panel_mc_content_question-title">
+            <div [innerHTML]="questionSelect.title |ovicSafeHtml"></div>
+          </div>
+        </div>
+        <div *ngIf="questionSelect" class="panel_mc_content_answerOption">
+          <div *ngIf="!viewAnswer, else isShowAnswer">
+            <app-groups-radio [options]="questionSelect.answer_options" (onChange)="onAnswerQuestion(questionSelect.id, $event)"
+                          [options_sty]="questionSelect.options_sty">
+            </app-groups-radio>
+
+          </div>
+          <ng-template #isShowAnswer>
+            <app-groups-radio [options]="questionSelect.answer_options" [default]="questionSelect['__anserByContestant_convent']"
+                              [correctAnswer]="questionSelect['__answer_coverted']" [freeze]="true"
+                              [options_sty]="questionSelect.options_sty"></app-groups-radio>
+
+          </ng-template>
+        </div>
+      </div>
+
     </ng-container>
 
-    <ng-container *ngSwitchDefault>
-      <!--            <div class="results-container&#45;&#45;center border text-center d-flex justify-content-center align-items-center">-->
-      <!--                <span class="text-primary &#45;&#45;fs-15 mr-2">Tải thông tin</span><i class="pi pi-spin pi-spinner &#45;&#45;before-fs-22"></i>-->
-      <!--            </div>-->
+    <ng-container *ngSwitchCase="'data_question'">
+      <div class="data-container">
+        <div class="data-header">
+          <div>HỘI THI</div>
+          <div>“DÂN VẬN KHÉO” TỈNH THÁI NGUYÊN NĂM 2024</div>
+          <div>PHẦN THI KIẾN THỨC</div>
+          <div>KẾT QUẢ</div>
+        </div>
+        <div class="data-body">
+
+
+        </div>
+        <div class="data-footer">
+        </div>
+      </div>
+
+
+    </ng-container>
+    <ng-container *ngSwitchCase="'loading'">
+      <div class="loading-container">
+        <div class="loading-item">
+
+          <div class="loading-item__icon  pi pi-spin">
+            <i class="fa fa-spinner" aria-hidden="true"></i>
+
+          </div>
+          <div class="loading-item__content">
+            Vui lòng chờ
+          </div>
+
+        </div>
+
+
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'data_all'">
+      <div class="data-container">
+        <div class="data-header">
+          <div>HỘI THI</div>
+          <div>“DÂN VẬN KHÉO” TỈNH THÁI NGUYÊN NĂM 2024</div>
+          <div>PHẦN THI KIẾN THỨC</div>
+          <div>KẾT QUẢ</div>
+        </div>
+        <div class="data-body">
+          <p-table [value]="dataShiftTests" [loading]="table_loading" [lazy]="table_loading"   styleClass="p-datatable-gridlines"  >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Đội thi</th>
+                <th class="text-center ovic-w-100px">Câu 1</th>
+                <th class="text-center ovic-w-100px">Câu 2</th>
+                <th class="text-center ovic-w-100px">Câu 3</th>
+                <th class="text-center ovic-w-100px">Câu 4</th>
+                <th class="text-center ovic-w-100px">Câu 5</th>
+                <th class="text-center ovic-w-100px">Tổng điểm</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item>
+              <tr>
+                <td>{{ item['__name_coverted'] }}</td>
+                <td class="text-center">{{item['__cau_1']}}</td>
+                <td class="text-center">{{item['__cau_2']}}</td>
+                <td class="text-center">{{item['__cau_3']}}</td>
+                <td class="text-center">{{item['__cau_4']}}</td>
+                <td class="text-center">{{item['__cau_5']}}</td>
+                <td class="text-center">{{item['__total']}}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" >
+              <tr>
+                <td colspan="20">Chưa có dữ liệu thí sinh</td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+        </div>
+        <div class="data-footer">
+          <button pButton pRipple label="thoát" icon="pi pi-sign-out" (click)="btnOutTest()" ></button>
+        </div>
+      </div>
+
     </ng-container>
   </ng-container>
 
-
-
 </div>
 
-<p-dialog [(visible)]="openStartTheTestDialog" styleClass="test-notify test-notify--no-header" appendTo="body" [modal]="true">
-  <h4 class="text-center text-primary font-weight-bold primary-font-family text-uppercase">Thông báo</h4>
-  <table *ngIf="shiftTest" class="tbl-in-dialog w-100">
-    <tr>
-      <td>Thí sinh:</td>
-      <td>{{ contestantInfo.name }}</td>
 
-    </tr>
-    <tr>
-      <td>Bài thi:</td>
-      <td>{{contestantInfo.testName}}</td>
-    </tr>
-    <tr>
-      <td>Thời gian làm bài:</td>
-      <td>{{contestantInfo.timeOfTheTest}} </td>
-    </tr>
-  </table>
-  <div class="d-flex justify-content-center align-items-center mt-3">
-    <button pRipple pButton icon="pi pi-sign-out" label="Thoát" class="p-button-secondary" (click)="btnOutTest()"></button>
-    <button pButton pRipple icon="pi pi-check-square" label="Bắt đầu thi" class="ml-3" (click)="startTheTest()"></button>
+
+
+
+<ng-template #notifiTest>
+  <div class="notifi-container">
+    <div class="title">Thông báo</div>
+    <div class="content">Hết thời gian</div>
+    <div class="btn_notifi">
+      <button pRipple pButton label="Xem đáp án " (click)="btnSubmitTimeEnd()" ></button>
+    </div>
   </div>
-</p-dialog>
-
-<!--<p-dialog [(visible)]="isTimeOver" styleClass="test-notify test-notify&#45;&#45;no-header" appendTo="body" [modal]="true">-->
-<!--  <h4 class="text-center text-danger font-weight-bold primary-font-family text-uppercase">Thông báo hết giờ làm bài</h4>-->
-<!--  <p class="text-center mt-1">Xác nhận nộp bài</p>-->
-<!--  <div class="d-flex justify-content-center align-items-center mt-2">-->
-<!--    <button pButton pRipple class="p-button-success" label="Xác nhận" (click)="submitTheTest()"></button>-->
-<!--  </div>-->
-<!--</p-dialog>-->
+</ng-template>

@@ -58,15 +58,10 @@ export class NganHangCauHoiService {
   getDataByBankId(bank_id: number, search?: string, select: string = null): Observable<NganHangCauHoi[]> {
     const conditions: OvicConditionParam[] = [
       {
-        conditionName: 'is_deleted',
-        condition: OvicQueryCondition.equal,
-        value: '0'
-      },
-      {
         conditionName: 'bank_id',
         condition: OvicQueryCondition.equal,
         value: bank_id.toString(10),
-        orWhere: 'and'
+
       }
     ];
     if (search) {
@@ -74,7 +69,6 @@ export class NganHangCauHoiService {
         conditionName: 'title',
         condition: OvicQueryCondition.like,
         value: `%${search}%`,
-        orWhere: 'and'
       })
     }
 

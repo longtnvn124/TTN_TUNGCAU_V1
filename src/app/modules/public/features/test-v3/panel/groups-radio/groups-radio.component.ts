@@ -11,7 +11,7 @@ interface GroupsRadioQuestion {
 }
 
 @Component({
-  selector: 'groups-radio',
+  selector: 'app-groups-radio',
   templateUrl: './groups-radio.component.html',
   styleUrls: ['./groups-radio.component.css'],
   imports: [

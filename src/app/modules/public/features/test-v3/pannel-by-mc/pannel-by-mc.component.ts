@@ -25,7 +25,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 export class PannelByMcComponent implements OnInit,OnDestroy {
   @ViewChild('notifiTest', {static: true}) notifiTest: TemplateRef<any>;
   private _validInfo: { shift_id: number, contestant: number } = {shift_id: 0, contestant: 0};
-  testView             :'load'|'question'|'data_question'|'data_all' = "question" ;
+  testView             :'loading'|'question'|'data_question'|'data_all' = "question" ;
   shift                : Shift;
   bank                 : NganHangDe;
   bankQuestions        : NganHangCauHoi[];
@@ -133,8 +133,8 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
     }
     else{
       this.testView ="data_all";
-      this.loadDataShiftTestByShiftIdAndquestionId()
-
+      this.loadDataShiftTestByShiftIdAndquestionId();
+      this.callSocketEndQuestion();
     }
   }
 
@@ -178,31 +178,42 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
 
   btnViewTestQuestion(){
     this.testView="data_question";
-    this.loadDataShiftTestByShiftIdAndquestionId()
+    this.loadDataShiftTestByShiftIdAndquestionId(this.questionSelect.id)
   }
 
 
   shiftTest:ShiftTests[] = null;
   table_loading:boolean=false;
-  loadDataShiftTestByShiftIdAndquestionId(){
+  loadDataShiftTestByShiftIdAndquestionId(question_id?:number){
+    this.testView ="data_all";
     this.stopTimer();
     this.table_loading= true;
     const shift_id = this.shift.id;
-    const question_id = this.questionSelect.id;
+    // const question_id = this.questionSelect.id;
     this.shiftTestsService.getDataByShiftId(shift_id).pipe(switchMap(m=>{
       const ids = m.map(m=>m.id);
       return forkJoin([of(m),this.shiftTestQuestionService.getDataByShiftTestIdsAndquestion_id(ids,question_id)])
     })).subscribe({
       next:([shiftTest,shiftTestQuestion])=>{
           this.shiftTest = shiftTest && shiftTest.length>0 ? shiftTest.map(m=>{
-            const thisinh =m['thisinh'];
+            const thisinh =m['users'];
+            console.log(thisinh);
             m['__name_coverted'] = thisinh ? thisinh['display_name'] : '';
             const shiftTestQuestionData = shiftTestQuestion && shiftTestQuestion.length> 0 ? shiftTestQuestion.filter(f=>f.shift_test_id === m.id) : [];
-            m['__question_converted'] = shiftTestQuestionData;
+            m['__question_converted'] =shiftTestQuestionData && shiftTestQuestionData.length>0  ?  shiftTestQuestionData.map(b=>{
+              // console.log(b);
+              const id_answer =b.answer ? b.answer[0]  : null;
+              const options =  this.questionSelect.answer_options
+              const index_answer = id_answer ?  options.findIndex(f=>f.id === id_answer) : '-1';
+              b['__answer_converted'] = index_answer ===0 ? 'A': index_answer ===1?'B': index_answer === 2 ?'C':index_answer ===3?'D': '-';
+              return b;
+            }): [];
+            m['__question_number']= this.curentQuestionNumber+1
             let total = 0
+            console.log(shiftTestQuestionData);
             shiftTestQuestionData.forEach((a,index)=>{
-              m['__score_question_'+ index+1] = a.score ? a.score : 0 ;
-              total +=1;
+              m['__score_question_'+ (index + 1)] = a.score ? a.score : 0 ;
+              total =total + a.score;
             });
             m['__total_score'] = total;
             return m;
@@ -241,7 +252,28 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
 
   }
 
-  updateSocketTimeByTimeStart(string){
-    this.shiftService.update(this.shift.id,{})
+  callSocketStartQuestion(){
+    this.notificationService.isProcessing(true)
+    this.shiftTestQuestionService.callSocketStart(this.shift.id,this.questionSelect.id).subscribe({
+      next:()=>{
+        this.startTimer(this.time_clone_for_end);
+        this.notificationService.isProcessing(false);
+      },
+      error:()=>{
+        this.notificationService.isProcessing(false);
+      }
+    })
+  }
+  callSocketEndQuestion(){
+    this.notificationService.isProcessing(true)
+    this.shiftTestQuestionService.callSocketEnd(this.shift.id).subscribe({
+      next:()=>{
+        this.notificationService.isProcessing(false);
+        this.notificationService.toastSuccess('Bài thi đã kết thúc');
+      },
+      error:()=>{
+        this.notificationService.isProcessing(false);
+      }
+    })
   }
 }

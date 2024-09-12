@@ -13,6 +13,7 @@ import { PannelByMcComponent } from './pannel-by-mc/pannel-by-mc.component';
 import { PannelByContestantComponent } from './pannel-by-contestant/pannel-by-contestant.component';
 import {GroupsRadioComponent} from "@modules/public/features/test-v3/panel/groups-radio/groups-radio.component";
 import {TableModule} from "primeng/table";
+import {TestV2Module} from "@modules/public/features/test-v2/test-v2.module";
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import {TableModule} from "primeng/table";
     TabViewModule,
     GroupsRadioComponent,
     TableModule,
+    TestV2Module,
   ]
 })
 export class TestV3Module { }
