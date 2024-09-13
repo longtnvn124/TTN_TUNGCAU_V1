@@ -14,7 +14,7 @@ import {forkJoin, interval, merge, Observable, of, Subject, switchMap, takeUntil
 import {Shift, ShiftTests} from "@shared/models/quan-ly-doi-thi";
 import {NganHangCauHoi, NganHangDe} from "@shared/models/quan-ly-ngan-hang";
 import {User} from "@core/models/user";
-import {ShiftTestQuestionService} from "@shared/services/shift-test-question.service";
+import {ShiftTestQuestion, ShiftTestQuestionService} from "@shared/services/shift-test-question.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
@@ -36,10 +36,12 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
   timeCloser$          : Subject<string> = new Subject<string>();
   destroy$             : Subject<string> = new Subject<string>();
   isSubmitTimeEnd      : boolean = false;
-  isTimeOver           : boolean = false;
   user                 : User;
   viewAnswer           : boolean = false;
   curentQuestionNumber : number = -1;
+  shiftTest            : ShiftTests[] ;
+  shiftTestQuestion    : ShiftTestQuestion[];
+  table_loading        : boolean=false;
   constructor(
     private router: Router,
     private notificationService: NotificationService,
@@ -122,18 +124,20 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
 
   }
   btnNextQuestion(){
+    this.shiftTestQuestion = [];
     this.viewAnswer=false;
     this.time_clone_for_end =this.time_clone;
     this.bankQuestions.find(f=>f.id === this.questionSelect.id)['__used'] = true;
     const bank_clone = this.bankQuestions.filter(f=>!f['__used']);
-    if(bank_clone.length>0){
+    if(bank_clone.length === 0){
+    // if(bank_clone.length>0){
       this.questionSelect = {...bank_clone[0]};
       this.curentQuestionNumber = this.bankQuestions.findIndex(f=>f.id === bank_clone[0].id);
       console.log(this.curentQuestionNumber);
     }
     else{
       this.testView ="data_all";
-      this.loadDataShiftTestByShiftIdAndquestionId();
+      // this.loadDataShiftTestByShiftIdAndquestionId();
       this.callSocketEndQuestion();
     }
   }
@@ -182,8 +186,6 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
   }
 
 
-  shiftTest:ShiftTests[] = null;
-  table_loading:boolean=false;
   loadDataShiftTestByShiftIdAndquestionId(question_id?:number){
     this.testView ="data_all";
     this.stopTimer();
@@ -197,7 +199,7 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
       next:([shiftTest,shiftTestQuestion])=>{
           this.shiftTest = shiftTest && shiftTest.length>0 ? shiftTest.map(m=>{
             const thisinh =m['users'];
-            console.log(thisinh);
+            m['__avatar'] = thisinh ? thisinh['avatar']:'assets/images/bandanvan/logo_bandanvan.png';
             m['__name_coverted'] = thisinh ? thisinh['display_name'] : '';
             const shiftTestQuestionData = shiftTestQuestion && shiftTestQuestion.length> 0 ? shiftTestQuestion.filter(f=>f.shift_test_id === m.id) : [];
             m['__question_converted'] =shiftTestQuestionData && shiftTestQuestionData.length>0  ?  shiftTestQuestionData.map(b=>{
@@ -210,7 +212,7 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
             }): [];
             m['__question_number']= this.curentQuestionNumber+1
             let total = 0
-            console.log(shiftTestQuestionData);
+
             shiftTestQuestionData.forEach((a,index)=>{
               m['__score_question_'+ (index + 1)] = a.score ? a.score : 0 ;
               total =total + a.score;
@@ -248,14 +250,31 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
   btnSubmitTimeEnd(){
     this.isSubmitTimeEnd = false;
     this.viewAnswer= true;
+    this.loadKetquaQueStion(this.shift.id,this.questionSelect.id);
     this.modalSerivice.dismissAll();
 
   }
 
   callSocketStartQuestion(){
     this.notificationService.isProcessing(true)
-    this.shiftTestQuestionService.callSocketStart(this.shift.id,this.questionSelect.id).subscribe({
-      next:()=>{
+    this.shiftTestQuestionService.callSocketStart(this.shift.id,this.questionSelect.id).pipe(switchMap(()=>
+    this.shiftTestQuestionService.getDataByShiftIdAndQuestionId(this.shift.id,this.questionSelect.id)
+    )).subscribe({
+      next:(data)=>{
+        this.shiftTestQuestion = data.map(m=>{
+          const thisinh =m['users'];
+          m['__display_name'] = thisinh ? thisinh['display_name'] :'Đội thi ...';
+          m['__avatar'] = thisinh ? thisinh['avatar'] :'assets/images/bandanvan/logo_bandanvan.png';
+          const id_answer =m.answer ? m.answer[0]  : null;
+          const options =  this.questionSelect.answer_options;
+          const index_answer = id_answer ?  options.findIndex(f=>f.id === id_answer) : '-1';
+          m['__answer_converted'] = index_answer ===0 ? 'A': index_answer ===1?'B': index_answer === 2 ?'C':index_answer ===3?'D': '-';
+          m['_typeView'] = !!m['answer'];
+          m['__score'] = m['score']!=0  ;
+          return m;
+        })
+        console.log(this.shiftTestQuestion);
+
         this.startTimer(this.time_clone_for_end);
         this.notificationService.isProcessing(false);
       },
@@ -273,6 +292,33 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
       },
       error:()=>{
         this.notificationService.isProcessing(false);
+      }
+    })
+  }
+
+
+  loadKetquaQueStion(shift_id:number,question_id:number){
+    this.notificationService.isProcessing(true);
+    this.shiftTestQuestionService.getDataByShiftIdAndQuestionId(shift_id,question_id).subscribe({
+      next:(data)=>{
+        this.shiftTestQuestion = data.map(m=>{
+          const thisinh =m['users'];
+          m['__display_name'] = thisinh ? thisinh['display_name'] :'Đội thi ...';
+          m['__avatar'] = thisinh ? thisinh['avatar'] :'assets/images/bandanvan/logo_bandanvan.png';
+          const id_answer =m.answer ? m.answer[0]  : null;
+          const options =  this.questionSelect.answer_options;
+          const index_answer = id_answer ?  options.findIndex(f=>f.id === id_answer) : '-1';
+          m['__answer_converted'] = index_answer ===0 ? 'A': index_answer ===1?'B': index_answer === 2 ?'C':index_answer ===3?'D': '-';
+          m['_typeView'] = !!m['answer'];
+          m['__score'] = m['score']!=0  ;
+          return m;
+        })
+
+        this.notificationService.isProcessing(false);
+
+      },error:()=>{
+        this.notificationService.isProcessing(false);
+
       }
     })
   }

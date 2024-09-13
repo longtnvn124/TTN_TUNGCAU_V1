@@ -114,7 +114,7 @@ export class ShiftTestQuestionService {
     const params = this.httpParamsHelper.paramsConditionBuilder(conditions, new HttpParams({fromObject}));
     return this.http.get<Dto>(this.api, {params}).pipe(map(res => res ? res.data : []));
   }
-  getDataByShiftTestId(shiftTest_id:number):Observable<ShiftTestQuestion[]>
+  getDataByShiftTestId(shiftTest_id:number,question_id?:number):Observable<ShiftTestQuestion[]>
   {
     const conditions: OvicConditionParam[] = [
       {
@@ -123,17 +123,48 @@ export class ShiftTestQuestionService {
         value:shiftTest_id.toString()
       }
     ];
+    if(question_id){
+      conditions.push({
+        conditionName:'question_id',
+        condition:OvicQueryCondition.equal,
+        value:question_id.toString()
+      })
+    }
 
 
     const fromObject = {
       paged: 1,
       limit: -1,
     }
-    const params = this.httpParamsHelper.paramsConditionBuilder(conditions, new HttpParams({fromObject}));
+    const params = this.httpParamsHelper.paramsConditionBuilder(conditions, new HttpParams({fromObject}).set('with', 'users'));
     return this.http.get<Dto>(this.api, {params}).pipe(map(res => res ? res.data : []));
   }
 
+  getDataByShiftIdAndQuestionId(shiftTest_id:number,question_id?:number):Observable<ShiftTestQuestion[]>
+  {
+    const conditions: OvicConditionParam[] = [
+      {
+        conditionName:'shift_id',
+        condition:OvicQueryCondition.equal,
+        value:shiftTest_id.toString()
+      }
+    ];
+    if(question_id){
+      conditions.push({
+        conditionName:'question_id',
+        condition:OvicQueryCondition.equal,
+        value:question_id.toString()
+      })
+    }
 
+
+    const fromObject = {
+      paged: 1,
+      limit: -1,
+    }
+    const params = this.httpParamsHelper.paramsConditionBuilder(conditions, new HttpParams({fromObject}).set('with', 'users'));
+    return this.http.get<Dto>(this.api, {params}).pipe(map(res => res ? res.data : []));
+  }
 
   callSocketStart(shift_id:number,question_id:number):Observable<any>{
     const fromObject = {

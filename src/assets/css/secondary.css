@@ -804,4 +804,8 @@ p .ql-align-center{
   gap: 10px;
   flex-direction: column;
 }
-/*----------------------------CHAt-BOT---------------------------------*/
+/*----------------------------TestV3---------------------------------*/
+.custom-by-mc .p-splitter{
+  background:none;
+  border:none;
+}

@@ -30,7 +30,7 @@ export class OvicGroupsRadioComponent implements OnInit , OnChanges {
 
 	@Input() verticalMode = false;
 
-	@Input() columns : 1 | 2 | 3 | 4 = 1;
+	@Input() columns : number= 1;//1 | 2 | 3 | 4
 
 	@Input() inputType = 'radio'; // radio | checkbox
 

@@ -14,6 +14,7 @@ import { PannelByContestantComponent } from './pannel-by-contestant/pannel-by-co
 import {GroupsRadioComponent} from "@modules/public/features/test-v3/panel/groups-radio/groups-radio.component";
 import {TableModule} from "primeng/table";
 import {TestV2Module} from "@modules/public/features/test-v2/test-v2.module";
+import {SplitterModule} from "primeng/splitter";
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import {TestV2Module} from "@modules/public/features/test-v2/test-v2.module";
     GroupsRadioComponent,
     TableModule,
     TestV2Module,
+    SplitterModule,
   ]
 })
 export class TestV3Module { }

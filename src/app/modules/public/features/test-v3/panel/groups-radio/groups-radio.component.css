@@ -40,40 +40,42 @@
 }
 
 .ov-btn-radio {
-	border: 1px solid #dedede;
+	border: 1px solid #D9D9D959;;
 	margin: 0;
 	display: flex;
 	box-shadow: none !important;
 	outline: none !important;
-	font-size: 14px;
+	font-size: 16px;
 	font-weight: 500;
 	color: #333333;
 	line-height: 20px;
 	justify-content: flex-start;
 	align-items: center;
-	background-color: #f1f1f1;
+	background-color: #D9D9D959;
 	padding: 4px;
 	width: 100%;
-	border-radius: 18px;
+	border-radius:50px;
 }
 
 .ov-btn-radio:hover {
-	background-color: #e5e5e5;
-	border: 1px solid #e5e5e5;
+	background-color: #C10A0A;
+	border: 1px solid #FFF700;
 	color: #333333;
-  border-radius: 18px;
+  border-radius: 50px;
 
 }
 
 .ov-btn-radio .ov-prefix {
-	border: 1px solid #dedede;
-	background-color: #ffffff;
-	width: var(--ov-prefix-width);
-	height: var(--ov-prefix-height);
-	min-width: var(--ov-prefix-width);
-	min-height: var(--ov-prefix-height);
-	max-width: var(--ov-prefix-width);
-	max-height: var(--ov-prefix-height);
+	background-color: #C10A0A;
+	/*width: var(--ov-prefix-width);*/
+	/*height: var(--ov-prefix-height);*/
+  padding:22px;
+  /*width:100%;*/
+  /*height:100%;*/
+	/*min-width: var(--ov-prefix-width);*/
+	/*min-height: var(--ov-prefix-height);*/
+	/*max-width: var(--ov-prefix-width);*/
+	/*max-height: var(--ov-prefix-height);*/
 	text-align: center;
 	position: relative;
 	transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
@@ -95,12 +97,12 @@
 /*	background-color: #cccccc;*/
 /*}*/
 
-.ov-btn-radio.active {
-	/*background-color: #007ad9;*/
-	background-color: #0089d926;
-	border-color: #007ad9;
-	color: #393939;
-}
+/*.ov-btn-radio.active {*/
+/*	!*background-color: #007ad9;*!*/
+/*	background-color: #0089d926;*/
+/*	border-color: #007ad9;*/
+/*	color: #393939;*/
+/*}*/
 
 .ov-btn-radio .ov-prefix::before {
 	content: 'A';
@@ -109,10 +111,11 @@
 	left: 50%;
 	display: inline-block;
 	transform: translate(-50%, -50%);
-	font-size: 14px;
+	/*font-size: 16px;*/
 	line-height: 1;
 	font-weight: 700;
-	color: #444444;
+	color: #fff;
+  font-size: 26px;
 }
 
 .ovic-radios__elm:nth-child(2) .ov-btn-radio .ov-prefix::before {
@@ -165,7 +168,7 @@
 
 .ovic-radios__elm:hover {
 	background-color: #ffffff;
-  border-radius: 18px;
+  border-radius: 50px;
 
 }
 
@@ -187,6 +190,7 @@ p.ovic-radios__text {
 
 .ovic-radios__text{
 	text-align: left;
+  color:#fff;
 }
 
 .content-inner-html {
@@ -206,14 +210,14 @@ p.ovic-radios__text {
 }
 
 .ovic-radios__tick--correct-answer {
-	width: 12px;
-	height: 12px;
+	width: 16px;
+	height: 16px;
 	display: none;
 }
 
 .ovic-radios__tick--incorrect-answer {
-	width: 10px;
-	height: 10px;
+	width: 16px;
+	height: 16px;
 	display: none;
 }
 
@@ -225,6 +229,13 @@ p.ovic-radios__text {
 	display: inline;
 }
 
+.correct-answer .ov-btn-radio{
+  background-color: #FFFFFFD6;
+  border-color: #FFFFFFD6;
+}
+.correct-answer .ov-btn-radio .ov-prefix {
+  background-color:#04AA1D;
+}
 .correct-answer .ovic-radios__text {
 	color: #3AB54A;
 }
@@ -238,6 +249,7 @@ p.ovic-radios__text {
 .ov-prefix {
 	display: inline;
 	vertical-align: top;
+  padding:0 4px;
 }
 
 .ovic-radios__tick {
@@ -258,5 +270,5 @@ p.ovic-radios__text {
   background: #ffff;
   padding: 7px;
   border-radius: 50%;
-  border: 1px solid;
+  /*border: 1px solid;*/
 }
