@@ -34,17 +34,17 @@
 <!--            <app-groups-radio>-->
 <!--            </app-groups-radio>-->
 
-            <ovic-groups-radio  [options]="questionSelect.answer_options" (onChange)="onAnswerQuestion(questionSelect.id, $event)"
-                                [columns]="questionSelect.options_sty"></ovic-groups-radio>
+            <groups-radio  [options]="questionSelect.answer_options" (onChange)="onAnswerQuestion(questionSelect.id, $event)"
+                                [options_sty]="questionSelect.options_sty"></groups-radio>
 
           </div>
           <ng-template #isShowAnswer>
 <!--            <app-groups-radio [options]="questionSelect.answer_options" [default]="questionSelect['__anserByContestant_convent']"-->
 <!--                              [correctAnswer]="questionSelect['__answer_coverted']" [freeze]="true"-->
 <!--                              [options_sty]="questionSelect.options_sty"></app-groups-radio>-->
-            <ovic-groups-radio [options]="questionSelect.answer_options" [default]="questionSelect['__anserByContestant_convent']"
+            <groups-radio [options]="questionSelect.answer_options" [default]="questionSelect['__anserByContestant_convent']"
                                [correctAnswer]="questionSelect['__answer_coverted']" [freeze]="true"
-                               [columns]="questionSelect.options_sty"></ovic-groups-radio>
+                               [options_sty]="questionSelect.options_sty"></groups-radio>
 
 
           </ng-template>

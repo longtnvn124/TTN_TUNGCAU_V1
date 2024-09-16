@@ -4,12 +4,16 @@ export const environment = {
   production : true
 };
 
+// run locall
+
 const realm       = 'ttn_dhtn';
-// const host        = [ 'h' , 't' , 't' , 'p' , 's' , ':' , '/' , '/' , 'a' , 'p' , 'i' , '-' , 'd' , 'e' , 'v' , '.' , 'i' , 'c' , 't' , 'u' , '.' , 'v' , 'n' ];
-const host        = 'https://tnu.vn';
-const port        = '10091';
-const port_socket = '10092';
-const ws_url      = [ 'w' , 's' , 's' , ':' , '/' , '/' , 'a' , 'p' , 'i' , '-' , 'd' , 'e' , 'v' , '.' , 'i' , 'c' , 't' , 'u' , '.' , 'v' , 'n' ];
+const host        = 'https://bandanvan.ictu.vn';
+// const host        = 'https://api-dev.ictu.vn';
+// const host        = 'https://tnu.vn';
+
+const port        = '9087';
+const port_socket = '9088';
+const ws_url      =  'wss://bandanvan.ictu.vn' ;
 
 export const getHost         = () : string => host;
 export const getRoute        = ( route : string ) : string => [].concat( host , [ ':' , port , '/' , realm , '/api/' , route ] ).join( '' );
@@ -18,7 +22,7 @@ export const getLinkDrive    = ( id : string ) : string => [].concat( host , [ '
 export const getLinkMedia    = ( id : string ) : string => [].concat( host , [ ':' , port , '/' , realm , '/api/uploads/' , id ] ).join( '' );
 export const getFileDir      = () : string => [].concat( host , [ ':' , port , '/' , realm , '/api/uploads/folder/' ] ).join( '' );
 export const getLinkDownload = ( id : number | string ) : string => [].concat( host , [ ':' , port , '/' , realm , '/api/uploads/file/' , id ? id.toString( 10 ) : '' ] ).join( '' );
-export const getWsUrl        = () : string => ws_url.join( '' ) + ':' + port_socket;
+export const getWsUrl        = () : string => ws_url+ ':' + port_socket;
 export const wsPath          = '/sso/socket';
 
 const acceptFileType = [
@@ -96,6 +100,7 @@ export const APP_CONFIGS = {
   teacherCloudStorage      : '1YZwbEC_OBOTg6OyzvWXMWqxJI63dehH6' ,
   soundAlert               : true
 };
+
 /* define menu filter */
 export const HIDDEN_MENUS = new Set( [ 'message/notification-details' ] ); // id của menu không muốn hiển thị
 
@@ -112,8 +117,8 @@ export const REFRESH_TOKEN   = 'dtlsdpAbLPDaGK';
 export const ENCRYPT_KEY     = 'dtlsdpW4jM2P5r';
 export const APP_STORES      = 'dtlsdp4QfWtr6Z'; // no clear after logout
 export const SWITCH_DONVI_ID = 'dtlsdpC@gGA506'; // no clear after logout
-// export const X_APP_ID        = '64c9a192-cc0e-4198-acb8-2188dbb472fa';
-export const X_APP_ID        = '70E23978-93C8-4AE0-AA74-57E76CFB69A7';
+export const X_APP_ID        = '64c9a192-cc0e-4198-acb8-2188dbb472fa';//offline
+// export const X_APP_ID        = '70E23978-93C8-4AE0-AA74-57E76CFB69A7';//online
 
 export const imgFalback = 'assets/images/placeholder.jpg';
 

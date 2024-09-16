@@ -49,6 +49,7 @@ export class ShiftComponent implements OnInit {
   isLoading           : boolean = false;
   user                : User;
   viewLogout          : boolean = false;
+  select_id           : number = 0;
   constructor(
     private helperService : HelperService ,
     private dotThiDanhSachService : DotThiDanhSachService ,
@@ -124,33 +125,64 @@ export class ShiftComponent implements OnInit {
 
   mode : 'TABLE' | 'EXAM' = 'TABLE';
 
-  btnTest( dotthi : DotThiKhaDung ) {
-    switch ( dotthi.state ) {
-      case -1:
-        this.notificationService.toastError( 'Ca thi đã quá hạn' );
-        break;
-      case 0:
-        this.notificationService.toastInfo( 'Ca thi chưa bắt đầu' );
-        break;
-      case 1:
-        // bắt đầu ca thi
-        // const safeGard = Date.now().toString( 10 );
-        // localStorage.setItem( '_safeGard' , safeGard );
-        // const code = this.auth.encryptData( JSON.stringify( {
-        // 	shift_id : dotthi.id ,
-        // 	bank_id  : dotthi.bank_id ,
-        // 	safeGard
-        // } ) );
+  btnTest(  ) {
+    const dotthi = this.dsDotthi.find(f=>f.id === this.select_id);
+    if (dotthi){
+      switch ( dotthi.state ) {
+        case -1:
+          this.notificationService.toastError( 'Ca thi đã quá hạn' );
+          break;
+        case 0:
+          this.notificationService.toastInfo( 'Ca thi chưa bắt đầu' );
+          break;
+        case 1:
+          // bắt đầu ca thi
+          // const safeGard = Date.now().toString( 10 );
+          // localStorage.setItem( '_safeGard' , safeGard );
+          // const code = this.auth.encryptData( JSON.stringify( {
+          // 	shift_id : dotthi.id ,
+          // 	bank_id  : dotthi.bank_id ,
+          // 	safeGard
+          // } ) );
 
-        // void this.router.navigate( [ 'test/panel' ] , { queryParams : { code } } );
+          // void this.router.navigate( [ 'test/panel' ] , { queryParams : { code } } );
 
-        this.auth.setOption( KEY_NAME_SHIFT_ID , dotthi.id );
-        void this.router.navigate( [ 'test/panel' ] );
-        break;
-      default:
-        this.notificationService.toastError( 'Ca thi đã quá hạn' );
-        break;
+          this.auth.setOption( KEY_NAME_SHIFT_ID , dotthi.id );
+          void this.router.navigate( [ 'test/panel' ] );
+          break;
+        default:
+          this.notificationService.toastError( 'Ca thi đã quá hạn' );
+          break;
+      }
+    }else{
+      this.notificationService.toastWarning('Vui lòng chọn bộ đề ');
     }
+    // switch ( dotthi.state ) {
+    //   case -1:
+    //     this.notificationService.toastError( 'Ca thi đã quá hạn' );
+    //     break;
+    //   case 0:
+    //     this.notificationService.toastInfo( 'Ca thi chưa bắt đầu' );
+    //     break;
+    //   case 1:
+    //     // bắt đầu ca thi
+    //     // const safeGard = Date.now().toString( 10 );
+    //     // localStorage.setItem( '_safeGard' , safeGard );
+    //     // const code = this.auth.encryptData( JSON.stringify( {
+    //     // 	shift_id : dotthi.id ,
+    //     // 	bank_id  : dotthi.bank_id ,
+    //     // 	safeGard
+    //     // } ) );
+    //
+    //     // void this.router.navigate( [ 'test/panel' ] , { queryParams : { code } } );
+    //
+    //     this.auth.setOption( KEY_NAME_SHIFT_ID , dotthi.id );
+    //     void this.router.navigate( [ 'test/panel' ] );
+    //     break;
+    //   default:
+    //     this.notificationService.toastError( 'Ca thi đã quá hạn' );
+    //     break;
+    // }
   }
 
 
@@ -206,5 +238,8 @@ export class ShiftComponent implements OnInit {
   }
   btnViewLogOut(check:boolean){
     this.viewLogout= check;
+  }
+  btnSelectId(id){
+    this.select_id= id;
   }
 }

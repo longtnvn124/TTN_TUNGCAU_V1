@@ -370,8 +370,8 @@ export class PannelByContestantComponent implements OnInit {
         // this.updateTimeLeft(0);
         this.isSubmitTimeEnd= true;
         this.btnViewTemplaceNotifi();
-        console.log(this.bankQuestions.find(f=>f.id === this.shiftTestQuestion.question_id));
-        this.updateTestQuestion(this.shiftTestQuestion,this.questionSelect.id);
+
+        // this.updateTestQuestion(this.shiftTestQuestion,this.questionSelect.id);
       }
       if (++couter === perious) {
         // this.updateTimeLeft(this.remainingTimeClone);// tính h sinh viên time giarm theo 20s 1 laamf
@@ -461,21 +461,6 @@ export class PannelByContestantComponent implements OnInit {
         })
         this.shiftTest['__total']= total;
         this.shiftTest['__name_coverted'] = this.authService.user.display_name;
-        // this.dataShiftTests = shifttest.map(m=>{
-        //   const thisinh = m['users'];
-        //   m['__name_coverted'] = thisinh ? thisinh['display_name'] :'Đội';
-        //   const shiftTestQuestionsmap = shiftTestQuestions &&  shiftTestQuestions.length>0 ? shiftTestQuestions.filter(f=>f.shift_test_id === m.id): [];
-        //   let total =0;
-        //   m.question_ids.map((a,index)=>{
-        //     const question =shiftTestQuestionsmap.find(c=>c.question_id === a);
-        //     total = total + question.score;
-        //     m[ '__cau_'+ index + 1 ] = question.score;
-        //     return shiftTestQuestionsmap.find(c=>c.question_id === a)
-        //   })
-        //
-        //   m['_total'] =total;
-        //   return m;
-        // })
         this.dataShiftTests.push(this.shiftTest);
         console.log(this.dataShiftTests);
         this.notificationService.isProcessing(false);

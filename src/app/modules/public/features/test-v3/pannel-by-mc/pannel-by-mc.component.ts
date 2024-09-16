@@ -129,15 +129,14 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
     this.time_clone_for_end =this.time_clone;
     this.bankQuestions.find(f=>f.id === this.questionSelect.id)['__used'] = true;
     const bank_clone = this.bankQuestions.filter(f=>!f['__used']);
-    if(bank_clone.length === 0){
-    // if(bank_clone.length>0){
+    // if(bank_clone.length === 0){
+    if(bank_clone.length>0){
       this.questionSelect = {...bank_clone[0]};
       this.curentQuestionNumber = this.bankQuestions.findIndex(f=>f.id === bank_clone[0].id);
       console.log(this.curentQuestionNumber);
     }
     else{
       this.testView ="data_all";
-      // this.loadDataShiftTestByShiftIdAndquestionId();
       this.callSocketEndQuestion();
     }
   }
@@ -199,25 +198,18 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
       next:([shiftTest,shiftTestQuestion])=>{
           this.shiftTest = shiftTest && shiftTest.length>0 ? shiftTest.map(m=>{
             const thisinh =m['users'];
+            console.log(thisinh);
             m['__avatar'] = thisinh ? thisinh['avatar']:'assets/images/bandanvan/logo_bandanvan.png';
             m['__name_coverted'] = thisinh ? thisinh['display_name'] : '';
             const shiftTestQuestionData = shiftTestQuestion && shiftTestQuestion.length> 0 ? shiftTestQuestion.filter(f=>f.shift_test_id === m.id) : [];
-            m['__question_converted'] =shiftTestQuestionData && shiftTestQuestionData.length>0  ?  shiftTestQuestionData.map(b=>{
-              // console.log(b);
-              const id_answer =b.answer ? b.answer[0]  : null;
-              const options =  this.questionSelect.answer_options
-              const index_answer = id_answer ?  options.findIndex(f=>f.id === id_answer) : '-1';
-              b['__answer_converted'] = index_answer ===0 ? 'A': index_answer ===1?'B': index_answer === 2 ?'C':index_answer ===3?'D': '-';
-              return b;
-            }): [];
-            m['__question_number']= this.curentQuestionNumber+1
+            const numberQuestion = shiftTestQuestionData ? shiftTestQuestionData.length : 5;
+            const numberQuestionCorect = shiftTestQuestionData ? shiftTestQuestionData.filter(f=>f.score === 5).length:0;
             let total = 0
-
             shiftTestQuestionData.forEach((a,index)=>{
-              m['__score_question_'+ (index + 1)] = a.score ? a.score : 0 ;
               total =total + a.score;
             });
             m['__total_score'] = total;
+            m['__answer_convert'] = numberQuestionCorect +'/' + numberQuestion;
             return m;
           }) : null;
 
@@ -287,6 +279,7 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
     this.notificationService.isProcessing(true)
     this.shiftTestQuestionService.callSocketEnd(this.shift.id).subscribe({
       next:()=>{
+        this.loadDataShiftTestByShiftIdAndquestionId();
         this.notificationService.isProcessing(false);
         this.notificationService.toastSuccess('Bài thi đã kết thúc');
       },

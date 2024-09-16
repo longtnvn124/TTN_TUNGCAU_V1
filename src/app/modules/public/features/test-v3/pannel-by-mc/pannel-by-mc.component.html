@@ -26,7 +26,7 @@
             <div class="title">PHẦN THI KIẾN THỨC</div>
           </div>
         </div>
-        <div *ngIf="questionSelect" class="panel-center-body">
+        <div *ngIf="questionSelect" class="panel-center-body intro-x">
 
           <div class="panel-center-body_left">
             <div class="panel-center-body_left-header"> {{'Câu '+ (curentQuestionNumber+1) }}</div>
@@ -71,7 +71,7 @@
             <div class="panel-center-footer_item-name">
               {{item['__display_name']}}
             </div>
-            <div *ngIf="item.answer else notAnswer" class="panel-center-footer_item-answer">
+            <div *ngIf="item.answer && time_clone_for_end === 0 else notAnswer" class="panel-center-footer_item-answer">
               <div>{{item['__answer_converted']}}</div>
             </div>
             <ng-template #notAnswer>
@@ -87,6 +87,8 @@
             </ng-template>
 
           </div>
+
+
         </div>
         <ng-template #notFooter>
           <div class="panel-center-footer"></div>
@@ -173,8 +175,13 @@
                 <div class="total"> {{item['__total_score']}}</div>
               </div>
             </div>
+            <div class="footer-signout">
+              <button pRipple pButton class="p-button-warning" icon="pi pi-sign-out" iconPos="right" label="Thoát" (click)="btnOutTest()"></button>
+            </div>
           </div>
+
         </div>
+
       </div>
       <div class="panel-right">
         <div class="panel-arrow d-none" (click)="btnNextQuestion()">

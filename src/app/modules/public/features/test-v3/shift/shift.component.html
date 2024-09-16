@@ -33,11 +33,11 @@
 
   </div>
 
-  <div class="bandanvan-logo">
-    <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">
-    <div>TỈNH UỶ THÁI NGUYÊN</div>
-    <div>BAN DÂN VẬN</div>
-  </div>
+<!--  <div class="bandanvan-logo">-->
+<!--    <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">-->
+<!--    <div>TỈNH UỶ THÁI NGUYÊN</div>-->
+<!--    <div>BAN DÂN VẬN</div>-->
+<!--  </div>-->
 
   <div class="shift-content">
 <!--    <div class="shift-content-header">-->
@@ -51,27 +51,39 @@
     </div>
     <div class="shift-content-body">
       <div class="shift-data">
-        <div class="shift-data_item" *ngFor="let item of dsDotthi" [ngClass]="">
+        <div class="shift-data_item" *ngFor="let item of dsDotthi" [ngClass]="select_id === item.id ? 'active':''" (click)="btnSelectId(item.id)">
+          <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">
           <div>{{item.title}}</div>
-          <button pRipple pButton label="Vào thi" (click)="btnTest(item)"></button>
+
         </div>
       </div>
+<!--      <button pRipple pButton label="Vào thi" class="custom-button-start p-button-warning" (click)="btnTest()"></button>-->
+<!--      <div *ngIf="select_id !== 0 else notSelect" class="custom-button-start" (click)="btnTest()">-->
+      <div  class="custom-button-start" (click)="btnTest()">
+        <div >Bắt đầu thi</div>
+      </div>
+<!--      <ng-template #notSelect>-->
+<!--        <div class="custom-button-start not">-->
+<!--          <div >Bắt đầu thi</div>-->
+<!--        </div>-->
+<!--      </ng-template>-->
+
     </div>
   </div>
 
 
-  <div class="copy-right">
-    <div class="copy-right_img">
-      <img src="assets/images/logo-tnu.png" alt="">
-    </div>
-    <div class="copy-right_content">
-      <div> Nền tảng thiết kể bời ICTU Software</div>
-      <ul>
-        <li>  <span>Trường Đại học Công nghệ Thông tin và Truyền thông</span></li>
-        <li>  <span>Website: <a style="color:#fff" href="https://ictu.edu.vn" target="_blank">ictu.edu.vn</a> | Email: ttptpm@ictu.vn | Tel: 0855-891-892</span></li>
-        <li>  <span>Xã Quyết Thắng, TP. Thái Nguyên, tỉnh Thái Nguyên</span></li>
-      </ul>
-    </div>
-  </div>
+<!--  <div class="copy-right">-->
+<!--    <div class="copy-right_img">-->
+<!--      <img src="assets/images/logo__ictu.png" alt="">-->
+<!--    </div>-->
+<!--    <div class="copy-right_content">-->
+<!--      <div> Nền tảng thiết kể bời ICTU Software</div>-->
+<!--      <ul>-->
+<!--        <li>  <span>Trường Đại học Công nghệ Thông tin và Truyền thông</span></li>-->
+<!--        <li>  <span>Website: <a style="color:#fff" href="https://ictu.edu.vn" target="_blank">ictu.edu.vn</a> | Email: ttptpm@ictu.vn | Tel: 0855-891-892</span></li>-->
+<!--        <li>  <span>Xã Quyết Thắng, TP. Thái Nguyên, tỉnh Thái Nguyên</span></li>-->
+<!--      </ul>-->
+<!--    </div>-->
+<!--  </div>-->
 
 </div>

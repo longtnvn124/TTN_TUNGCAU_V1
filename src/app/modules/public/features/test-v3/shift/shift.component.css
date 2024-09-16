@@ -186,6 +186,11 @@
 }
 .shift-content-body{
   margin-top:40px;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .shift-data{
@@ -194,27 +199,36 @@
   gap:10px;
 }
 .shift-data_item{
+  margin: 2px;
+  padding:20px 50px;
+  background: linear-gradient(102.02deg, #FFA600 20.03%, #FF0000 94.11%);
+  text-align:center;
+  border-radius:25px;
 
-  width: 150px;
-  height: 150px;
-  border: 2px solid #FFEA00;
-  border-radius: 18%;
-  background: #a50202;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 12px;
-  color: #FFEA00;
-  font-family: Times New Roman, serif;
-  position:relative;
 }
-.shift-data_item div{
-  position: absolute;
-  /* left: 50%; */
-  top: 38%;
-  height: 100%;
+.shift-data_item img{
+  width:44px;
 
+}
+
+.shift-data_item div{
+  margin-top: 12px;
+  font-size: 20px;
+  font-weight: 600;
+  font-family: Roboto, sans-serif;
+  color: #fff;
+  text-transform: uppercase;
+
+}
+
+.shift-data_item.active{
+  border:2px solid #FFEA00;
+
+}
+
+.shift-data_item:hover{
+  cursor:pointer;
+  border:2px solid #FFEA00;
 }
 
 .shift-data_item button{
@@ -228,6 +242,31 @@
   border:none;
   font-weight:600;
   width:100px;
+}
+
+.custom-button-start{
+  margin-top: 40px;
+  height: 42px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  background: #FFEA00;
+  width: 150px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#a50202;
+
+}
+.custom-button-start div{
+  font-size:18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-family:Roboto, sans-serif;
+}
+.custom-button-start:hover{
+  cursor:pointer;
+  background: #ffa600;
+  color:#fff;
 }
 
 
