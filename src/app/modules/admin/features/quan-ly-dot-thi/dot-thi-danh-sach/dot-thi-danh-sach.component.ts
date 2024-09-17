@@ -1,7 +1,7 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {FormType, NgPaginateEvent, OvicForm, OvicTableStructure} from "@shared/models/ovic-models";
 import {Shift, statusOptions} from "@shared/models/quan-ly-doi-thi";
-import {debounceTime, filter, Observable, Subject, Subscription} from "rxjs";
+import {debounceTime, filter, forkJoin, Observable, Subject, Subscription} from "rxjs";
 import {AbstractControl, FormBuilder, FormGroup,Validators} from "@angular/forms";
 import {NotificationService} from "@core/services/notification.service";
 import {ThemeSettingsService} from "@core/services/theme-settings.service";
@@ -11,6 +11,8 @@ import {NganHangDeService} from "@shared/services/ngan-hang-de.service";
 import {NganHangDe} from "@shared/models/quan-ly-ngan-hang";
 import {HelperService} from '@core/services/helper.service';
 import {MODULES_QUILL} from "@shared/utils/syscat";
+import {UserService} from "@core/services/user.service";
+import {User} from "@core/models/user";
 interface FormDotthi extends OvicForm {
   object: Shift;
 }
@@ -48,9 +50,7 @@ export class DotThiDanhSachComponent implements OnInit {
       innerData: true,
       header: 'Tên đợt thi',
       sortable: false,
-
     },
-
     {
       fieldType: 'normal',
       field: ['__time_converted'],
@@ -125,13 +125,15 @@ export class DotThiDanhSachComponent implements OnInit {
     {value:0,label:'Chưa kích hoạt'},
     {value:1,label:'Đang kích hoạt'},
   ]
+  user_list:number[]=[];
+
   constructor(
     private dotThiDanhSachService: DotThiDanhSachService,
     private notificationService: NotificationService,
     private fb: FormBuilder,
     private themeSettingsService: ThemeSettingsService,
     private nganHangDeService: NganHangDeService,
-    private helperService: HelperService,
+    private userService:UserService
 
   ) {
     this.formSave = this.fb.group({
@@ -141,6 +143,7 @@ export class DotThiDanhSachComponent implements OnInit {
       time_end: ['', Validators.required],
       bank_id: ['', Validators.required],
       status: [1],
+      user_list:[[], Validators.required],
     },
       // {validators:PinableValidator}
     );
@@ -152,11 +155,19 @@ export class DotThiDanhSachComponent implements OnInit {
     this.subscription.add(observerOnResize);
   }
 
+  userLists: User[];
   ngOnInit(): void {
-    this.nganHangDeService.getDataUnlimit().subscribe({
-      next: (data) => {
+    forkJoin<[User[],NganHangDe[]]>([
+      this.userService.getUserListsByRole_ids('116', 'id,avatar,display_name'),
+      this.nganHangDeService.getDataUnlimit()
+    ]).subscribe({
+      next: ([userList , data]) => {
+        this.userLists = userList;
+        console.log(this.userLists);
         this.nganHangDe = data.filter(f => f.number_questions_per_test <= f.total);
-        this.loadInit();
+        if (this.nganHangDe && this.userLists){
+          this.loadInit();
+        }
       }, error: () => {
         this.notificationService.toastError('Mất kết nối với máy chủ');
       }
@@ -185,7 +196,7 @@ export class DotThiDanhSachComponent implements OnInit {
       next: ({data, recordsTotal}) => {
         this.listData = data.map(m => {
           const timeszone = new Date(m.time_end).getTime() < new Date().getTime();
-          m['__title_converted'] = `<b>${m.title}</b><br>`;
+          m['__title_converted'] = `<b>${m.title}</b><br><span>${m.desc}</span>`;
           m['__time_converted'] = this.strToTime(m.time_start) + ' - ' + this.strToTime(m.time_end);
           m['__bank_coverted'] = this.nganHangDe && m.bank_id && this.nganHangDe.find(f => f.id === m.bank_id) ? this.nganHangDe.find(f => f.id === m.bank_id).title : '';
           m['__status_converted'] =  this.statusOptions[m.status].color;
@@ -219,7 +230,11 @@ export class DotThiDanhSachComponent implements OnInit {
     observer$.subscribe({
       next: () => {
         this.needUpdate = true;
+
         this.notificationService.toastSuccess('Thao tác thành công', 'Thông báo');
+        if (type === FormType.ADDITION){
+          this.resetForm();
+        }
       },
       error: () => this.notificationService.toastError('Thao tác thất bại', 'Thông báo')
     });
@@ -235,6 +250,19 @@ export class DotThiDanhSachComponent implements OnInit {
     });
   }
 
+  resetForm(){
+    this.formSave.reset({
+      title: '',
+      desc: '',
+      time_start: '',
+      time_end: '',
+      bank_id: '',
+      status: 1,
+      user_list:[],
+    });
+    this.user_list = [];
+  }
+
   closeForm() {
     this.loadInit();
     this.notificationService.closeSideNavigationMenu(this.menuName);
@@ -247,6 +275,7 @@ export class DotThiDanhSachComponent implements OnInit {
     const decision = button.data && this.listData ? this.listData.find(u => u.id === button.data) : null;
     switch (button.name) {
       case 'BUTTON_ADD_NEW':
+        this.user_list = [];
         this.btn_checkAdd = "Lưu lại";
         this.formSave.reset({
           title: '',
@@ -273,6 +302,7 @@ export class DotThiDanhSachComponent implements OnInit {
           status: object1.status
 
         })
+        this.user_list= object1.user_list? object1.user_list : [] ;
         this.formActive = this.listForm[FormType.UPDATE];
         this.formActive.object = object1;
         this.preSetupForm(this.menuName);
@@ -333,5 +363,18 @@ export class DotThiDanhSachComponent implements OnInit {
     const sec = '00';
     //'YYYY-MM-DD hh:mm:ss' type of sql DATETIME format
     return `${y}-${m}-${d} ${h}:${min}:${sec}`;
+  }
+
+  btnSlectContestant(id:number){
+
+    if(this.user_list.includes(id)){
+      this.user_list =this.user_list.filter(f=>f !== id);
+      this.f['user_list'].setValue( this.user_list);
+    }else{
+      this.user_list.push(id);
+      this.f['user_list'].setValue(this.user_list);
+    }
+
+    console.log(this.f['user_list'].value);
   }
 }

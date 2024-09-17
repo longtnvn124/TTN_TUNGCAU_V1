@@ -16,6 +16,7 @@ export interface Shift extends ThongTinChung {
   time_start: string;
   time_end: string;
   status: number;
+  user_list?: number[];
 }
 
 export interface ShiftTests extends ThongTinChung {

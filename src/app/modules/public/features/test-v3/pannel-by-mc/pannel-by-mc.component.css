@@ -1,7 +1,16 @@
 *{
   --cl-shadow-text:#fff;
 }
-
+/*------------------------ logo------------------------*/
+.logo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo img{
+  width:100px;
+  height:100px;
+}
 /*-------------------------NewVer----------------------*/
 .panel-container{
   display:flex;
@@ -52,6 +61,7 @@
   align-items:center;
   padding: 10px 10px 0;
 }
+
 .panel-center-header_item-left{
   height:100%;
   /*border:1px solid #fff;*/
@@ -171,6 +181,7 @@
 }
 .panel-center-footer_item-avatar img{
   height:100%;
+  border-radius: 50px;
 }
 .panel-center-footer_item-name{
   padding:10px;
@@ -269,6 +280,7 @@
 }
 .panel-center-body_data_content-item .name img{
   height:100%;
+  border-radius: 50px;
 }
 .panel-center-body_data_content-item .name div{
   font-size: 20px;
@@ -461,29 +473,59 @@
   height:40px;
 }
 
+/*------------------- notification------------------*/
 .notifi-container{
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  /*justify-content: center;*/
   align-items: center;
-  /*gap: 10px;*/
+
+  gap: 10px;
   /*width: 300px;*/
 }
-.notifi-container .title{
-  font-weight:500;
-  color:#db0a0a;
-  margin-top:4px;
+.notifi-left{
+  width:50px;
+  height:50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.notifi-container .content{
+.notifi-left i{
+  font-size:50px;
+  color: #d33e3e;
+}
+.notifi-right{
+  width:1%;
+  flex:1 1 auto;
+
+}
+.notifi-right .content{
   font-size: 16px;
-  font-weight: 400;
-  margin-top: 5px;
-  margin-bottom: 13px;
+  padding: 4px 0;
+  font-weight: 500;
+  color: #393939;
+
 }
-.notifi-container .btn_notifi button{
-  border-radius: 20px;
-  height: 40px;
+.notifi-right button{
+    border-radius: 20px;
+    height: 36px;
+
 }
+/*.notifi-container .title{*/
+/*  font-weight:500;*/
+/*  color:#db0a0a;*/
+/*  margin-top:4px;*/
+/*}*/
+/*.notifi-container .content{*/
+/*  font-size: 16px;*/
+/*  font-weight: 400;*/
+/*  margin-top: 5px;*/
+/*  margin-bottom: 13px;*/
+/*}*/
+/*.notifi-container .btn_notifi button{*/
+/*  border-radius: 20px;*/
+/*  height: 40px;*/
+/*}*/
 
 
 

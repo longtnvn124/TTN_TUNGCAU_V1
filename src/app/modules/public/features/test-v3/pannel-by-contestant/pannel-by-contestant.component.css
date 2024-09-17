@@ -38,6 +38,36 @@
   font-weight: 500;
 }
 
+.loading-item button {
+  border-radius:50px;
+}
+/*----------------------------socket--------------*/
+
+.socket-connent{
+  position:absolute;
+  bottom:12px;
+  right:12px;
+  display:flex;
+  align-items:center;
+  font-size:14px;
+  font-weight:500;
+  gap:10px;
+  color:#fff;
+}
+.socket-connent .dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 50px;
+  background: RED;
+  box-shadow: 0 0 10px red;
+
+}
+.socket-connent .dot.actice{
+  background: #1aff00 !important;
+  box-shadow: 0 0 10px #1aff00 !important;
+}
+
+/*------------end socket---- ---------*/
 
 .panel_mc_contaner{
   height:100%;

@@ -48,6 +48,12 @@ export const DEFAULT_MODAL_OPTIONS_NO_BACKDROP : NgbModalOptions = {
   centered    : true ,
   windowClass : 'ovic-modal-class'
 };
+export const SM_MODAL_OPTIONS_CUSTOM : NgbModalOptions = {
+  size        : 'sm' ,
+  backdrop    : 'static' ,
+  // centered    : true ,
+  windowClass : 'ovic-modal-class custom-bandanvan'
+};
 
 export const DanToc = [
   { name : 'kinh' , label : 'Kinh' } ,

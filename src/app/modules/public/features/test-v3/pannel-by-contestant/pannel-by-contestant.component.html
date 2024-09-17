@@ -17,7 +17,7 @@
           </div>
 
         </div>
-        <div class="panel_mc_header-item"></div>
+<!--        <div class="panel_mc_header-item"></div>-->
 
       </div>
       <div class="panel_mc_content ovic-scroll-style">
@@ -82,6 +82,7 @@
           <div class="loading-item__content">
             Vui lòng chờ
           </div>
+          <button pButton pRipple label="Thoát"  (click)="btnOutTest()"></button>
 
         </div>
 
@@ -101,22 +102,14 @@
             <ng-template pTemplate="header">
               <tr>
                 <th>Đội thi</th>
-                <th class="text-center ovic-w-100px">Câu 1</th>
-                <th class="text-center ovic-w-100px">Câu 2</th>
-                <th class="text-center ovic-w-100px">Câu 3</th>
-                <th class="text-center ovic-w-100px">Câu 4</th>
-                <th class="text-center ovic-w-100px">Câu 5</th>
+                <th class="text-center ovic-w-250px">Số câu trả lời đúng</th>
                 <th class="text-center ovic-w-100px">Tổng điểm</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-item>
               <tr>
                 <td>{{ item['__name_coverted'] }}</td>
-                <td class="text-center">{{item['__cau_1']}}</td>
-                <td class="text-center">{{item['__cau_2']}}</td>
-                <td class="text-center">{{item['__cau_3']}}</td>
-                <td class="text-center">{{item['__cau_4']}}</td>
-                <td class="text-center">{{item['__cau_5']}}</td>
+                <td class="text-center">{{item['__total_answer']}}</td>
                 <td class="text-center">{{item['__total']}}</td>
               </tr>
             </ng-template>
@@ -135,6 +128,13 @@
 
     </ng-container>
   </ng-container>
+
+
+  <div class="socket-connent" >
+    <div class="dot" [ngClass]="stateSocket ? 'actice' :''"></div>
+    <div class="title">{{stateSocket ? 'Đã kết nối': 'Chưa được kết nối'  }}</div>
+  </div>
+
 
 </div>
 

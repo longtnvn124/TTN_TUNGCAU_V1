@@ -9,7 +9,12 @@ import {ServerTimeService} from "@shared/services/server-time.service";
 import {AuthService} from "@core/services/auth.service";
 import {HelperService} from "@core/services/helper.service";
 import {ThisinhTrackingService} from "@shared/services/thisinh-tracking.service";
-import {DEFAULT_MODAL_OPTIONS, KEY_NAME_SHIFT_ID, SM_MODAL_OPTIONS} from "@shared/utils/syscat";
+import {
+  DEFAULT_MODAL_OPTIONS,
+  KEY_NAME_SHIFT_ID,
+  SM_MODAL_OPTIONS,
+  SM_MODAL_OPTIONS_CUSTOM
+} from "@shared/utils/syscat";
 import {forkJoin, interval, merge, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
 import {Shift, ShiftTests} from "@shared/models/quan-ly-doi-thi";
 import {NganHangCauHoi, NganHangDe} from "@shared/models/quan-ly-ngan-hang";
@@ -95,6 +100,7 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
         this.number_questions =this.bankQuestions.length;
         this.notificationService.isProcessing(false);
         if(this.bank && this.bankQuestions){
+          this.testView="question";
           this.btnStart()
         }
       },
@@ -108,7 +114,6 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
   btnStart(){
     this.time_clone = this.bank.time_per_test_tungcau;
     this.time_clone_for_end =this.time_clone;
-
     const bank_clone = this.bankQuestions.filter(f=>!f['__used']);
 
     this.questionSelect = bank_clone[0];
@@ -152,7 +157,6 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
       this.destroy$,
       this.timeCloser$
     );
-
     // this.mode = 'PANEL';
 
     let couter = 0;
@@ -163,18 +167,18 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
         this.time_clone_for_end = Math.max(remainingTime, 0);
       } else {
         this.time_clone_for_end = 0;
-        // this.viewAnswer= true;
+        this.viewAnswer= true;
         this.btnViewTemplaceNotifi();
         this.stopTimer();
-        // this.isTimeOver = true;
-        // this.isSubmitTimeEnd =true;
+        this.isSubmitTimeEnd =true;
       }
       if (++couter === perious) {
         // this.updateTimeLeft(this.remainingTimeClone);// tính h sinh viên time giarm theo 20s 1 laamf
         couter = 0;
       }
     });
-  }
+    console.log(this.time_clone_for_end);
+ }
   stopTimer(): void {
     this.timeCloser$.next('close');
   }
@@ -237,7 +241,7 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
   }
 
   btnViewTemplaceNotifi(){
-    this.modalSerivice.open(this.notifiTest,SM_MODAL_OPTIONS);
+    this.modalSerivice.open(this.notifiTest,SM_MODAL_OPTIONS_CUSTOM);
   }
   btnSubmitTimeEnd(){
     this.isSubmitTimeEnd = false;
@@ -266,7 +270,7 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
           return m;
         })
         console.log(this.shiftTestQuestion);
-
+        console.log(this.time_clone_for_end);
         this.startTimer(this.time_clone_for_end);
         this.notificationService.isProcessing(false);
       },

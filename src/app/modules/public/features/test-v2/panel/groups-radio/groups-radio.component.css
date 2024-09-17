@@ -29,7 +29,15 @@
 .ovic-radios--vertical li + li {
 	margin-top: 10px;
 }
-
+.ovic-radios li.layout-1-columns {
+  max-width: 100%;
+}
+.ovic-radios li.layout-2-columns {
+  max-width: 50%;
+}
+.ovic-radios li.layout-3-columns {
+  max-width: 33.333333333%;
+}
 .ovic-radios li.layout-3-columns {
 	max-width: 33.333333333%;
 }
@@ -233,8 +241,11 @@ p.ovic-radios__text {
 .ov-prefix {
 	display: inline;
 	vertical-align: top;
-}
 
+}
+.ovic-radios__text{
+  padding: 0 10px 0 6px;
+}
 .ovic-radios__tick {
 	padding-left: 10px;
 }

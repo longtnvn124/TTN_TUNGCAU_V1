@@ -224,5 +224,10 @@ export class DotThiKetQuaService {
       return this.http.get<Dto>(''.concat(this.api), {params}).pipe(map(res => res.data));
 
   }
+  //--------------------------------------------------------------------------
+
+  createSocket(id: number): Observable<any> {
+    return this.http.post<Dto>(''.concat(this.api,'start-shift/', id.toString(10)),null);
+  }
 
 }

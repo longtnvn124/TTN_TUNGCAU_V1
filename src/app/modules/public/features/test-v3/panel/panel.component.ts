@@ -61,12 +61,6 @@ export class PanelComponent implements OnInit {
   checkInit() {
     console.log(this.auth.roles);
     const rolesUsers = this.auth.roles;
-    // if (rolesUsers.find(f=>f.name === 'thi_sinh')){
-    //   this.pageChange='contestant';
-    // }else{
-    //   this.pageChange='contestant';
-    //
-    // }
     this.pageChange= rolesUsers.find(f=>f.name === 'thi-sinh') ? 'contestant' : 'admin';
     console.log( this.pageChange);
   }

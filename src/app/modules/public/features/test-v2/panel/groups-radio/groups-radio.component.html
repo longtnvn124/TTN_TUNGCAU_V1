@@ -2,7 +2,8 @@
   <li class="position-relative"  ovicMediaLoader *ngFor="let question of options ; let i=index"
       [class.wrong-answer]="correctAnswerSet && !correctAnswerSet.has(question.id) && selectedSet.has(question.id)"
       [class.correct-answer]="correctAnswerSet && correctAnswerSet.has(question.id) && selectedSet.has(question.id)"
-      [ngClass]=" inputType==='radio' ? 'ovic-radios__elm' : ''.concat('ovic-radios__elm ','layout-',options_sty.toString(),'-columns')"
+      [ngClass]=" inputType==='radio' ? 'ovic-radios__elm layout-1-columns' : ''.concat('ovic-radios__elm ','layout-',options_sty.toString(),'-columns')"
+
   >
     <!--    [class.wrong-answer]="correctAnswerSet && !correctAnswerSet.has(question.id) && selectedSet.has(question.id)"-->
     <!--    [class.correct-answer]="correctAnswerSet && correctAnswerSet.has(question.id) && selectedSet.has(question.id)"-->

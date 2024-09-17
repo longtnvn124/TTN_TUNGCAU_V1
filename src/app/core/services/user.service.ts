@@ -232,4 +232,16 @@ export class UserService {
 	updateMeta( info : UserMeta ) : Observable<number> {
 		return this.http.post<Dto>( this.userMetaApi , info ).pipe( map( res => res.data ) );
 	}
+
+  //=========================  Long Custom  =========================
+
+  getUserListsByRole_ids(role_ids:string, _select:string):Observable<User[]>{
+    const condition = [
+      { conditionName : 'role_ids' , condition : OvicQueryCondition.like , value : `%${role_ids}%` } ,
+
+    ];
+    const options   = { params : this.appHttpParamsService.paramsConditionBuilder( condition ).set( 'select' , _select ) };
+    return this.http.get<Dto>( this.api , options ).pipe( map( res => res.data ) );
+  }
+
 }

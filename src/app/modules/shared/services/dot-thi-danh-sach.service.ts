@@ -104,7 +104,7 @@ export class DotThiDanhSachService {
         value: '1',
       }
     ];
-    const fromObject: IctuQueryParams = {paged: 1, limit: -1, orderby: 'time_start', order: 'ASC'};
+    const fromObject: IctuQueryParams = {paged: 1, limit: -1, orderby: 'title', order: 'ASC'};
 
     if (configs) {
       Object.assign(fromObject, configs);
