@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AuthService} from "@core/services/auth.service";
 import {Shift} from "@shared/models/quan-ly-doi-thi";
 import {HelperService} from "@core/services/helper.service";
@@ -37,7 +37,9 @@ interface DotThiKhaDung extends Shift {
   styleUrls: ['./shift.component.css']
 })
 export class ShiftComponent implements OnInit,OnDestroy {
-
+  @ViewChild('copyRight') copyRight!: ElementRef;
+  @ViewChild('copyRightCustom') copyRightCustom!: ElementRef;
+  private intervalId: any;
 
   private _listButton : ListButtonShiftState = {
     '-1' : { state : -1 , label : 'Bài thi đã kết thúc' , icon : 'pi pi-ban' , class : 'p-button-secondary' } ,
@@ -59,6 +61,7 @@ export class ShiftComponent implements OnInit,OnDestroy {
   stateSocket             : boolean = false;
   isContestant            : 'admin' | 'thisinh' = "thisinh";
   private subscriptions = new Subscription();
+  totalThisinh            : number = 0;
 
   constructor(
     private helperService : HelperService ,
@@ -134,12 +137,27 @@ export class ShiftComponent implements OnInit,OnDestroy {
       this.loadData();
     }
 
+    // setTimeout(() => {
+    //   this.runTextAnimation();
+    // }, 2000); // Sau 2 giây bắt đầu chạy chữ
+    //
+    // // Ẩn toàn bộ class copy-right sau 10 giây
+    // setTimeout(() => {
+    //   this.hideCopyRight();
+    // }, 2000); // Sau 10 giây sẽ ẩn cả phần tử copy-right
+    // setTimeout(() => {
+    //   this.unHideCopyRight();
+    // }, 6000); // Sau 10 giây sẽ ẩn cả phần tử copy-right
+
 
   }
 
   ngOnDestroy(): void {
     if ( this.subscriptions ) {
       this.subscriptions.unsubscribe();
+    }
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
     }
   }
 
@@ -217,7 +235,7 @@ export class ShiftComponent implements OnInit,OnDestroy {
               console.log(data);
               this.auth.setOption( KEY_NAME_SHIFT_ID , dotthi.id );
               void this.router.navigate( [ 'test/panel' ] );
-              this.notificationService.toastSuccess('Socket create shift test success');
+              // this.notificationService.toastSuccess('Socket create shift test success');
 
             },error:()=>{
               this.notificationService.toastError('Socket create shift test error');
@@ -268,13 +286,10 @@ export class ShiftComponent implements OnInit,OnDestroy {
     await this.auth.logout();
     this.router.navigate( [ 'login' ]).then( () => this.notificationService.isProcessing( false ) , () => this.notificationService.isProcessing( false ) );
   }
+  btnRouterResult(){
+    this.router.navigate( [ 'test/result' ]);
+  }
 
-
-  // backHome() {
-  //   void this.router.navigate( [ '/test/shift/' ] );
-  //   this.auth.logout().then();
-  // }
-  totalThisinh:number = 0;
 
   checkThisinhInhoidong(){
     this.shiftTestsService.getTotalStateBy2().subscribe({
@@ -295,9 +310,35 @@ export class ShiftComponent implements OnInit,OnDestroy {
 
   socketParam(data){
     console.log(data);
-
     this.auth.setOption( KEY_NAME_SHIFT_ID , data.shift_id );
     void this.router.navigate( [ 'test/panel' ] );
-
   }
+
+
+  runTextAnimation() {
+    const copyRightCustomElement = this.copyRightCustom.nativeElement;
+    copyRightCustomElement.style.animation = 'moveText 2.5s linear forwards'; // Chạy hiệu ứng trong 5 giây
+  }
+
+  hideCopyRight() {
+    const copyRightElement = this.copyRight.nativeElement;
+    copyRightElement.classList.add('hidden'); // Thêm class 'hidden' để ẩn toàn bộ phần tử copy-right
+      setTimeout(() => {
+        copyRightElement.classList.remove('hidden');
+      }, 5000);
+  }
+  unHideCopyRight(){
+    const copyRightElement = this.copyRight.nativeElement;
+    // copyRightElement.classList.add('hidden'); // Thêm class 'hidden' để ẩn toàn bộ phần tử copy-right
+      copyRightElement.classList.remove('hidden');
+  }
+
+  // resetAnimation() {
+  //   const marqueeElement = this.copyRight.nativeElement;
+  //   marqueeElement.style.animation = 'none';
+  //   setTimeout(() => {
+  //     marqueeElement.style.animation = 'moveText 5s linear forwards';
+  //   }, 10);
+  // }
+
 }

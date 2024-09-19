@@ -76,7 +76,8 @@ export class DotThiDanhSachComponent implements OnInit {
       header: 'Trạng thái',
       sortable: false,
       headClass: 'ovic-w-120px text-center',
-      rowClass: 'ovic-w-120px text-center'
+      rowClass: 'ovic-w-120px text-center',
+
     },
 
     {
@@ -85,10 +86,28 @@ export class DotThiDanhSachComponent implements OnInit {
       field: [],
       rowClass: 'ovic-w-110px text-center',
       checker: 'fieldName',
-      header: 'Thao tác',
+      header: 'Thao tác', 
       sortable: false,
       headClass: 'ovic-w-120px text-center',
       buttons: [
+        {
+          conditionField: '__status',
+          conditionValue : '1',
+          tooltip: 'Đóng ca thi ',
+          label: '',
+          icon: 'pi pi-lock',
+          name: 'EDIT_STATUS',
+          cssClass: 'btn-warning rounded'
+        },
+        {
+          conditionField: '__status',
+          conditionValue : '0',
+          tooltip: 'Mở ca thi ',
+          label: '',
+          icon: 'pi pi-lock-open',
+          name: 'EDIT_STATUS',
+          cssClass: 'btn-warning rounded'
+        },
         {
           tooltip: 'Sửa',
           label: '',
@@ -200,8 +219,10 @@ export class DotThiDanhSachComponent implements OnInit {
           m['__time_converted'] = this.strToTime(m.time_start) + ' - ' + this.strToTime(m.time_end);
           m['__bank_coverted'] = this.nganHangDe && m.bank_id && this.nganHangDe.find(f => f.id === m.bank_id) ? this.nganHangDe.find(f => f.id === m.bank_id).title : '';
           m['__status_converted'] =  this.statusOptions[m.status].color;
+          m['__status'] = m.status === 1 ? '1' :'0';
           return m;
         })
+        console.log(this.listData);
         this.recordsTotal = recordsTotal;
         this.isLoading = false
       }, error: () => {
@@ -299,7 +320,8 @@ export class DotThiDanhSachComponent implements OnInit {
           time_start: object1.time_start ? new Date(object1.time_start) : null,
           time_end: object1.time_end ? new Date(object1.time_end) : null,
           bank_id: object1.bank_id,
-          status: object1.status
+          status: object1.status,
+          user_list: object1.user_list
 
         })
         this.user_list= object1.user_list? object1.user_list : [] ;
@@ -323,6 +345,22 @@ export class DotThiDanhSachComponent implements OnInit {
             }
           })
         }
+        break;
+      case 'EDIT_STATUS':
+        const object2 = this.listData.find(u => u.id === decision.id);
+        const status = object2.status === 1 ? 0: 1;
+        this.notificationService.isProcessing(true);
+        this.dotThiDanhSachService.update(object2.id , {status:status}).subscribe({
+          next:()=>{
+            this.loadData(this.page);
+            this.notificationService.isProcessing(false);
+            this.notificationService.toastSuccess('Cập nhật trạng thái thành công');
+
+          },error:()=>{
+            this.notificationService.isProcessing(false);
+            this.notificationService.toastError('Cập nhật trạng thái không thành công');
+          }
+        })
         break;
       default:
         break;

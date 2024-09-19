@@ -57,6 +57,7 @@ export class PannelByContestantComponent implements OnInit,OnDestroy {
   destroy$                : Subject<string> = new Subject<string>();
   questions               : NganHangCauHoi[];
   remainingTimeClone      : number = 0; // 30 minutes in seconds
+  timeClone               : number = 0; // 30 minutes in seconds
   timeCloser$             : Subject<string> = new Subject<string>();
   user                    : User;
   questionSelect          : NganHangCauHoi;
@@ -128,6 +129,9 @@ export class PannelByContestantComponent implements OnInit,OnDestroy {
             this.testView="data_all";
             this.socketEndQuestions()
           })
+          this.socket.on('start_time', ()=>{
+            this.socketStatTime();
+          })
 
         }
       }
@@ -183,6 +187,7 @@ export class PannelByContestantComponent implements OnInit,OnDestroy {
       next:([shift,shifttest, bank,bankQuestion])=>{
         this.notificationService.isProcessing(false);
         this.bank = bank;
+        this.timeClone = bank.time_per_test_tungcau;
         this.bankQuestions = bankQuestion.map(m=>{
           m['__answer_coverted'] = m.correct_answer.join(',');
           m['__freeze'] = false;
@@ -259,7 +264,13 @@ export class PannelByContestantComponent implements OnInit,OnDestroy {
     this.questionSelect = {...this.bankQuestions.find(f=>f.id === data.question_id)};
     this.testView = "question";
     this.remainingTimeClone = this.bank.time_per_test_tungcau;
+
+    // this.startTimer(this.remainingTimeClone);
+  }
+  socketStatTime(){
+    this.notificationService.toastSuccess('Bắt đầu làm bài ');
     this.startTimer(this.remainingTimeClone);
+
   }
 
   onAnswerQuestion(questionId: number, answers: number[]) {

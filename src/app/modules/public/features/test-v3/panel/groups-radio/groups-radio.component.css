@@ -8,7 +8,7 @@
 	--ov-prefix-width: 28px;
 	--ov-prefix-height: 28px;
   flex-wrap:wrap;
-  gap: 10px;
+  gap: 12px;
 }
 
 .ovic-radios--horizontal {
@@ -40,33 +40,44 @@
 }
 
 .ov-btn-radio {
-	border: 1px solid #D9D9D959;;
-	margin: 0;
-	display: flex;
-	box-shadow: none !important;
-	outline: none !important;
-	font-size: 16px;
-	font-weight: 500;
-	color: #333333;
-	line-height: 20px;
-	justify-content: flex-start;
-	align-items: center;
-	background-color: #D9D9D959;
-	padding: 4px;
-	width: 100%;
-	border-radius:50px;
+  border: 1px solid #008DED;
+  margin: 0;
+  display: flex;
+  box-shadow: none !important;
+  outline: none !important;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333333;
+  line-height: 20px;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #008DED;
+  padding: 4px;
+  width: 100%;
+  border-radius: 5px;
 }
 
 .ov-btn-radio:hover {
-	background-color: #C10A0A;
-	border: 1px solid #FFF700;
+	/*background-color: #660000CC;*/
+	/*border: 2px solid #FFF700;*/
+  /*box-shadow:0 0 1px #ff7c63;*/
+  box-shadow: 0 0 0 2px #fff700 !important;
 	color: #333333;
-  border-radius: 50px;
+  /*border-radius: 50px;*/
 
+}
+.ov-btn-radio:hover .ov-prefix{
+  background:#FFF700;
+  color: #DF0000;
+
+}
+.ov-btn-radio:hover .ovic-radios__text{
+  color:#FFF700;
 }
 
 .ov-btn-radio .ov-prefix {
-	background-color: #C10A0A;
+  height:44px;
+	background-color: #FFF;
 	/*width: var(--ov-prefix-width);*/
 	/*height: var(--ov-prefix-height);*/
   padding:22px;
@@ -79,11 +90,14 @@
 	text-align: center;
 	position: relative;
 	transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
-	border-radius: 999px;
+	/*border-radius: 999px;*/
+	/*border-radius: 0;*/
 	margin-right: 5px;
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
+  color: #DF0000;
+  border-radius:5px;
 }
 
 /*.ov-btn-radio-type--checkbox .ov-prefix {*/
@@ -114,7 +128,7 @@
 	/*font-size: 16px;*/
 	line-height: 1;
 	font-weight: 700;
-	color: #fff;
+	/*color: #fff;*/
   font-size: 26px;
 }
 
@@ -167,7 +181,9 @@
 }
 
 .ovic-radios__elm:hover {
-	background-color: #ffffff;
+	/*background-color: #ffffff;*/
+  /*background-color: #660000CC;*/
+  /*border: 1px solid #FFF700;*/
   border-radius: 50px;
 
 }
@@ -230,14 +246,18 @@ p.ovic-radios__text {
 }
 
 .correct-answer .ov-btn-radio{
-  background-color: #FFFFFFD6;
-  border-color: #FFFFFFD6;
+  border: 2px solid #FFFF00;
+  /*background-color: #660000CC;*/
+  color: #FFFF00;
 }
 .correct-answer .ov-btn-radio .ov-prefix {
-  background-color:#04AA1D;
+  /*background-color:#04AA1D;*/
+  background-color: #FFF700;
+  color: #C10A0A;
 }
 .correct-answer .ovic-radios__text {
-	color: #3AB54A;
+	/*color: #3AB54A;*/
+	color: #FFF700;
 }
 
 .correct-answer .ovic-radios__tick--correct-answer {
@@ -249,7 +269,9 @@ p.ovic-radios__text {
 .ov-prefix {
 	display: inline;
 	vertical-align: top;
-  padding:0 4px;
+  padding:0 10px;
+  line-height: 22px;
+  text-align:justify;
 }
 
 .ovic-radios__tick {

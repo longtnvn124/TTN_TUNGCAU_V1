@@ -809,6 +809,11 @@ p .ql-align-center{
   background:none;
   border:none;
 }
+.panel-center-body_left-title div p{
+  /*text-align:justify;*/
+  /*white-space: break-spaces !important;*/
+}
+
 /*---------------notification custom modal------------------------*/
 .ovic-modal-class.custom-bandanvan{
   position:relative;

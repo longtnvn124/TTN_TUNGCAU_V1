@@ -40,8 +40,7 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  /*text-shadow: -2px -2px 2px #fff, 2px -2px 2px #fff, -2px 2px 2px #fff, 2px 2px 2px #fff;*/
-  text-shadow: -1px 0 #fff, 0 1px #fff, 1px 0 #fff, 0 -1px #fff;
+  text-shadow: -2px -2px 2px #fff, 2px -2px 2px #fff, -2px 2px 2px #fff, 2px 2px 2px #fff;
   font-family:Roboto, sans-serif;
 }
 .copy-right_content .text-1{
@@ -116,7 +115,7 @@
 /*------------------- Shift-container ----------------*/
 .shift-container{
   width:100%;
-  height:100%;
+  height:100vh;
   z-index:100000;
   position:relative;
   background-color: #db0a0a;
@@ -153,7 +152,6 @@
 }
 .login-user img{
   height:100%;
-  border-radius:50px;
 }
 .login-user div{
 
@@ -162,7 +160,7 @@
   font-family: Roboto, sans-serif;
 }
 
-.login-logout,.login-result{
+.login-logout{
   display: flex;
   /* padding: 5px 5px 5px 27px; */
   gap: 10px;
@@ -173,10 +171,9 @@
   border-top: 1px solid #fff;
   height: 50px;
   color: #fff;
-  overflow:hidden;
 }
 
-.login-user:hover,.login-result:hover{
+.login-user:hover{
   cursor: pointer;
 }
 .login-logout:hover{
@@ -184,10 +181,7 @@
   cursor: pointer;
   border-bottom-left-radius:30px;
   border-bottom-right-radius:30px;
-}
-.login-result:hover{
-  background: #e43d21;
-  cursor: pointer;
+
 }
 
 .bandanvan-logo{
@@ -291,12 +285,13 @@
 .shift-content{
   display:flex;
   flex-direction:column;
-  /*justify-content:center;*/
+  justify-content:flex-start;
   align-items:center;
   width:100%;
   height:100%;
   padding:20px 0;
-  justify-content: center;
+
+  margin-top:40px;
 
 }
 .shift-content-header{
@@ -347,64 +342,54 @@
   justify-content: center;
   flex-direction: column;
 }
-
-.shift-data{
-  display:flex;
-  flex-direction:row;
-  gap:50px;
+.shift-content-body button{
+  border-radius: 40px;
+  height: 40px;
+  margin: 20px 0;
+  width: 120px;
 }
-.shift-data_item{
-  margin: 2px;
-  padding:20px 50px;
-  /*background: linear-gradient(102.02deg, #FFA600 20.03%, #FF0000 94.11%);*/
-  background: linear-gradient(180deg, #FFFFFF 17.01%, #FFCECE 97.52%);
-  text-align:center;
-  border-radius:25px;
-  /*box-shadow: 0 0 0 2px #FFA600;*/
-  transition: background 0.5s ease-in-out;
-}
-.shift-data_item img{
-  width:44px;
-
+.user-data{
+  display: flex;
+  flex-direction: row;
+  max-width: 1440px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
 }
 
-.shift-data_item div{
-  margin-top: 12px;
-  font-size: 20px;
-  font-weight: 600;
+.user_item{
+  width: calc(100% / 3 - 40px);
+  height: 56px;
+  padding: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #008DED;
+  border-radius: 10px;
+  color: #fff;
+
+}
+.user_item-left{
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.user_item-left img{
+  height:100%;
+  padding:2px;
+  border-radius: 8px;
+  background:#fff;
+}
+.user_item-left span, .user_item-left div{
+  font-size:16px;
+  font-weight:500;
   font-family: Roboto, sans-serif;
-  color:#9D0003;
-  text-transform: uppercase;
-
 }
-
-.shift-data_item.active{
-  box-shadow: 0 0 0 3px #fff;
-  background: linear-gradient(106.02deg, #FF8000 1.97%, #FFDA60 52.13%, #FF8000 87.71%);
+.user_item-left div{
+  padding-right:10px;
 }
-
-.shift-data_item:hover{
-  cursor:pointer;
-  /*border:2px solid #FFEA00;*/
-  box-shadow: 0 0 0 3px #fff;
-  background: linear-gradient(106.02deg, #FF8000 1.97%, #FFDA60 52.13%, #FF8000 87.71%);
-  background: linear-gradient(106.02deg, rgba(255, 128, 0, 1) 1.97%, rgba(255, 218, 96, 1) 52.13%, rgba(255, 128, 0, 1) 87.71%);
-
-}
-
-.shift-data_item button{
-  position:absolute;
-
-  bottom:15px;
-
-  background: #FFEA00;
-  border-radius:20px;
-  color:#a50202;
-  border:none;
-  font-weight:600;
-  width:100px;
-}
-
 .custom-button-start{
   margin-top: 40px;
   height: 42px;

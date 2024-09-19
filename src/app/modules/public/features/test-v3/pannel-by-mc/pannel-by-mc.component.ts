@@ -7,12 +7,11 @@ import {DotThiDanhSachService} from "@shared/services/dot-thi-danh-sach.service"
 import {DotThiKetQuaService} from "@shared/services/dot-thi-ket-qua.service";
 import {ServerTimeService} from "@shared/services/server-time.service";
 import {AuthService} from "@core/services/auth.service";
-import {HelperService} from "@core/services/helper.service";
-import {ThisinhTrackingService} from "@shared/services/thisinh-tracking.service";
+
 import {
-  DEFAULT_MODAL_OPTIONS,
+
   KEY_NAME_SHIFT_ID,
-  SM_MODAL_OPTIONS,
+
   SM_MODAL_OPTIONS_CUSTOM
 } from "@shared/utils/syscat";
 import {forkJoin, interval, merge, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
@@ -88,8 +87,6 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
       return forkJoin([of(m),this.nganHangDeService.getDataById(m.bank_id),this.nganHangCauHoiService.getDataByBankId(m.bank_id)])
     })).subscribe({
       next:([shift,bank,bankQuestions])=>{
-        console.log(shift);
-        console.log(bank);
         this.shift = shift;
         this.bank = bank;
         this.bankQuestions = bankQuestions.map(m=>{
@@ -118,13 +115,14 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
 
     this.questionSelect = bank_clone[0];
     this.curentQuestionNumber = 0
+    this.callSocketStartQuestion();
   }
 
   btnReturnQuestion(){
     this.viewAnswer=true;
     this.time_clone_for_end = 0;
     this.curentQuestionNumber = this.curentQuestionNumber - 1;
-    console.log(this.curentQuestionNumber);
+
     this.questionSelect = {...this.bankQuestions[this.curentQuestionNumber]};
 
   }
@@ -138,7 +136,8 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
     if(bank_clone.length>0){
       this.questionSelect = {...bank_clone[0]};
       this.curentQuestionNumber = this.bankQuestions.findIndex(f=>f.id === bank_clone[0].id);
-      console.log(this.curentQuestionNumber);
+      this.callSocketStartQuestion();
+
     }
     else{
       this.testView ="data_all";
@@ -152,6 +151,18 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
     return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   }
 
+  socketStartTime(){
+    this.notificationService.isProcessing(true);
+    this.shiftTestQuestionService.callSocketStartTime(this.shift.id).subscribe({
+      next:()=>{
+        this.notificationService.isProcessing(false);
+        this.startTimer(this.time_clone_for_end);
+      },error:()=>{
+        this.notificationService.isProcessing(false);
+        this.notificationService.toastError('Bắt đầu thời gian thi không thành công ');
+      }
+    })
+  }
   startTimer(remainingTime: number): void {
     const closer$: Observable<string> = merge(
       this.destroy$,
@@ -177,7 +188,6 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
         couter = 0;
       }
     });
-    console.log(this.time_clone_for_end);
  }
   stopTimer(): void {
     this.timeCloser$.next('close');
@@ -202,7 +212,7 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
       next:([shiftTest,shiftTestQuestion])=>{
           this.shiftTest = shiftTest && shiftTest.length>0 ? shiftTest.map(m=>{
             const thisinh =m['users'];
-            console.log(thisinh);
+
             m['__avatar'] = thisinh ? thisinh['avatar']:'assets/images/bandanvan/logo_bandanvan.png';
             m['__name_coverted'] = thisinh ? thisinh['display_name'] : '';
             const shiftTestQuestionData = shiftTestQuestion && shiftTestQuestion.length> 0 ? shiftTestQuestion.filter(f=>f.shift_test_id === m.id) : [];
@@ -215,9 +225,8 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
             m['__total_score'] = total;
             m['__answer_convert'] = numberQuestionCorect +'/' + numberQuestion;
             return m;
-          }) : null;
+          }).sort((a,b)=>b['__total_score'] - a['__total_score']) : null;
 
-        console.log(this.shiftTest);
         this.table_loading= false;
       },
       error:()=>{
@@ -266,12 +275,10 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
           const index_answer = id_answer ?  options.findIndex(f=>f.id === id_answer) : '-1';
           m['__answer_converted'] = index_answer ===0 ? 'A': index_answer ===1?'B': index_answer === 2 ?'C':index_answer ===3?'D': '-';
           m['_typeView'] = !!m['answer'];
-          m['__score'] = m['score']!=0  ;
+          m['__score'] = m['score']!=0 ;
           return m;
         })
-        console.log(this.shiftTestQuestion);
-        console.log(this.time_clone_for_end);
-        this.startTimer(this.time_clone_for_end);
+        // this.startTimer(this.time_clone_for_end);
         this.notificationService.isProcessing(false);
       },
       error:()=>{

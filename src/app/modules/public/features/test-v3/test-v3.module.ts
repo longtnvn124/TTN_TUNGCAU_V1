@@ -15,6 +15,7 @@ import {GroupsRadioComponent} from "@modules/public/features/test-v3/panel/group
 import {TableModule} from "primeng/table";
 import {TestV2Module} from "@modules/public/features/test-v2/test-v2.module";
 import {SplitterModule} from "primeng/splitter";
+import { ResultComponent } from './result/result.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import {SplitterModule} from "primeng/splitter";
     ShiftComponent,
     PanelComponent,
     PannelByMcComponent,
-    PannelByContestantComponent
+    PannelByContestantComponent,
+    ResultComponent
   ],
   imports: [
     CommonModule,

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import {ShiftComponent} from "@modules/public/features/test-v3/shift/shift.component";
 import {PanelComponent} from "@modules/public/features/test-v3/panel/panel.component";
 import {TestV3GuardGuard} from "@modules/public/features/test-v3/test-v3-guard.guard";
+import {ResultComponent} from "@modules/public/features/test-v3/result/result.component";
 
 const routes: Routes = [
   {
@@ -15,6 +16,11 @@ const routes: Routes = [
     path      : 'panel' ,
     component : PanelComponent ,
     data      : { state : 'test--panel' }
+  } ,
+  {
+    path      : 'result' ,
+    component : ResultComponent ,
+    data      : { state : 'test--result' }
   } ,
   {
     path       : '**' ,

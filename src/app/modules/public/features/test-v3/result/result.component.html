@@ -1,18 +1,16 @@
 <div class="shift-container">
 
 
-  <div class="socket-connent" *ngIf="isContestant === 'thisinh'">
-    <div class="dot" [ngClass]="stateSocket ? 'actice' :''"></div>
-    <div class="title">{{ stateSocket ? 'Đã kết nối' : 'Chưa được kết nối' }}</div>
-  </div>
   <div class="copy-right intro-x" #copyRight>
     <div class="copy-right_img">
       <img src="assets/images/logo__ictu.png" alt="">
     </div>
     <div class="copy-right_content copy-right-custom" #copyRightCustom>
       <div class="text-1"> HỆ THÔNG ĐƯỢC XÂY DỤNG BỞI</div>
-      <div class="text-2"> <span> <strong>TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN VÀ TRUYỀN THÔNG</strong></span> <span> - Đại học Thái Nguyên </span></div>
-      <div class="text-3"> <span class="mr-4">www.ictu.edu.vn </span><span class="mr-4">fb.com/ictu.vn</span><span>ttptpm@ictu.vn</span></div>
+      <div class="text-2"><span> <strong>TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN VÀ TRUYỀN THÔNG</strong></span> <span> - Đại học Thái Nguyên </span>
+      </div>
+      <div class="text-3"><span class="mr-4">www.ictu.edu.vn </span><span class="mr-4">fb.com/ictu.vn</span><span>ttptpm@ictu.vn</span>
+      </div>
     </div>
   </div>
 
@@ -26,12 +24,6 @@
         <img [src]="user.avatar" alt="">
         <div class="">{{ user.display_name }}</div>
       </div>
-      <div class="login-result" (click)="btnRouterResult()">
-        <div class="logout-icon">
-          <i class="pi pi-check-circle"></i>
-        </div>
-        <div>Kết quả thi</div>
-      </div>
       <div class="login-logout" (click)="signOut()">
         <div class="logout-icon">
           <i class="pi pi-sign-out"></i>
@@ -44,11 +36,9 @@
   <div class="shift-content">
     <div class="shift-content-top">
       <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">
-      <div>HỘI THI</div>
-      <div>“DÂN VẬN KHÉO” TỈNH THÁI NGUYÊN NĂM 2024</div>
-      <div>PHẦN THI KIẾN THỨC</div>
+      <div>KẾT QUẢ PHẦN THI KIẾN THỨC 9 ĐỘI THI</div>
     </div>
-    <ng-container [ngSwitch]="state ">
+    <ng-container [ngSwitch]="state">
       <ng-container *ngSwitchCase="'loading'">
         <div class="loading-container">
           <div class="loading-item">
@@ -63,17 +53,18 @@
       </ng-container>
       <ng-container *ngSwitchCase="'data'">
         <div class="shift-content-body">
-          <div class="shift-data">
-            <div class="shift-data_item -intro-x" *ngFor="let item of dsDotthi" [ngClass]="select_id === item.id ? 'active':''"
-                 (click)="btnSelectId(item.id)">
-              <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">
-              <div>{{ item.title }}</div>
-
+          <div class="user-data">
+            <div class="user_item intro-y" *ngFor="let item of userList">
+              <div class="user_item-left">
+                <img [src]="item.avatar" alt="">
+                <span>{{ item.display_name }}</span>
+              </div>
+              <div class="user_item-left">
+                <div>{{ item['__total'] + ' điểm' }}</div>
+              </div>
             </div>
           </div>
-          <div class="custom-button-start" (click)="btnTest()">
-            <div>Bắt đầu thi</div>
-          </div>
+          <button pRipple pButton class="p-button-warning" label="Thoát" (click)="btnExit()"></button>
         </div>
       </ng-container>
     </ng-container>

@@ -33,9 +33,16 @@
           <div *ngIf="!viewAnswer, else isShowAnswer">
 <!--            <app-groups-radio>-->
 <!--            </app-groups-radio>-->
+            <ng-container *ngIf=" timeClone === remainingTimeClone else notBy">
+              <groups-radio  [options]="questionSelect.answer_options" [freeze]="true"
+                             [options_sty]="questionSelect.options_sty"></groups-radio>
 
-            <groups-radio  [options]="questionSelect.answer_options" (onChange)="onAnswerQuestion(questionSelect.id, $event)"
-                                [options_sty]="questionSelect.options_sty"></groups-radio>
+            </ng-container>
+            <ng-template #notBy>
+              <groups-radio  [options]="questionSelect.answer_options" (onChange)="onAnswerQuestion(questionSelect.id, $event)"
+                             [options_sty]="questionSelect.options_sty"></groups-radio>
+            </ng-template>
+
 
           </div>
           <ng-template #isShowAnswer>
@@ -92,8 +99,9 @@
     <ng-container *ngSwitchCase="'data_all'">
       <div class="data-container">
         <div class="data-header">
-          <div>HỘI THI</div>
-          <div>“DÂN VẬN KHÉO” TỈNH THÁI NGUYÊN NĂM 2024</div>
+          <div style="width: 150px;margin-bottom: 10px;">
+            <img class="w-100" src='assets/images/bandanvan/logo_bandanvan.png' alt="">
+          </div>
           <div>PHẦN THI KIẾN THỨC</div>
           <div>KẾT QUẢ</div>
         </div>
@@ -122,7 +130,7 @@
 
         </div>
         <div class="data-footer">
-          <button pButton pRipple label="thoát" icon="pi pi-sign-out" (click)="btnOutTest()" ></button>
+          <button pButton pRipple label="thoát" icon="pi pi-sign-out" iconPos="right" (click)="btnOutTest()" ></button>
         </div>
       </div>
 

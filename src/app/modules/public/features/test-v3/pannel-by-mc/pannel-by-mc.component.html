@@ -1,6 +1,18 @@
 <ng-container [ngSwitch]="testView">
   <ng-container *ngSwitchCase="'question'">
     <div class="panel-container" >
+      <div class="panel-top-left">
+        <div class="panel-center-header_item-left__user" >
+          <img [src]="user.avatar" alt="">
+          <div>{{user.display_name}}</div>
+        </div>
+      </div>
+      <div class="panel-top-right">
+        <div class="counter-clock-wrap h-100" (click)="socketStartTime()">
+          <div class="d-inline timer">{{ getFormattedTime() }}</div>
+        </div>
+      </div>
+
       <div class="panel-left">
         <div class="panel-arrow">
           <i class="pi pi-angle-left"></i>
@@ -10,17 +22,17 @@
         <div class="panel-center-header">
           <div class="panel-center-header_item justify-content-between">
 
-            <div class="panel-center-header_item-left">
-              <div class="panel-center-header_item-left__user" >
-                <img [src]="user.avatar" alt="">
-                <div>{{user.display_name}}</div>
-              </div>
-            </div>
-            <div class="panel-center-header_item-right">
-              <div class="counter-clock-wrap h-100" (click)="callSocketStartQuestion()">
-                <div class="d-inline timer">{{ getFormattedTime() }}</div>
-              </div>
-            </div>
+<!--            <div class="panel-center-header_item-left">-->
+<!--              <div class="panel-center-header_item-left__user" >-->
+<!--                <img [src]="user.avatar" alt="">-->
+<!--                <div>{{user.display_name}}</div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="panel-center-header_item-right">-->
+<!--              <div class="counter-clock-wrap h-100" (click)="callSocketStartQuestion()">-->
+<!--                <div class="d-inline timer">{{ getFormattedTime() }}</div>-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
           <div class="logo text-center">
             <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">
@@ -30,24 +42,22 @@
           </div>
         </div>
         <div *ngIf="questionSelect" class="panel-center-body intro-x">
-
-          <div class="panel-center-body_left">
-            <div class="panel-center-body_left-header"> {{'Câu '+ (curentQuestionNumber+1) }}</div>
-            <div class="panel-center-body_left-title" >
-              <div [innerHtml]="questionSelect.title |ovicSafeHtml"></div>
-            </div>
-          </div>
-          <div class="panel-center-body_right">
-            <div  class="panel-center-body_right-answer-options">
-              <div *ngIf="!viewAnswer else showAnswer">
-                <app-groups-radio [options]="questionSelect.answer_options" [freeze]="questionSelect['__freeze']" [options_sty]="questionSelect.options_sty"></app-groups-radio>
-                <!--            <groups-radio [options]="questionSelect.answer_options" [freeze]="questionSelect['__freeze']" [options_sty]="questionSelect.options_sty"></groups-radio>-->
-
+          <div class="d-flex align-items-stretch">
+            <div class="panel-center-body_left">
+              <div class="panel-center-body_left-header"> {{'Câu '+ (curentQuestionNumber+1) }}</div>
+              <div class="panel-center-body_left-title" >
+                <div [innerHtml]="questionSelect.title |ovicSafeHtml"></div>
               </div>
-              <ng-template #showAnswer>
-                <app-groups-radio [options]="questionSelect.answer_options" [correctAnswer]="questionSelect['__answer_coverted']" [freeze]="questionSelect['__freeze']" [options_sty]="questionSelect.options_sty"></app-groups-radio>
-
-              </ng-template>
+            </div>
+            <div class="panel-center-body_right">
+              <div  class="panel-center-body_right-answer-options">
+                <div *ngIf="!viewAnswer else showAnswer">
+                  <app-groups-radio [options]="questionSelect.answer_options" [freeze]="questionSelect['__freeze']" [options_sty]="questionSelect.options_sty"></app-groups-radio>
+                </div>
+                <ng-template #showAnswer>
+                  <app-groups-radio [options]="questionSelect.answer_options" [correctAnswer]="questionSelect['__answer_coverted']" [freeze]="questionSelect['__freeze']" [options_sty]="questionSelect.options_sty"></app-groups-radio>
+                </ng-template>
+              </div>
             </div>
           </div>
 
@@ -66,7 +76,7 @@
 <!--            </ng-template>-->
 <!--          </p-splitter>-->
         </div>
-        <div *ngIf="shiftTestQuestion && shiftTestQuestion.length>0 else notFooter " class="panel-center-footer intro-y">
+        <div *ngIf="time_clone_for_end < time_clone && shiftTestQuestion && shiftTestQuestion.length>0 else notFooter " class="panel-center-footer intro-y" [style.--number-item] ="shiftTestQuestion.length" >
           <div *ngFor="let item of shiftTestQuestion" class="panel-center-footer_item" [ngClass]="item['__score'] ? 'active':''">
             <div class="panel-center-footer_item-avatar">
               <img [src]="item['__avatar']" alt="">
@@ -79,7 +89,11 @@
             </div>
             <ng-template #notAnswer>
               <div  class="panel-center-footer_item-answer">
-                <div *ngIf="time_clone_for_end !== 0 else notCheck" class="pi pi-spin"> <i class="fa fa-spinner"></i></div>
+                <div *ngIf="time_clone_for_end !== 0 else notCheck" >
+                  <span class="pi pi-spin">
+                    <i class="fa fa-spinner"></i>
+                  </span>
+                </div>
                 <ng-template #notCheck>
                   <div>{{item['__answer_converted']}}</div>
                 </ng-template>
@@ -191,9 +205,14 @@
 
       </div>
       <div class="panel-right">
-        <div class="panel-arrow d-none" (click)="btnNextQuestion()">
+        <div class="panel-arrow d-none" *ngIf="time_clone_for_end === 0 else haveTime" (click)="btnNextQuestion()">
           <i class="pi pi-angle-right"></i>
         </div>
+        <ng-template #haveTime>
+          <div class="panel-arrow d-none">
+            <i class="pi pi-angle-right"></i>
+          </div>
+        </ng-template>
       </div>
     </div>
 

@@ -183,4 +183,11 @@ export class ShiftTestQuestionService {
     return this.http.post<Dto>(this.api + 'end-test/', fromObject);
   }
 
+  callSocketStartTime(shift_id:number):Observable<any>{
+    const fromObject = {
+      shift_id: shift_id.toString(10),
+    }
+    return this.http.post<Dto>(this.api + 'start-time/',fromObject);
+  }
+
 }

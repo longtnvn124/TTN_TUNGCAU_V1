@@ -72,7 +72,7 @@ const appVersion = '2.0.1';
 
 export const APP_CONFIGS = {
   defaultRedirect          : '/admin' ,
-  pageTitle                : 'Test online cho Sở khoa học và Công nghệ tỉnh Thái Nguyên' ,
+  pageTitle                : 'Hội thi \'Dân vận Khéo \' Thành Phố Thái Nguyên' ,
   multiLanguage            : true ,
   defaultLanguage          : appDefaultLanguage , // không được bỏ trống trường này ngay cả khi multiLanguage = false
   languages                : appLanguages ,
