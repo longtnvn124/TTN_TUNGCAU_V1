@@ -142,4 +142,22 @@ export class NganHangCauHoiService {
     const params : HttpParams = new HttpParams( { fromObject } );
     return this.http.get<Dto>( this.api , { params } ).pipe( map( res => res.data ) );
   }
+
+  getQuestionById(id:number):Observable<NganHangCauHoi>{
+    const conditions: OvicConditionParam[] = [
+      {
+        conditionName: 'id',
+        condition: OvicQueryCondition.equal,
+        value: id.toString(),
+      }
+    ];
+
+    const fromObject = {
+      // paged: 1,
+      // limit: -1,
+      // order: "ASC"
+    }
+    const params = this.httpParamsHelper.paramsConditionBuilder(conditions, new HttpParams({fromObject}));
+    return this.http.get<Dto>(this.api, {params}).pipe(map(res => res.data[0] ? res.data[0]:null));
+  }
 }

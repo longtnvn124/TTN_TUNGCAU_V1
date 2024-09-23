@@ -68,7 +68,7 @@ export class GroupsRadioComponent implements OnInit {
 			this.selectedSet = new Set( this.default.split( ',' ).map( str => parseInt( str ) ) );
 		}
 		if ( this.correctAnswer ) {
-      console.log(this.correctAnswer);
+      // console.log(this.correctAnswer);
 			this.correctAnswerSet = new Set( this.correctAnswer.split( ',' ).map( str => parseInt( str ) ) );
 		}
 	}
@@ -78,7 +78,7 @@ export class GroupsRadioComponent implements OnInit {
 			this.selectedSet = new Set( ( changes[ 'default' ].currentValue || '' ).split( ',' ).map( ( str : string ) => parseInt( str ) ) );
 		}
 		if ( changes[ 'correctAnswer' ] ) {
-      console.log(this.correctAnswer);
+      // console.log(this.correctAnswer);
 			this.selectedSet = new Set( ( changes[ 'correctAnswer' ].currentValue || '' ).split( ',' ).map( ( str : string ) => parseInt( str ) ) );
 		}
 	}

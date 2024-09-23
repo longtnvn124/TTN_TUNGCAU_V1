@@ -2,14 +2,12 @@ import {Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from
 import {NganHangCauHoi, NganHangDe} from "@shared/models/quan-ly-ngan-hang";
 import {Shift, ShiftTests} from "@shared/models/quan-ly-doi-thi";
 import {
-  debounceTime,
   forkJoin,
   interval,
   merge,
   Observable,
   of,
   Subject,
-  Subscription,
   switchMap,
   takeUntil
 } from "rxjs";
@@ -19,17 +17,13 @@ import {NganHangCauHoiService} from "@shared/services/ngan-hang-cau-hoi.service"
 import {NganHangDeService} from "@shared/services/ngan-hang-de.service";
 import {DotThiDanhSachService} from "@shared/services/dot-thi-danh-sach.service";
 import {DotThiKetQuaService} from "@shared/services/dot-thi-ket-qua.service";
-import {ServerTimeService} from "@shared/services/server-time.service";
 import {AuthService} from "@core/services/auth.service";
-import {HelperService} from "@core/services/helper.service";
-import {ThisinhTrackingService} from "@shared/services/thisinh-tracking.service";
 import {io, Socket} from "socket.io-client";
 import {APP_CONFIGS, getWsUrl, wsPath} from "@env";
 import {KEY_NAME_SHIFT_ID, SM_MODAL_OPTIONS} from "@shared/utils/syscat";
 import {User} from "@core/models/user";
 import {ShiftTestQuestion, ShiftTestQuestionService} from "@shared/services/shift-test-question.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {distinctUntilChanged, filter} from "rxjs/operators";
 
 
 @Component({
@@ -70,7 +64,6 @@ export class PannelByContestantComponent implements OnInit,OnDestroy {
   table_loading           : boolean=false;
   private socket          : Socket;
   stateSocket             : boolean = false;
-  private subscriptions = new Subscription();
 
   constructor(
     private router: Router,
@@ -81,72 +74,55 @@ export class PannelByContestantComponent implements OnInit,OnDestroy {
     private shiftTestsService: DotThiKetQuaService,
     private authService: AuthService,
     private shiftTestQuestionSercice:ShiftTestQuestionService,
-    private modalSerivice : NgbModal
+    private modalSerivice : NgbModal,
+
   ) {
     this.user = this.authService.user;
-    const observerSignIn   = this.authService.onSignIn.pipe( debounceTime( 100 ) , filter( t => t !== null ) , distinctUntilChanged() ).subscribe( {
-        next : accessToken => {
-          if (this.authService.user.role_ids.includes('116')){
-            if ( this.socket ) {
-              this.socket.disconnect();
-              this.socket.close();
-            }
-            this.socket = io( getWsUrl() , {
-              path : wsPath ,
-              auth : {
-                token : accessToken ,
-                realm : APP_CONFIGS.realm
-              },
-              transports: ['websocket', 'polling'],
-            } );
-            // this.socket.connect();
-            this.socket.on( 'connect' , () => {
-              const engine = this.socket.io.engine;
-              this.stateSocket = true;
-              console.log( 'socket connected' );
-
-              engine.on( 'close' , ( reason ) => {
-                console.log( 'socket close' );
-              } );
-
-              engine.on( 'error' , ( reason ) => {
-                console.log( 'socket error' );
-                this.stateSocket=false;
-              } );
-            })
-            this.socket.on('close',()=>{console.log('log close');});
-
-          }
-          this.socket.on( 'batdauthi' , (data) => {
-            console.log( 'socket batdauthi' );
-            this.shiftTestQuestion =data as ShiftTestQuestion;
-
-            this.socketStartQuestion(this.shiftTestQuestion);
-          })
-
-          this.socket.on( 'ketthucthi' , () => {
-            console.log('socket ketthucthi')
-            this.testView="data_all";
-            this.socketEndQuestions()
-          })
-          this.socket.on('start_time', ()=>{
-            this.socketStatTime();
-          })
-
-        }
+    if (this.authService.user.role_ids.includes('116')){
+      if ( this.socket ) {
+        this.socket.disconnect();
+        this.socket.close();
       }
-    );
-    const observerSignOut  = this.authService.onSignOut.pipe( debounceTime( 100 ) , filter( t => t !== null ) ).subscribe( {
-      next : reason => {
-        if ( this.socket ) {
-          this.socket.disconnect();
-          this.socket.close();
-        }
-      }
-    } );
+      this.socket = io( getWsUrl() , {
+        reconnection:true,
+        autoConnect: true,
+        path : wsPath ,
+        auth : {
+          token : this.authService.accessToken ,
+          realm : APP_CONFIGS.realm
+        },
+        transports: ['websocket', 'polling'],
+      } );
+      // this.socket.connect();
+      this.socket.on( 'connect' , () => {
+        const engine = this.socket.io.engine;
+        this.stateSocket = true;
+        console.log( 'socket connected' );
 
-    this.subscriptions.add( observerSignIn );
-    this.subscriptions.add( observerSignOut );
+        engine.on( 'close' , ( reason ) => {
+          console.log( 'socket close' );
+        } );
+
+        engine.on( 'error' , ( reason ) => {
+          console.log( 'socket error' );
+          this.stateSocket=false;
+        } );
+      })
+    }
+    this.socket.on( 'batdauthi' , (data) => {
+      console.log( 'socket batdauthi' );
+      this.shiftTestQuestion =data as ShiftTestQuestion;
+        this.socketStartQuestion(this.shiftTestQuestion);
+    })
+
+    this.socket.on( 'ketthucthi' , () => {
+      console.log('socket ketthucthi')
+      this.testView="data_all";
+      this.socketEndQuestions()
+    })
+    this.socket.on('start_time', ()=>{
+      this.socketStatTime();
+    })
 
 
   }
@@ -159,7 +135,8 @@ export class PannelByContestantComponent implements OnInit,OnDestroy {
     this.destroy$.complete();
     this.timeCloser$.complete();
     if (this.socket){
-      this.subscriptions.unsubscribe();
+      this.socket.disconnect();
+      this.socket.close();
     }
   }
 
@@ -260,10 +237,26 @@ export class PannelByContestantComponent implements OnInit,OnDestroy {
   socketStartQuestion(data:ShiftTestQuestion){
     this.modalSerivice.dismissAll()
     this.viewAnswer= false;
-    this.curentQuestionNumber = this.bankQuestions.findIndex(f=>f.id == data.question_id);
-    this.questionSelect = {...this.bankQuestions.find(f=>f.id === data.question_id)};
     this.testView = "question";
     this.remainingTimeClone = this.bank.time_per_test_tungcau;
+
+    //
+    // this.curentQuestionNumber = this.bankQuestions && this.bankQuestions.length>0 ?  this.bankQuestions.findIndex(f=>f.id == data.question_id) : (this.curentQuestionNumber+1);
+    // this.questionSelect = {...this.bankQuestions.find(f=>f.id === data.question_id)};
+
+    this.nganHangCauHoiService.getQuestionById(data.question_id).subscribe({
+      next:(q)=>{
+        const q_current=q;
+         q_current['__answer_coverted'] =  q_current.correct_answer.join(',');
+         q_current['__freeze'] = false;
+        this.questionSelect = {... q_current };
+        this.curentQuestionNumber = (this.curentQuestionNumber + 1);
+
+      },
+      error:()=>{
+        this.notificationService.toastError('Tải câu hỏi không thành công');
+      }
+    })
 
     // this.startTimer(this.remainingTimeClone);
   }
@@ -274,15 +267,12 @@ export class PannelByContestantComponent implements OnInit,OnDestroy {
   }
 
   onAnswerQuestion(questionId: number, answers: number[]) {
-    console.log(questionId)
-    console.log(answers);
-    console.log(this.bankQuestions.find(f=>f.id === questionId ))
+
     const bankCurrent = this.bankQuestions.find(f=>f.id === questionId )
     if(this.remainingTimeClone>0){
       this.bankQuestions.find(f=>f.id === questionId)['__anserByContestant'] = answers;
       this.questionSelect['__anserByContestant'] = answers;
       this.questionSelect['__anserByContestant_convent'] = answers.join(',');
-      // console.log(answers === bankCurrent.correct_answer);
       if (JSON.stringify(answers) === JSON.stringify(bankCurrent.correct_answer)){
         this.shiftTestQuestionSercice.update(this.shiftTestQuestion.id, {answer:answers,score:5}).subscribe();
       }else{
@@ -301,26 +291,13 @@ export class PannelByContestantComponent implements OnInit,OnDestroy {
     this.modalSerivice.dismissAll();
 
   }
-  updateTestQuestion(data :ShiftTestQuestion,question_id:number){
-
-
-    const bankCurrent =  this.bankQuestions.find(f=>f.id === question_id);
-
-    if (JSON.stringify(bankCurrent['__anserByContestant']) === JSON.stringify(bankCurrent.correct_answer)){
-      this.shiftTestQuestionSercice.update(this.shiftTestQuestion.id, {answer:bankCurrent['__anserByContestant'],score:5}).subscribe();
-    }else{
-      this.shiftTestQuestionSercice.update(this.shiftTestQuestion.id, {answer:bankCurrent['__anserByContestant'],score:0}).subscribe();
-    }
-  }
-
-
 
   socketEndQuestions(){
     this.table_loading=true;
     this.notificationService.isProcessing(true);
     this.shiftTestQuestionSercice.getDataByShiftTestId(this.shiftTest.id).subscribe({
       next:(data)=>{
-        console.log(data);
+
         let total = 0;
         const total_question = this.bankQuestions ? this.bankQuestions.length : 0;
         const total_question_anser:number = 0
@@ -334,7 +311,7 @@ export class PannelByContestantComponent implements OnInit,OnDestroy {
         this.shiftTest['__total']= total;
         this.shiftTest['__name_coverted'] = this.authService.user.display_name;
         this.dataShiftTests.push(this.shiftTest);
-        console.log(this.dataShiftTests);
+
         this.notificationService.isProcessing(false);
         this.table_loading=false;
 

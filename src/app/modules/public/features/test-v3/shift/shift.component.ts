@@ -8,12 +8,11 @@ import {NotificationService} from "@core/services/notification.service";
 import {DateTimeServer, ServerTimeService} from "@shared/services/server-time.service";
 import {Router} from "@angular/router";
 import {DotThiKetQuaService} from "@shared/services/dot-thi-ket-qua.service";
-import {debounceTime, forkJoin, Subscription} from "rxjs";
+import {forkJoin} from "rxjs";
 import {KEY_NAME_SHIFT_ID} from "@shared/utils/syscat";
 import {User} from "@core/models/user";
 import {io,Socket} from "socket.io-client";
 import {APP_CONFIGS, getWsUrl, wsPath} from "@env";
-import {distinctUntilChanged, filter} from "rxjs/operators";
 
 
 type ShiftState = -1 | 0 | 1; // 0: chưa tới thời gian thi | 1 trong thời gian cho phép thi | -1 : quá hạn thời gian được phép thi
@@ -60,7 +59,6 @@ export class ShiftComponent implements OnInit,OnDestroy {
   socket                  : Socket;
   stateSocket             : boolean = false;
   isContestant            : 'admin' | 'thisinh' = "thisinh";
-  private subscriptions = new Subscription();
   totalThisinh            : number = 0;
 
   constructor(
@@ -74,17 +72,18 @@ export class ShiftComponent implements OnInit,OnDestroy {
 
   ) {
     this.user = this.auth.user;
-    const observerSignIn   = this.auth.onSignIn.pipe( debounceTime( 100 ) , filter( t => t !== null ) , distinctUntilChanged() ).subscribe( {
-      next : accessToken => {
+
         if (this.auth.user.role_ids.includes('116')){
           if ( this.socket ) {
             this.socket.disconnect();
             this.socket.close();
           }
           this.socket = io( getWsUrl() , {
+            reconnection:true,
+            autoConnect: true,
             path : wsPath ,
             auth : {
-              token : accessToken ,
+              token : this.auth.accessToken ,
               realm : APP_CONFIGS.realm
             },
             transports: ['websocket', 'polling'],
@@ -104,25 +103,10 @@ export class ShiftComponent implements OnInit,OnDestroy {
               this.stateSocket=false;
             } );
           })
-          this.socket.on('close',()=>{console.log('log close');});
 
           this.socket.on( 'start_shift' , (data) => {this.socketParam(data);})
         }
 
-      }
-    }
-    );
-    const observerSignOut  = this.auth.onSignOut.pipe( debounceTime( 100 ) , filter( t => t !== null ) ).subscribe( {
-      next : reason => {
-        if ( this.socket ) {
-          this.socket.disconnect();
-          this.socket.close();
-        }
-      }
-    } );
-
-    this.subscriptions.add( observerSignIn );
-    this.subscriptions.add( observerSignOut );
 
   }
 
@@ -153,8 +137,9 @@ export class ShiftComponent implements OnInit,OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if ( this.subscriptions ) {
-      this.subscriptions.unsubscribe();
+    if ( this.socket ) {
+      this.socket.disconnect();
+      this.socket.close();
     }
     if (this.intervalId) {
       clearInterval(this.intervalId);
@@ -232,7 +217,7 @@ export class ShiftComponent implements OnInit,OnDestroy {
           // void this.router.navigate( [ 'test/panel' ] , { queryParams : { code } } );
           this.shiftTestsService.createSocket(dotthi.id).subscribe({
             next:(data)=>{
-              console.log(data);
+
               this.auth.setOption( KEY_NAME_SHIFT_ID , dotthi.id );
               void this.router.navigate( [ 'test/panel' ] );
               // this.notificationService.toastSuccess('Socket create shift test success');
@@ -289,8 +274,6 @@ export class ShiftComponent implements OnInit,OnDestroy {
   btnRouterResult(){
     this.router.navigate( [ 'test/result' ]);
   }
-
-
   checkThisinhInhoidong(){
     this.shiftTestsService.getTotalStateBy2().subscribe({
       next:(data)=>{
@@ -307,38 +290,12 @@ export class ShiftComponent implements OnInit,OnDestroy {
   btnSelectId(id){
     this.select_id= id;
   }
-
   socketParam(data){
-    console.log(data);
     this.auth.setOption( KEY_NAME_SHIFT_ID , data.shift_id );
     void this.router.navigate( [ 'test/panel' ] );
   }
 
 
-  runTextAnimation() {
-    const copyRightCustomElement = this.copyRightCustom.nativeElement;
-    copyRightCustomElement.style.animation = 'moveText 2.5s linear forwards'; // Chạy hiệu ứng trong 5 giây
-  }
 
-  hideCopyRight() {
-    const copyRightElement = this.copyRight.nativeElement;
-    copyRightElement.classList.add('hidden'); // Thêm class 'hidden' để ẩn toàn bộ phần tử copy-right
-      setTimeout(() => {
-        copyRightElement.classList.remove('hidden');
-      }, 5000);
-  }
-  unHideCopyRight(){
-    const copyRightElement = this.copyRight.nativeElement;
-    // copyRightElement.classList.add('hidden'); // Thêm class 'hidden' để ẩn toàn bộ phần tử copy-right
-      copyRightElement.classList.remove('hidden');
-  }
-
-  // resetAnimation() {
-  //   const marqueeElement = this.copyRight.nativeElement;
-  //   marqueeElement.style.animation = 'none';
-  //   setTimeout(() => {
-  //     marqueeElement.style.animation = 'moveText 5s linear forwards';
-  //   }, 10);
-  // }
 
 }
