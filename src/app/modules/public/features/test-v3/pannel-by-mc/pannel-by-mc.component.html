@@ -7,7 +7,11 @@
           <div>{{user.display_name}}</div>
         </div>
       </div>
-      <div class="panel-top-right">
+      <div  class="panel-top-right">
+        <div *ngIf="isLoading" class="loading">
+<!--        <div class="loading">-->
+            <i class="fa fa-spin fa-spinner"></i>
+        </div>
         <div class="counter-clock-wrap h-100" (click)="socketStartTime()">
           <div class="d-inline timer">{{ getFormattedTime() }}</div>
         </div>
@@ -43,14 +47,14 @@
         </div>
         <div *ngIf="questionSelect" class="panel-center-body intro-x">
           <div class="d-flex align-items-stretch">
-            <div class="panel-center-body_left">
+            <div class="panel-center-body_left intro-x">
               <div class="panel-center-body_left-header"> {{'Câu '+ (curentQuestionNumber+1) }}</div>
               <div class="panel-center-body_left-title" >
                 <div [innerHtml]="questionSelect.title |ovicSafeHtml"></div>
               </div>
             </div>
-            <div class="panel-center-body_right">
-              <div  class="panel-center-body_right-answer-options">
+            <div class="panel-center-body_right intro-x">
+              <div class="panel-center-body_right-answer-options">
                 <div *ngIf="!viewAnswer else showAnswer">
                   <app-groups-radio [options]="questionSelect.answer_options" [freeze]="questionSelect['__freeze']" [options_sty]="questionSelect.options_sty"></app-groups-radio>
                 </div>
@@ -147,6 +151,21 @@
   </ng-container>
   <ng-container *ngSwitchCase="'data_all'">
     <div class="panel-container" >
+      <div class="panel-top-left">
+        <div class="panel-center-header_item-left__user" >
+          <img [src]="user.avatar" alt="">
+          <div>{{user.display_name}}</div>
+        </div>
+      </div>
+      <div  class="panel-top-right">
+        <div *ngIf="isLoading" class="loading">
+          <!--        <div class="loading">-->
+          <i class="fa fa-spin fa-spinner"></i>
+        </div>
+        <div class="counter-clock-wrap h-100">
+          <div class="d-inline timer">{{ getFormattedTime() }}</div>
+        </div>
+      </div>
       <div class="panel-left">
         <div class="panel-arrow d-none">
           <i class="pi pi-angle-left"></i>
@@ -156,17 +175,17 @@
         <div class="panel-center-header">
           <div class="panel-center-header_item justify-content-between">
 
-            <div class="panel-center-header_item-left">
-              <div class="panel-center-header_item-left__user" >
-                <img [src]="user.avatar" alt="">
-                <div>{{user.display_name}}</div>
-              </div>
-            </div>
-            <div class="panel-center-header_item-right">
-              <div class="counter-clock-wrap h-100" >
-                <div class="d-inline timer">{{ getFormattedTime() }}</div>
-              </div>
-            </div>
+<!--            <div class="panel-center-header_item-left">-->
+<!--              <div class="panel-center-header_item-left__user" >-->
+<!--                <img [src]="user.avatar" alt="">-->
+<!--                <div>{{user.display_name}}</div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="panel-center-header_item-right">-->
+<!--              <div class="counter-clock-wrap h-100" >-->
+<!--                <div class="d-inline timer">{{ getFormattedTime() }}</div>-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
           <div class="logo">
             <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">

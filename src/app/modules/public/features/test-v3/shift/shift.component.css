@@ -338,6 +338,7 @@
   line-height: 50px;
   /* text-shadow: 0 0 2px var(--cl-shadow-text); */
   text-shadow: -2px -2px 2px #FFF, 2px -2px 2px #fff, -2px 2px 2px #fff, 2px 2px 2px #fff;
+  text-align:center;
 }
 .shift-content-body{
   margin-top:40px;

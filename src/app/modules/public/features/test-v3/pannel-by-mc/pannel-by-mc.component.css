@@ -29,11 +29,28 @@
   position:absolute;
   right:20px;
   top:20px;
+  display:flex;
+  justify-content: center;
+  align-items:center;
 }
-
-
+.panel-top-right .loading{
+  background: #fff;
+  padding: 10px;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+}
+.panel-top-right .loading i {
+  color : #a70e0e;
+  font-size: 25px;
+}
 .panel-left,.panel-right{
-  width:320px;
+  width:280px;
   height:100%;
   display:flex;
   justify-content:center;
@@ -98,6 +115,7 @@
 .panel-center-header_item-left__user img{
   height:100%;
   padding: 4px;
+  border-radius: 50px;
 }
 .panel-center-header_item-left__user div{
   font-size: 16px;

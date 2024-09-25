@@ -2,7 +2,7 @@
 
   <ng-container [ngSwitch]="testView">
     <ng-container *ngSwitchCase="'question'">
-      <div *ngIf="bank" class="panel_mc_header">
+      <div *ngIf="questionSelect" class="panel_mc_header">
         <div class="panel_mc_header-item">
           <div class="panel_mc_header-item__img">
             <img [src]="user.avatar" alt="">
@@ -20,8 +20,8 @@
 <!--        <div class="panel_mc_header-item"></div>-->
 
       </div>
-      <div class="panel_mc_content ovic-scroll-style">
-        <div *ngIf="questionSelect" class="panel_mc_content_question">
+      <div *ngIf="questionSelect else notQuestionSelect" class="panel_mc_content ovic-scroll-style">
+        <div  class="panel_mc_content_question">
           <div class="panel_mc_content_question-head">
             Câu {{ curentQuestionNumber + 1 }}:
           </div>
@@ -29,7 +29,7 @@
             <div [innerHTML]="questionSelect.title |ovicSafeHtml"></div>
           </div>
         </div>
-        <div *ngIf="questionSelect" class="panel_mc_content_answerOption">
+        <div class="panel_mc_content_answerOption">
           <div *ngIf="!viewAnswer, else isShowAnswer">
 <!--            <app-groups-radio>-->
 <!--            </app-groups-radio>-->
@@ -56,7 +56,26 @@
 
           </ng-template>
         </div>
+
+
       </div>
+      <ng-template #notQuestionSelect>
+        <div class="d-flex w-100 h-100 justify-content-center align-items-center flex-column" style=" gap:10px;">
+          <div class="loading-container">
+            <div class="loading-item">
+
+              <div class="loading-item__icon  pi pi-spin">
+                <i class="fa fa-spinner" aria-hidden="true"></i>
+
+              </div>
+              <div class="loading-item__content">
+                Vui lòng chờ
+              </div>
+              <button pButton pRipple label="Thoát"  (click)="btnlogOut()"></button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
 
     </ng-container>
 
@@ -89,7 +108,7 @@
           <div class="loading-item__content">
             Vui lòng chờ
           </div>
-          <button pButton pRipple label="Thoát"  (click)="btnOutTest()"></button>
+          <button pButton pRipple label="Thoát" iconPos="right" icon="pi pi-sign-out" class="p-button-warning"  (click)="btnOutTest()"></button>
 
         </div>
 
@@ -130,7 +149,7 @@
 
         </div>
         <div class="data-footer">
-          <button pButton pRipple label="thoát" icon="pi pi-sign-out" iconPos="right" (click)="btnOutTest()" ></button>
+          <button pButton pRipple label="Thoát" icon="pi pi-sign-out" iconPos="right" (click)="btnOutTest()" ></button>
         </div>
       </div>
 

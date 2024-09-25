@@ -14,7 +14,7 @@ import {
 
   SM_MODAL_OPTIONS_CUSTOM
 } from "@shared/utils/syscat";
-import {forkJoin, interval, merge, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
+import {debounceTime, forkJoin, interval, merge, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
 import {Shift, ShiftTests} from "@shared/models/quan-ly-doi-thi";
 import {NganHangCauHoi, NganHangDe} from "@shared/models/quan-ly-ngan-hang";
 import {User} from "@core/models/user";
@@ -46,6 +46,7 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
   shiftTest            : ShiftTests[] ;
   shiftTestQuestion    : ShiftTestQuestion[];
   table_loading        : boolean=false;
+  isLoading            : boolean = false;
   constructor(
     private router: Router,
     private notificationService: NotificationService,
@@ -66,6 +67,7 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
     this.destroy$.next('closed');
     this.destroy$.complete();
     this.timeCloser$.complete();
+    this.modalSerivice.dismissAll();
   }
 
   ngOnInit(): void {
@@ -81,8 +83,8 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
   }
 
   _initTest(){
-    this.notificationService.isProcessing(true);
-    this.shiftService.getDataById(this._validInfo.shift_id).pipe(switchMap(m=>{
+    this.isLoading = true;
+    this.shiftService.getDataById(this._validInfo.shift_id).pipe( debounceTime(3000),switchMap(m=>{
 
       return forkJoin([of(m),this.nganHangDeService.getDataById(m.bank_id),this.nganHangCauHoiService.getDataByBankId(m.bank_id)])
     })).subscribe({
@@ -95,14 +97,14 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
           return m;
         })
         this.number_questions =this.bankQuestions.length;
-        this.notificationService.isProcessing(false);
+        this.isLoading=false;
         if(this.bank && this.bankQuestions){
           this.testView="question";
           this.btnStart()
         }
       },
       error:()=>{
-        this.notificationService.isProcessing(false);
+        this.isLoading=false;
         this.notificationService.toastError('Tải xuống dữ liệu không thành công ');
       }
     })
@@ -112,7 +114,6 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
     this.time_clone = this.bank.time_per_test_tungcau;
     this.time_clone_for_end =this.time_clone;
     const bank_clone = this.bankQuestions.filter(f=>!f['__used']);
-
     this.questionSelect = bank_clone[0];
     this.curentQuestionNumber = 0
     this.callSocketStartQuestion();
@@ -152,13 +153,13 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
   }
 
   socketStartTime(){
-    this.notificationService.isProcessing(true);
-    this.shiftTestQuestionService.callSocketStartTime(this.shift.id).subscribe({
+    this.isLoading=true;
+    this.shiftTestQuestionService.callSocketStartTime(this.shift.id).pipe(debounceTime(2000)).subscribe({
       next:()=>{
-        this.notificationService.isProcessing(false);
+        this.isLoading=false;
         this.startTimer(this.time_clone_for_end);
       },error:()=>{
-        this.notificationService.isProcessing(false);
+        this.isLoading=false;
         this.notificationService.toastError('Bắt đầu thời gian thi không thành công ');
       }
     })
@@ -216,7 +217,7 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
             m['__avatar'] = thisinh ? thisinh['avatar']:'assets/images/bandanvan/logo_bandanvan.png';
             m['__name_coverted'] = thisinh ? thisinh['display_name'] : '';
             const shiftTestQuestionData = shiftTestQuestion && shiftTestQuestion.length> 0 ? shiftTestQuestion.filter(f=>f.shift_test_id === m.id) : [];
-            const numberQuestion = shiftTestQuestionData ? shiftTestQuestionData.length : 5;
+            const numberQuestion = shiftTestQuestionData ? (shiftTestQuestionData.length <5 ? 5: shiftTestQuestionData.length ) : 5;
             const numberQuestionCorect = shiftTestQuestionData ? shiftTestQuestionData.filter(f=>f.score === 5).length:0;
             let total = 0
             shiftTestQuestionData.forEach((a,index)=>{
@@ -261,7 +262,7 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
   }
 
   callSocketStartQuestion(){
-    this.notificationService.isProcessing(true)
+    this.isLoading=true;
     this.shiftTestQuestionService.callSocketStart(this.shift.id,this.questionSelect.id).pipe(switchMap(()=>
     this.shiftTestQuestionService.getDataByShiftIdAndQuestionId(this.shift.id,this.questionSelect.id)
     )).subscribe({
@@ -279,30 +280,35 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
           return m;
         })
         // this.startTimer(this.time_clone_for_end);
-        this.notificationService.isProcessing(false);
+        this.isLoading=false;
+
       },
       error:()=>{
-        this.notificationService.isProcessing(false);
+
+        this.isLoading=false;
+        this.notificationService.toastError('Socket Error');
       }
     })
   }
   callSocketEndQuestion(){
-    this.notificationService.isProcessing(true)
+    this.isLoading=true;
     this.shiftTestQuestionService.callSocketEnd(this.shift.id).subscribe({
       next:()=>{
         this.loadDataShiftTestByShiftIdAndquestionId();
-        this.notificationService.isProcessing(false);
+        this.isLoading=false;
         this.notificationService.toastSuccess('Bài thi đã kết thúc');
       },
       error:()=>{
-        this.notificationService.isProcessing(false);
+        this.isLoading=false;
+        this.notificationService.toastError('Kết thúc bài thi không thành công');
       }
     })
   }
 
 
   loadKetquaQueStion(shift_id:number,question_id:number){
-    this.notificationService.isProcessing(true);
+    this.isLoading=true;
+
     this.shiftTestQuestionService.getDataByShiftIdAndQuestionId(shift_id,question_id).subscribe({
       next:(data)=>{
         this.shiftTestQuestion = data.map(m=>{
@@ -318,10 +324,12 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
           return m;
         })
 
-        this.notificationService.isProcessing(false);
+        this.isLoading=false;
+
 
       },error:()=>{
-        this.notificationService.isProcessing(false);
+        this.isLoading=false;
+        this.notificationService.toastError('Load dữ liệu không thành công');
 
       }
     })

@@ -32,10 +32,10 @@ const routes: Routes = [
   //   path         : 'dev' ,
   //   loadChildren : () => import('@modules/public/features/dev/dev.module').then( m => m.DevModule )
   // },
-  {
-    path:"home",
-    component:HomeDhtnComponent
-  } ,
+  // {
+  //   path:"home",
+  //   component:HomeDhtnComponent
+  // } ,
   // {
   //   path: 'home',
   //   canActivate: [DesktopGuard],

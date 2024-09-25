@@ -8,12 +8,16 @@ export const environment = {
 
 const realm       = 'ttn_dhtn';
 const host        = 'https://bandanvan.ictu.vn';
-// const host        = 'https://api-dev.ictu.vn';
-// const host        = 'https://tnu.vn';
+const port        = '9087';//online
+const port_socket = '9088';//online
+const ws_url      =  'wss://bandanvan.ictu.vn' ;//online
 
-const port        = '9087';
-const port_socket = '9088';
-const ws_url      =  'wss://bandanvan.ictu.vn' ;
+
+
+// const host        = 'https://api-dev.ictu.vn';
+// const port        = '10091';
+// const port_socket = '10092';
+// const ws_url      =  'wss://api-dev.ictu.vn' ;
 
 export const getHost         = () : string => host;
 export const getRoute        = ( route : string ) : string => [].concat( host , [ ':' , port , '/' , realm , '/api/' , route ] ).join( '' );
