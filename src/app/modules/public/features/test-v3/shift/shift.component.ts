@@ -11,7 +11,6 @@ import {DotThiKetQuaService} from "@shared/services/dot-thi-ket-qua.service";
 import {forkJoin} from "rxjs";
 import {KEY_NAME_SHIFT_ID} from "@shared/utils/syscat";
 import {User} from "@core/models/user";
-import {filter} from "rxjs/operators";
 
 
 type ShiftState = -1 | 0 | 1; // 0: chưa tới thời gian thi | 1 trong thời gian cho phép thi | -1 : quá hạn thời gian được phép thi
@@ -69,14 +68,12 @@ export class ShiftComponent implements OnInit, OnDestroy {
     private shiftTestsService: DotThiKetQuaService,
   ) {
     this.user = this.auth.user;
-    if (this.auth.user.role_ids.includes('116')) {
-      this.auth.onSocketResponse().pipe(filter(res => res.name === 'start_shift')).subscribe(({data}) => this.socketParam(data))
-      this.auth.observerAppSocketStatus.subscribe((connected: boolean) => {
-        this.stateSocket = connected
-      });
-    }
-
-
+    // if (this.auth.user.role_ids.includes('116')) {
+    //   this.auth.onSocketResponse().pipe(filter(res => res.name === 'start_shift')).subscribe(({data}) => this.socketParam(data))
+    //   this.auth.observerAppSocketStatus.subscribe((connected: boolean) => {
+    //     this.stateSocket = connected
+    //   });
+    // }
   }
 
   ngOnInit(): void {
@@ -85,23 +82,11 @@ export class ShiftComponent implements OnInit, OnDestroy {
 
     if (this.auth.user.role_ids.includes('116')) {
       this.state = "loading";
+      void this.router.navigate(['test/panel']);
     } else {
       this.state = "data";
       this.loadData();
     }
-
-    // setTimeout(() => {
-    //   this.runTextAnimation();
-    // }, 2000); // Sau 2 giây bắt đầu chạy chữ
-    //
-    // // Ẩn toàn bộ class copy-right sau 10 giây
-    // setTimeout(() => {
-    //   this.hideCopyRight();
-    // }, 2000); // Sau 10 giây sẽ ẩn cả phần tử copy-right
-    // setTimeout(() => {
-    //   this.unHideCopyRight();
-    // }, 6000); // Sau 10 giây sẽ ẩn cả phần tử copy-right
-
 
   }
 

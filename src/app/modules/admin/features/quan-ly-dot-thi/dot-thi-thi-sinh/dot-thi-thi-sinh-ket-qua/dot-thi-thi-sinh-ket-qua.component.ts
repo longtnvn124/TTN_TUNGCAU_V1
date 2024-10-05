@@ -5,7 +5,7 @@ import {NganHangCauHoi, NganHangDe} from "@shared/models/quan-ly-ngan-hang";
 import {DotThiDanhSachService} from "@shared/services/dot-thi-danh-sach.service";
 import {DotThiKetQuaService} from "@shared/services/dot-thi-ket-qua.service";
 import {NganHangDeService} from "@shared/services/ngan-hang-de.service";
-import {forkJoin} from "rxjs";
+import {forkJoin, of, switchMap} from "rxjs";
 import {NotificationService} from "@core/services/notification.service";
 import {NgPaginateEvent, OvicTableStructure} from "@shared/models/ovic-models";
 import {ThiSinhTracking, ThisinhTrackingService} from "@shared/services/thisinh-tracking.service";
@@ -15,6 +15,7 @@ import {NganHangCauHoiService} from "@shared/services/ngan-hang-cau-hoi.service"
 import {ExportExcelService} from "@shared/services/export-excel.service";
 import {ThemeSettingsService} from "@core/services/theme-settings.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ShiftTestQuestion, ShiftTestQuestionService} from "@shared/services/shift-test-question.service";
 
 
 // export interface dataThisinhCover extends ShiftTests{
@@ -47,6 +48,7 @@ export class DotThiThiSinhKetQuaComponent implements OnInit, OnChanges {
   rows = this.themeSettingsService.settings.rows;
   viewDetail:"default" | "question"| "tracking" = "default";
   nganhangCauhoi:NganHangCauHoi[];
+  // nganhangCauhoi:ShiftTestQuestion[];
 
   headButtons = [
     {
@@ -60,46 +62,14 @@ export class DotThiThiSinhKetQuaComponent implements OnInit, OnChanges {
   tblStructureShiftTest: OvicTableStructure[] = [
     {
       fieldType: 'normal',
-      field: ['_name'],
+      field: ['__name_coverted'],
       innerData: true,
-      header: 'Tên thí sinh',
+      header: 'Tên đội thi',
       sortable: false,
     },
     {
       fieldType: 'normal',
-      field: ['_school'],
-      innerData: true,
-      header: 'Tên Trường',
-      sortable: false,
-    },
-    {
-      fieldType: 'normal',
-      field: ['_units'],
-      innerData: true,
-      header: 'Đơn vị',
-      sortable: false,
-    },
-    {
-      fieldType: 'normal',
-      field: ['_time_start_shifttest'],
-      innerData: true,
-      header: 'Ngày làm bài',
-      sortable: false,
-      headClass: 'ovic-w-130px text-center',
-      rowClass: 'ovic-w-130px text-center'
-    },
-    {
-      fieldType:'normal',
-      field:['_time_doit'],
-      innerData: true,
-      header: 'Thời gian làm bài',
-      sortable: false,
-      headClass: 'ovic-w-130px text-center',
-      rowClass: 'ovic-w-130px text-center'
-    },
-    {
-      fieldType: 'normal',
-      field: ['_number_correct_converted'],
+      field: ['__answer_convert'],
       innerData: true,
       header: 'Kết quả làm bài',
       sortable: false,
@@ -108,7 +78,7 @@ export class DotThiThiSinhKetQuaComponent implements OnInit, OnChanges {
     },
     {
       fieldType: 'normal',
-      field: ['_score'],
+      field: ['__total_score'],
       innerData: true,
       header: 'Điểm',
       sortable: true,
@@ -132,13 +102,6 @@ export class DotThiThiSinhKetQuaComponent implements OnInit, OnChanges {
           name: 'DETAIL-EXAM',
           cssClass: 'btn-warning rounded'
         },
-        {
-          tooltip: 'Theo dõi bài làm ',
-          label: '',
-          icon: 'pi pi-stopwatch',
-          name: 'DETAIL-TRACKING',
-          cssClass: 'btn-secondary rounded'
-        },
 
       ]
     }
@@ -151,6 +114,7 @@ export class DotThiThiSinhKetQuaComponent implements OnInit, OnChanges {
   constructor(
     private shiftService: DotThiDanhSachService,
     private shiftTestService: DotThiKetQuaService,
+    private ShiftTestQuestionService: ShiftTestQuestionService,
     private bankSerivce: NganHangDeService,
     private notifi: NotificationService,
     private thisinhTrackingService:ThisinhTrackingService,
@@ -163,17 +127,20 @@ export class DotThiThiSinhKetQuaComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
         if (this._shift_id){
+          this.viewDetail = "default";
           this.loadInit();
         }
     }
 
   ngOnInit(): void {
     if (this._shift_id){
+      this.viewDetail = "default";
       this.loadInit();
     }
   }
 
   loadInit(){
+
     forkJoin<[NganHangDe[],Shift[]]>([
       this.bankSerivce.getDataUnlimit(),
       this.shiftService.getdataUnlimit()
@@ -181,9 +148,11 @@ export class DotThiThiSinhKetQuaComponent implements OnInit, OnChanges {
       next:([nghanhde, shift])=>{
         const checkshift= shift.find(f=>f.id === this._shift_id)
         this.shift = checkshift;
-        this.shift['_time_per_test'] = this.strToTime(checkshift.time_start) + ' - ' + this.strToTime(checkshift.time_end);
+
         this.bank =this.shift ? nghanhde.find(f=>f.id === this.shift.bank_id): null;
-        this.loadDataThisinh(this._shift_id,this.page);
+        // this.loadDataThisinh(this._shift_id,this.page);
+        this.loadDataShiftTestByShiftIdAndquestionId();
+
       },
       error:()=>{
         this.notifi.toastError('Mất kết nối với máy chủ');
@@ -191,116 +160,7 @@ export class DotThiThiSinhKetQuaComponent implements OnInit, OnChanges {
       }});
   }
 
-  loadDataThisinh(shift_id:number, page:number, search?:string){
-    this.notifi.isProcessing(true);
-    const searchdata = search;
-    this.shiftTestService.getDataByShiftIdAndWidthAndPageAndSearch(shift_id,page,searchdata).subscribe({
-      next:({ recordsTotal,data})=>{
-        this.recordsTotal = recordsTotal;
-          const ShiftTestData = data.map(m=>{
-            const thisinh = m['thisinh'];
-            m['_name']= thisinh ? thisinh['full_name'] : '';
-            m['_school'] = thisinh ? thisinh['school'] : '';
-            m['_units'] = thisinh && thisinh['people_classify'] === 0 ? thisinh['class'] : thisinh && thisinh['people_classify'] === 1 ? thisinh['units'] : '';
-            m['_time_start_shifttest'] = m.time_start ? this.getdate(m.time_start) : '';
-            m['_score'] = m && m.score ? this.take_decimal_number(m.score, 2) : 0;
-            const time_doit = this.bank && this.bank.time_per_test ?  Math.floor(this.bank.time_per_test *60 - m.time) : 0;
-            m['_time_doit'] = Math.floor(time_doit / 60) + 'p ' + Math.floor((time_doit % 60) / 10) + 's';
-            m['_number_correct_converted'] = m.number_correct + '/' + m.question_ids.length;
-            m['_bank_id'] = this.bank.id;
-            return m;
-          });
-        this.viewLazy=false;
-        this.shiftTest  = this.sortCandidates(ShiftTestData);
 
-        this.notifi.isProcessing(false);
-      },error:(err)=>{
-        this.notifi.isProcessing(false);
-      }
-    })
-  }
-
-  dataSearch:ShiftTests[] ;
-
-  onSearch(text: string) {
-    this.search = text;
-    this.page=1;
-    this.loadDataThisinh(this._shift_id,this.page,this.search);
-  }
-  take_decimal_number(num, n) {
-    let base = 10 ** n;
-    return Math.round(num * base) / base;
-  }
-  getdate(time: string, getime?: boolean) {
-    const date = new Date(time);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Lưu ý rằng tháng bắt đầu từ 0, nên cần cộng thêm 1.
-    const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    if (!getime) {
-      return `${day}/${month}/${year} ${hours}:${minutes}`;
-    } else {
-      return `${day}/${month}/${year}`;
-    }
-  }
-
-  paginate({page}: NgPaginateEvent) {
-    this.page = page + 1;
-    this.loadDataThisinh(this._shift_id,this.page);
-  }
-
-
-  dataTracking:ThiSinhTracking[];
-  type_tracking =TYPE_CONTESTANT_TRACKING;
-
-  getDataUserTracking(shift_id:number, thisinh_id:number){
-    // this.viewDetail="tracking";
-    this.notifi.isProcessing(true);
-    this.thisinhTrackingService.getdataTracking(shift_id,thisinh_id).subscribe({
-      next: (trackings)=>{
-        this.dataTracking = trackings.map(m=>
-        {
-          const iconCheck = this.type_tracking.find(f=>f.value === m.type_check)
-          m['_icon'] = iconCheck? iconCheck.icon : 'pi pi-bell';
-          m['_class'] = iconCheck ? iconCheck.class : '';
-          m['_date_chagnes'] = m['created_at']? this.getdate(m['created_at'], false):'';
-          return m;
-        }) ;
-        this.notifi.isProcessing(false);
-      },
-      error:(e)=>{
-        this.notifi.isProcessing(false);
-
-      }
-    })
-  }
-
-  strToTime(input: string): string {
-    const date = input ? new Date(input) : null;
-    let result = '';
-    if (date) {
-      result += [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString()].join('/');
-      result += ' ' + [date.getHours().toString().padStart(2, '0'), date.getMinutes().toString().padStart(2, '0')].join(':');
-    }
-    return result;
-  }
-  strToDate(input:string):string{
-    const date = input ? new Date(input) : null;
-    let result = '';
-    if (date) {
-      result = [date.getDate().toString().padStart(2, '0'), (date.getMonth() + 1).toString().padStart(2, '0'), date.getFullYear().toString()].join('/');
-    }
-      return result;
-  }
-  sortCandidates(candidates: ShiftTests[]): ShiftTests[] {
-    return candidates.sort((a, b) => {
-      if (b.score !== a.score) {
-        return b.score - a.score;
-      }
-      return b.time - a.time ;
-    });
-  }
   handleClickOnTableShiftTest(button: OvicButton){
     if(!button){
       return;
@@ -311,19 +171,25 @@ export class DotThiThiSinhKetQuaComponent implements OnInit, OnChanges {
     switch (button.name) {
       case 'DETAIL-EXAM':
         this.viewDetail = "question";
-        const quesition_ids = decision.question_ids;
-        const details = decision.details;
-        const bank_id = decision['_bank_id'];
+        const shiftTestQuestion = decision['__shiftTestQuestion'] as ShiftTestQuestion[];
         this.notifi.isProcessing(true);
-        this.nganHangCauHoiService.getDataByBankId(bank_id,null).subscribe({
+        this.nganHangCauHoiService.getDataByBankId(this.shift.bank_id,null).subscribe({
           next:(data)=>{
-            this.nganhangCauhoi = quesition_ids.map(m=>{
-              const item = data.find(f => f.id === m)?  data.find(f => f.id === m):null;
-              item['__per_select_question'] = details[m] && details[m].join(',').toString() ? details[m].join(',').toString() : '';
-              item['__correct_answer_coverted'] =item ? item.correct_answer.map(t => item.answer_options.find(f => f.id === t)):null;
-              item['__correct_answer'] = item.correct_answer.join(',');
+            // this.nganhangCauhoi = quesition_ids.map(m=>{
+            //   const item = data.find(f => f.id === m)?  data.find(f => f.id === m):null;
+            //   item['__per_select_question'] = details[m] && details[m].join(',').toString() ? details[m].join(',').toString() : '';
+            //   item['__correct_answer_coverted'] =item ? item.correct_answer.map(t => item.answer_options.find(f => f.id === t)):null;
+            //   item['__correct_answer'] = item.correct_answer.join(',');
+            //   return item;
+            // });
+            this.nganhangCauhoi = shiftTestQuestion.map(m=>{
+                const item = data.find(f => f.id === m.question_id)?  data.find(f => f.id === m.question_id):null;
+                item['__per_select_question']= m.answer ? m.answer.join(',').toString() : '';
+                item['__correct_answer_coverted'] =item ? item.correct_answer.map(t => item.answer_options.find(f => f.id === t)):null;
+                item['__correct_answer'] = item.correct_answer.join(',');
+                  item['__has_answered']  = m.answer;
               return item;
-            });
+            })
             this.notifi.isProcessing(false);
           },error:(e)=>{
             this.notifi.isProcessing(false);
@@ -332,62 +198,51 @@ export class DotThiThiSinhKetQuaComponent implements OnInit, OnChanges {
         })
         break;
       case 'BUTTON_EXPORT_EXCEL':
-
-        this.exportExcel(this.shift.id);
         break;
       case 'DETAIL-TRACKING':
-        this.viewDetail="tracking";
-        this.getDataUserTracking(decision.shift_id, decision.thisinh_id);
+
         break;
       default:
         break;
     }
   }
-  exportExcel(shift_id:number){
-    this.modalService.open(this.templateWaiting, WAITING_POPUP);
+  loadDataShiftTestByShiftIdAndquestionId(question_id?:number){
 
-    this.notifi.isProcessing(true)
-    let index = 1;
-    this.shiftTestService.getDataByShiftIdAndWidth(shift_id).subscribe({
-      next:(data)=>{
-        const dataaShiftTest = data.map(m => {
-          const thisinh = m['thisinh'];
-          const _index = index++;
-          const _name= thisinh ? thisinh['full_name'] : '';
-          const _sex = thisinh && thisinh['sex'] === 'nam'  ? 'Nam': 'Nữ';
-          const _dob = thisinh ?  this.strToDate(thisinh['dob']) :'';
-          const _phone = thisinh ? thisinh['phone']: '';
-          const _email = thisinh ? thisinh['email']:'';
-          const _school = thisinh ? thisinh['school'] : '';
-          const _class = thisinh && thisinh['people_classify'] === 0 ? thisinh['class'] : '';
-          const _units = thisinh && thisinh['people_classify'] === 1 ? thisinh['units'] : '';
-          const _time_start_shifttest = m.time_start ? this.getdate(m.time_start) : '';
-          const _score = m && m.score ? this.take_decimal_number(m.score, 2) : 0;
-          const time_doit = this.bank && this.bank.time_per_test ?  Math.floor(this.bank.time_per_test *60 - m.time) : 0;
-          const _time_doit = Math.floor(time_doit / 60) + ' phút ' + Math.floor((time_doit % 60) / 10) + ' giây';
-          const _number_correct_converted  = m.number_correct + '/' + m.question_ids.length;
-          const _bank_id  = this.bank.id;
-          return {_index,_name,_dob,_sex,_phone,_email,_school,_class,_units,_time_start_shifttest,_time_doit,_number_correct_converted,_score};
-        });
-        this.modalService.dismissAll();
-        if (dataaShiftTest){
-          this.sendExcel(dataaShiftTest);
-        }
-        this.notifi.isProcessing(false)
 
-      },error:()=>{
-        this.modalService.dismissAll();
-        this.notifi.toastSuccess('Lấy dữ liêu không thành công');
-        this.notifi.isProcessing(false)
+    this.notifi.isProcessing(true);
+    const shift_id = this.shift.id;
+    // const question_id = this.questionSelect.id;
+    this.shiftTestService.getDataByShiftId(shift_id).pipe(switchMap(m=>{
+      const ids = m.map(m=>m.id);
+      return forkJoin([of(m),this.ShiftTestQuestionService.getDataByShiftTestIdsAndquestion_id(ids,question_id)])
+    })).subscribe({
+      next:([shiftTest,shiftTestQuestion])=>{
+        this.shiftTest = shiftTest && shiftTest.length>0 ? shiftTest.map(m=>{
+          const thisinh =m['users'];
 
+          m['__avatar'] = thisinh ? thisinh['avatar']:'assets/images/bandanvan/logo_bandanvan.png';
+          m['__name_coverted'] = thisinh ? thisinh['display_name'] : '';
+          const shiftTestQuestionData = shiftTestQuestion && shiftTestQuestion.length> 0 ? shiftTestQuestion.filter(f=>f.shift_test_id === m.id) : [];
+          const numberQuestion = shiftTestQuestionData ? (shiftTestQuestionData.length <5 ? 5: shiftTestQuestionData.length ) : 5;
+          const numberQuestionCorect = shiftTestQuestionData ? shiftTestQuestionData.filter(f=>f.score === 5).length:0;
+          let total = 0
+          shiftTestQuestionData.forEach((a,index)=>{
+            total =total + a.score;
+          });
+          m['__shiftTestQuestion'] = shiftTestQuestionData;
+          m['__total_score'] = total;
+          m['__answer_convert'] = numberQuestionCorect +'/' + numberQuestion;
+          return m;
+        }).sort((a,b)=>b['__total_score'] - a['__total_score']) : null;
+
+        this.notifi.isProcessing(false);
+        this.viewLazy = false;
+      },
+      error:()=>{
+
+        this.notifi.toastError('Load dữ liệu không thành công ');
       }
-    });
+    })
   }
-  sendExcel(data ){
-    const heading = this.shift ? this.shift.title : 'Đợt thi 01: Cuộc thi tìm hiểu 30 năm xây dụng và phát triển Đại học Thái Nguyên' ;
-    const subHeading = this.shift['_time_per_test'];
-    this.exportExcelService.exportAsExcelFile(heading, subHeading, this.columns, data, heading, 'sheet1');
-  }
-
 
 }

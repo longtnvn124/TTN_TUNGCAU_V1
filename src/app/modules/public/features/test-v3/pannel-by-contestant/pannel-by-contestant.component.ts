@@ -24,6 +24,8 @@ import {KEY_NAME_SHIFT_ID, SM_MODAL_OPTIONS} from "@shared/utils/syscat";
 import {User} from "@core/models/user";
 import {ShiftTestQuestion, ShiftTestQuestionService} from "@shared/services/shift-test-question.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {io, Socket} from "socket.io-client";
+import {APP_CONFIGS, getWsUrl, wsPath} from "@env";
 
 
 
@@ -89,6 +91,8 @@ export class PannelByContestantComponent implements OnInit, OnDestroy {
   //   },
   // }
 
+  viewLogout:boolean = false;
+  socket: Socket;
   constructor(
     private router: Router,
     private notificationService: NotificationService,
@@ -101,15 +105,17 @@ export class PannelByContestantComponent implements OnInit, OnDestroy {
     private modalSerivice: NgbModal,
   ) {
     this.user = this.authService.user;
-    // if (this.socket) {
-    //   this.socket.disconnect();
-    //   this.socket.close();
-    // }
-    //
     this.authService.onSocketResponse().pipe(takeUntil(this.destroy$)).subscribe(({name,data}) => {
 
       // this.eventHandle[name](data);
+      if(name === 'start_shift'){
+        this._validInfo.shift_id = data.shift_id;
+        this.authService.setOption(KEY_NAME_SHIFT_ID, data.shift_id);
+        this.checkInit();
+      }
+
       if(name==='batdauthi'){
+        this._validInfo.shift_id = data.shift_id;
         this.shiftTestQuestion = data as ShiftTestQuestion;
         this.socketStartQuestion(this.shiftTestQuestion);
       }
@@ -117,18 +123,18 @@ export class PannelByContestantComponent implements OnInit, OnDestroy {
         this.testView = "data_all";
         this.socketEndQuestions()
       }
-      if(name==='start_time'){
-
+      if(name==='start_time') {
         this.socketStatTime();
+
       }
-    }),
+    });
     this.authService.observerAppSocketStatus.subscribe((connected: boolean) => {
-      this.stateSocket = connected
+      this.stateSocket = connected;
     });
   }
 
   ngOnInit(): void {
-    this.checkInit();
+    // this.checkInit();
   }
 
   ngOnDestroy(): void {
@@ -141,14 +147,17 @@ export class PannelByContestantComponent implements OnInit, OnDestroy {
 
 
   checkInit() {
-    const shift_id: number = this.authService.getOption(KEY_NAME_SHIFT_ID);
 
+    const shift_id: number = this.authService.getOption(KEY_NAME_SHIFT_ID);
+    console.log(shift_id);
     if (!Number.isNaN(shift_id)) {
       this._validInfo.shift_id = shift_id;
       this._initTest();
     } else {
       void this.router.navigate(['/test/shift']);
     }
+
+
   }
 
   private _initTest() {
@@ -223,7 +232,7 @@ export class PannelByContestantComponent implements OnInit, OnDestroy {
         this.remainingTimeClone = 0;
         this.stopTimer();
         this.isSubmitTimeEnd = true;
-        console.log('error');
+        console.log('time end');
         this.btnViewTemplaceNotifi();
       }
 
@@ -265,9 +274,11 @@ export class PannelByContestantComponent implements OnInit, OnDestroy {
 
   onAnswerQuestion(questionId: number, answers: number[]) {
 
-    const bankCurrent = this.bankQuestions.find(f => f.id === questionId)
+    const bankCurrent = this.bankQuestions.find(f => f.id === questionId) ? this.bankQuestions.find(f => f.id === questionId) : this.questionSelect;
     if (this.remainingTimeClone > 0) {
-      this.bankQuestions.find(f => f.id === questionId)['__anserByContestant'] = answers;
+      if (this.bankQuestions && this.bankQuestions.length>0){
+        this.bankQuestions.find(f => f.id === questionId)['__anserByContestant'] = answers;
+      }
       this.questionSelect['__anserByContestant'] = answers;
       this.questionSelect['__anserByContestant_convent'] = answers.join(',');
       if (JSON.stringify(answers) === JSON.stringify(bankCurrent.correct_answer)) {
@@ -333,4 +344,11 @@ export class PannelByContestantComponent implements OnInit, OnDestroy {
     this.router.navigate(['login']).then(() => this.notificationService.isProcessing(false), () => this.notificationService.isProcessing(false));
   }
 
+
+  btnViewLogOut(type){
+    this.viewLogout = type;
+  }
+  btnRouterResult(){
+
+  }
 }

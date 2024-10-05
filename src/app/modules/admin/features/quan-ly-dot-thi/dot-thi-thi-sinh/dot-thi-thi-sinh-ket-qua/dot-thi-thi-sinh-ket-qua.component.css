@@ -31,6 +31,8 @@
 .exam-container__item-label {
   font-size: 15px;
   font-weight: 500;
+  display:flex;
+  flex-direction: column;
 }
 
 .exam-container__item-label span {
@@ -159,4 +161,18 @@
   font-weight: 400;
   padding: 0 20px 10px;;
   margin: 0;
+}
+/*----------------------------------------------*/
+.has_answered{
+  background: #0B7A09;
+  color:#fff;
+  padding: 4px 10px;
+  border-radius: 50px;
+
+}
+.not-has-answered{
+  background: tomato;
+  color:#fff;
+  padding: 4px 10px;
+  border-radius: 50px;
 }

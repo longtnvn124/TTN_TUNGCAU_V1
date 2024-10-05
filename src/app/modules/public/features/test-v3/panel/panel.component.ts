@@ -13,7 +13,7 @@ export class PanelComponent implements OnInit {
   constructor(
     private auth: AuthService,
   ) {
-    this.auth.onsocKet().connect(this.auth.accessToken);
+
   }
   ngOnInit(): void {
 

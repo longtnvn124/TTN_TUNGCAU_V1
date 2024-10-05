@@ -1,122 +1,327 @@
-<div class="panel_mc_contaner container" >
+<!--<div class="panel_mc_contaner container" >-->
+
+<!--  <ng-container [ngSwitch]="testView">-->
+<!--    <ng-container *ngSwitchCase="'question'">-->
+<!--      <div *ngIf="questionSelect" class="panel_mc_header">-->
+<!--        <div class="panel_mc_header-item">-->
+<!--          <div class="panel_mc_header-item__img">-->
+<!--            <img [src]="user.avatar" alt="">-->
+<!--          </div>-->
+<!--          <div class="panel_mc_header-item__name">-->
+<!--            {{user.display_name}}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="panel_mc_header-item">-->
+<!--          <div class="counter-clock-wrap">-->
+<!--            <div class="d-inline timer">{{ getFormattedTime() }}</div>-->
+<!--          </div>-->
+
+<!--        </div>-->
+<!--&lt;!&ndash;        <div class="panel_mc_header-item"></div>&ndash;&gt;-->
+
+<!--      </div>-->
+<!--      <div *ngIf="questionSelect else notQuestionSelect" class="panel_mc_content ovic-scroll-style">-->
+<!--        <div  class="panel_mc_content_question">-->
+<!--          <div class="panel_mc_content_question-head">-->
+<!--            Câu {{ curentQuestionNumber + 1 }}:-->
+<!--          </div>-->
+<!--          <div class="panel_mc_content_question-title">-->
+<!--            <div [innerHTML]="questionSelect.title |ovicSafeHtml"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="panel_mc_content_answerOption">-->
+<!--          <div *ngIf="!viewAnswer, else isShowAnswer">-->
+<!--&lt;!&ndash;            <app-groups-radio>&ndash;&gt;-->
+<!--&lt;!&ndash;            </app-groups-radio>&ndash;&gt;-->
+<!--            <ng-container *ngIf=" timeClone === remainingTimeClone else notBy">-->
+<!--              <groups-radio  [options]="questionSelect.answer_options" [freeze]="true"-->
+<!--                             [options_sty]="questionSelect.options_sty"></groups-radio>-->
+
+<!--            </ng-container>-->
+<!--            <ng-template #notBy>-->
+<!--              <groups-radio  [options]="questionSelect.answer_options" (onChange)="onAnswerQuestion(questionSelect.id, $event)"-->
+<!--                             [options_sty]="questionSelect.options_sty"></groups-radio>-->
+<!--            </ng-template>-->
+
+
+<!--          </div>-->
+<!--          <ng-template #isShowAnswer>-->
+<!--&lt;!&ndash;            <app-groups-radio [options]="questionSelect.answer_options" [default]="questionSelect['__anserByContestant_convent']"&ndash;&gt;-->
+<!--&lt;!&ndash;                              [correctAnswer]="questionSelect['__answer_coverted']" [freeze]="true"&ndash;&gt;-->
+<!--&lt;!&ndash;                              [options_sty]="questionSelect.options_sty"></app-groups-radio>&ndash;&gt;-->
+<!--            <groups-radio [options]="questionSelect.answer_options" [default]="questionSelect['__anserByContestant_convent']"-->
+<!--                               [correctAnswer]="questionSelect['__answer_coverted']" [freeze]="true"-->
+<!--                               [options_sty]="questionSelect.options_sty"></groups-radio>-->
+
+
+<!--          </ng-template>-->
+<!--        </div>-->
+
+
+<!--      </div>-->
+<!--      <ng-template #notQuestionSelect>-->
+<!--        <div class="d-flex w-100 h-100 justify-content-center align-items-center flex-column" style=" gap:10px;">-->
+<!--          <div class="loading-container">-->
+<!--            <div class="loading-item">-->
+
+<!--              <div class="loading-item__icon  pi pi-spin">-->
+<!--                <i class="fa fa-spinner" aria-hidden="true"></i>-->
+
+<!--              </div>-->
+<!--              <div class="loading-item__content">-->
+<!--                Vui lòng chờ-->
+<!--              </div>-->
+<!--              <button pButton pRipple label="Thoát"  (click)="btnlogOut()"></button>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </ng-template>-->
+<!--    </ng-container>-->
+
+<!--    <ng-container *ngSwitchCase="'data_question'">-->
+<!--      <div class="data-container">-->
+<!--        <div class="data-header">-->
+<!--          <div>HỘI THI</div>-->
+<!--          <div>“DÂN VẬN KHÉO” TỈNH THÁI NGUYÊN NĂM 2024</div>-->
+<!--          <div>PHẦN THI KIẾN THỨC</div>-->
+<!--          <div>KẾT QUẢ</div>-->
+<!--        </div>-->
+<!--        <div class="data-body">-->
+
+
+<!--        </div>-->
+<!--        <div class="data-footer">-->
+<!--        </div>-->
+<!--      </div>-->
+
+
+<!--    </ng-container>-->
+<!--    <ng-container *ngSwitchCase="'loading'">-->
+<!--      <div class="shift-content">-->
+<!--        <div class="shift-content-top">-->
+<!--          <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">-->
+<!--          <div>HỘI THI</div>-->
+<!--          <div>“DÂN VẬN KHÉO” TỈNH THÁI NGUYÊN NĂM 2024</div>-->
+<!--          <div>PHẦN THI KIẾN THỨC</div>-->
+<!--        </div>-->
+<!--        <div class="shift-content-body">-->
+<!--          <div class="loading-container">-->
+<!--            <div class="loading-item">-->
+
+<!--              <div class="loading-item__icon  pi pi-spin">-->
+<!--                <i class="fa fa-spinner" aria-hidden="true"></i>-->
+
+<!--              </div>-->
+<!--              <div class="loading-item__content">-->
+<!--                Vui lòng chờ-->
+<!--              </div>-->
+<!--&lt;!&ndash;              <button pButton pRipple label="Thoát" iconPos="right" icon="pi pi-sign-out" class="p-button-warning"&ndash;&gt;-->
+<!--&lt;!&ndash;                      (click)="btnOutTest()"></button>&ndash;&gt;-->
+
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </ng-container>-->
+<!--    <ng-container *ngSwitchCase="'data_all'">-->
+<!--      <div class="data-container">-->
+<!--        <div class="data-header">-->
+<!--          <div style="width: 150px;margin-bottom: 10px;">-->
+<!--            <img class="w-100" src='assets/images/bandanvan/logo_bandanvan.png' alt="">-->
+<!--          </div>-->
+<!--          <div>PHẦN THI KIẾN THỨC</div>-->
+<!--          <div>KẾT QUẢ</div>-->
+<!--        </div>-->
+<!--        <div class="data-body">-->
+<!--          <p-table [value]="dataShiftTests" [loading]="table_loading" [lazy]="table_loading"   styleClass="p-datatable-gridlines"  >-->
+<!--            <ng-template pTemplate="header">-->
+<!--              <tr>-->
+<!--                <th>Đội thi</th>-->
+<!--                <th class="text-center ovic-w-250px">Số câu trả lời đúng</th>-->
+<!--                <th class="text-center ovic-w-100px">Tổng điểm</th>-->
+<!--              </tr>-->
+<!--            </ng-template>-->
+<!--            <ng-template pTemplate="body" let-item>-->
+<!--              <tr>-->
+<!--                <td>{{ item['__name_coverted'] }}</td>-->
+<!--                <td class="text-center">{{item['__total_answer']}}</td>-->
+<!--                <td class="text-center">{{item['__total']}}</td>-->
+<!--              </tr>-->
+<!--            </ng-template>-->
+<!--            <ng-template pTemplate="emptymessage" >-->
+<!--              <tr>-->
+<!--                <td colspan="20">Chưa có dữ liệu thí sinh</td>-->
+<!--              </tr>-->
+<!--            </ng-template>-->
+<!--          </p-table>-->
+
+<!--        </div>-->
+<!--        <div class="data-footer">-->
+<!--          <button pButton pRipple label="Thoát" icon="pi pi-sign-out" iconPos="right" (click)="btnOutTest()" ></button>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--    </ng-container>-->
+<!--  </ng-container>-->
+
+
+<!--  <div class="socket-connent" >-->
+<!--    <div class="dot" [ngClass]="stateSocket ? 'actice' :''"></div>-->
+<!--    <div class="title">{{stateSocket ? 'Đã kết nối': 'Chưa được kết nối'  }}</div>-->
+<!--  </div>-->
+
+
+<!--</div>-->
+
+<div class="panel_mc_contaner">
+  <div class="socket-connent" >
+    <div class="dot" [ngClass]="stateSocket ? 'actice' :''"></div>
+    <div class="title">{{stateSocket ? 'Đã kết nối': 'Chưa được kết nối'  }}</div>
+  </div>
+
 
   <ng-container [ngSwitch]="testView">
-    <ng-container *ngSwitchCase="'question'">
-      <div *ngIf="questionSelect" class="panel_mc_header">
-        <div class="panel_mc_header-item">
-          <div class="panel_mc_header-item__img">
+    <ng-container *ngSwitchCase="'loading'">
+      <div class="shift-container">
+        <div class="copy-right intro-x" #copyRight>
+          <div class="copy-right_img">
+            <img src="assets/images/logo__ictu.png" alt="">
+          </div>
+          <div class="copy-right_content copy-right-custom" #copyRightCustom>
+            <div class="text-1"> HỆ THÔNG ĐƯỢC XÂY DỤNG BỞI</div>
+            <div class="text-2"> <span> <strong>TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN VÀ TRUYỀN THÔNG</strong></span> <span> - Đại học Thái Nguyên </span></div>
+            <div class="text-3"> <span class="mr-4">www.ictu.edu.vn </span><span class="mr-4">fb.com/ictu.vn</span><span>ttptpm@ictu.vn</span></div>
+          </div>
+        </div>
+        <div class="login-container">
+          <div *ngIf="!viewLogout else notView" class="login-user" (click)="btnViewLogOut(true)">
             <img [src]="user.avatar" alt="">
+            <div class="">{{ user.display_name }}</div>
           </div>
-          <div class="panel_mc_header-item__name">
-            {{user.display_name}}
-          </div>
-        </div>
-        <div class="panel_mc_header-item">
-          <div class="counter-clock-wrap">
-            <div class="d-inline timer">{{ getFormattedTime() }}</div>
-          </div>
-
-        </div>
-<!--        <div class="panel_mc_header-item"></div>-->
-
-      </div>
-      <div *ngIf="questionSelect else notQuestionSelect" class="panel_mc_content ovic-scroll-style">
-        <div  class="panel_mc_content_question">
-          <div class="panel_mc_content_question-head">
-            Câu {{ curentQuestionNumber + 1 }}:
-          </div>
-          <div class="panel_mc_content_question-title">
-            <div [innerHTML]="questionSelect.title |ovicSafeHtml"></div>
-          </div>
-        </div>
-        <div class="panel_mc_content_answerOption">
-          <div *ngIf="!viewAnswer, else isShowAnswer">
-<!--            <app-groups-radio>-->
-<!--            </app-groups-radio>-->
-            <ng-container *ngIf=" timeClone === remainingTimeClone else notBy">
-              <groups-radio  [options]="questionSelect.answer_options" [freeze]="true"
-                             [options_sty]="questionSelect.options_sty"></groups-radio>
-
-            </ng-container>
-            <ng-template #notBy>
-              <groups-radio  [options]="questionSelect.answer_options" (onChange)="onAnswerQuestion(questionSelect.id, $event)"
-                             [options_sty]="questionSelect.options_sty"></groups-radio>
-            </ng-template>
-
-
-          </div>
-          <ng-template #isShowAnswer>
-<!--            <app-groups-radio [options]="questionSelect.answer_options" [default]="questionSelect['__anserByContestant_convent']"-->
-<!--                              [correctAnswer]="questionSelect['__answer_coverted']" [freeze]="true"-->
-<!--                              [options_sty]="questionSelect.options_sty"></app-groups-radio>-->
-            <groups-radio [options]="questionSelect.answer_options" [default]="questionSelect['__anserByContestant_convent']"
-                               [correctAnswer]="questionSelect['__answer_coverted']" [freeze]="true"
-                               [options_sty]="questionSelect.options_sty"></groups-radio>
-
-
+          <ng-template #notView>
+            <div class="login-user" (click)="btnViewLogOut(false)">
+              <img [src]="user.avatar" alt="">
+              <div class="">{{ user.display_name }}</div>
+            </div>
+            <div class="login-result" (click)="btnRouterResult()">
+              <div class="logout-icon">
+                <i class="pi pi-check-circle"></i>
+              </div>
+              <div>Kết quả thi</div>
+            </div>
+            <div class="login-logout" (click)="btnlogOut()">
+              <div class="logout-icon">
+                <i class="pi pi-sign-out"></i>
+              </div>
+              <div>Đăng xuất</div>
+            </div>
           </ng-template>
         </div>
+        <div class="shift-content">
+          <div class="shift-content-top">
+            <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">
+            <div>HỘI THI</div>
+            <div>“DÂN VẬN KHÉO” TỈNH THÁI NGUYÊN NĂM 2024</div>
+            <div>PHẦN THI KIẾN THỨC</div>
+          </div>
+          <div class="shift-content-body">
+            <div class="loading-container">
+              <div class="loading-item">
 
+                <div class="loading-item__icon  pi pi-spin">
+                  <i class="fa fa-spinner" aria-hidden="true"></i>
 
-      </div>
-      <ng-template #notQuestionSelect>
-        <div class="d-flex w-100 h-100 justify-content-center align-items-center flex-column" style=" gap:10px;">
-          <div class="loading-container">
-            <div class="loading-item">
-
-              <div class="loading-item__icon  pi pi-spin">
-                <i class="fa fa-spinner" aria-hidden="true"></i>
+                </div>
+                <div class="loading-item__content">
+                  Vui lòng chờ
+                </div>
+                              <button pButton pRipple label="Thoát" iconPos="right" icon="pi pi-sign-out" class="p-button-warning"
+                                      (click)="btnlogOut()"></button>
 
               </div>
-              <div class="loading-item__content">
-                Vui lòng chờ
-              </div>
-              <button pButton pRipple label="Thoát"  (click)="btnlogOut()"></button>
             </div>
           </div>
         </div>
-      </ng-template>
-
-    </ng-container>
-
-    <ng-container *ngSwitchCase="'data_question'">
-      <div class="data-container">
-        <div class="data-header">
-          <div>HỘI THI</div>
-          <div>“DÂN VẬN KHÉO” TỈNH THÁI NGUYÊN NĂM 2024</div>
-          <div>PHẦN THI KIẾN THỨC</div>
-          <div>KẾT QUẢ</div>
-        </div>
-        <div class="data-body">
-
-
-        </div>
-        <div class="data-footer">
-        </div>
       </div>
-
-
     </ng-container>
-    <ng-container *ngSwitchCase="'loading'">
-      <div class="loading-container">
-        <div class="loading-item">
 
-          <div class="loading-item__icon  pi pi-spin">
-            <i class="fa fa-spinner" aria-hidden="true"></i>
+    <ng-container *ngSwitchCase="'question'">
+      <div class="container h-100 d-flex flex-column">
+        <div *ngIf="questionSelect" class="panel_mc_header">
+          <div class="panel_mc_header-item">
+            <div class="panel_mc_header-item__img">
+              <img [src]="user.avatar" alt="">
+            </div>
+            <div class="panel_mc_header-item__name">
+              {{user.display_name}}
+            </div>
+          </div>
+          <div class="panel_mc_header-item">
+            <div class="counter-clock-wrap">
+              <div class="d-inline timer">{{ getFormattedTime() }}</div>
+            </div>
 
           </div>
-          <div class="loading-item__content">
-            Vui lòng chờ
-          </div>
-          <button pButton pRipple label="Thoát" iconPos="right" icon="pi pi-sign-out" class="p-button-warning"  (click)="btnOutTest()"></button>
+          <!--        <div class="panel_mc_header-item"></div>-->
 
         </div>
+        <div *ngIf="questionSelect else notQuestionSelect" class="panel_mc_content ovic-scroll-style">
+          <div  class="panel_mc_content_question">
+            <div class="panel_mc_content_question-head">
+              Câu {{ curentQuestionNumber + 1 }}:
+            </div>
+            <div class="panel_mc_content_question-title">
+              <div [innerHTML]="questionSelect.title |ovicSafeHtml"></div>
+            </div>
+          </div>
+          <div class="panel_mc_content_answerOption">
+            <div *ngIf="!viewAnswer, else isShowAnswer">
+              <!--            <app-groups-radio>-->
+              <!--            </app-groups-radio>-->
+              <ng-container *ngIf=" timeClone === remainingTimeClone else notBy">
+                <groups-radio  [options]="questionSelect.answer_options" [freeze]="true"
+                               [options_sty]="questionSelect.options_sty"></groups-radio>
+
+              </ng-container>
+              <ng-template #notBy>
+                <groups-radio  [options]="questionSelect.answer_options" (onChange)="onAnswerQuestion(questionSelect.id, $event)"
+                               [options_sty]="questionSelect.options_sty"></groups-radio>
+              </ng-template>
 
 
+            </div>
+            <ng-template #isShowAnswer>
+              <groups-radio [options]="questionSelect.answer_options" [default]="questionSelect['__anserByContestant_convent']"
+                            [correctAnswer]="questionSelect['__answer_coverted']" [freeze]="true"
+                            [options_sty]="questionSelect.options_sty"></groups-radio>
+
+
+            </ng-template>
+          </div>
+
+
+        </div>
+        <ng-template #notQuestionSelect>
+          <div class="d-flex w-100 h-100 justify-content-center align-items-center flex-column" style=" gap:10px;">
+            <div class="loading-container">
+              <div class="loading-item">
+
+                <div class="loading-item__icon  pi pi-spin">
+                  <i class="fa fa-spinner" aria-hidden="true"></i>
+
+                </div>
+                <div class="loading-item__content">
+                  Vui lòng chờ
+                </div>
+                <button pButton pRipple label="Thoát"  (click)="btnlogOut()"></button>
+              </div>
+            </div>
+          </div>
+        </ng-template>
       </div>
     </ng-container>
     <ng-container *ngSwitchCase="'data_all'">
-      <div class="data-container">
+      <div class="data-container container">
         <div class="data-header">
           <div style="width: 150px;margin-bottom: 10px;">
             <img class="w-100" src='assets/images/bandanvan/logo_bandanvan.png' alt="">
@@ -154,19 +359,11 @@
       </div>
 
     </ng-container>
+
+
   </ng-container>
 
-
-  <div class="socket-connent" >
-    <div class="dot" [ngClass]="stateSocket ? 'actice' :''"></div>
-    <div class="title">{{stateSocket ? 'Đã kết nối': 'Chưa được kết nối'  }}</div>
-  </div>
-
-
 </div>
-
-
-
 
 
 <ng-template #notifiTest>
