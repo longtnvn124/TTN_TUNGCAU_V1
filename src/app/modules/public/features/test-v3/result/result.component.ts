@@ -55,7 +55,7 @@ export class ResultComponent implements OnInit {
         this.userList  = user.filter(f=>f.id !==5011607).map(m=>{
           const shifttestUserIds = shift_test.filter(f=>f.thisinh_id === m.id).map(a=>a.id);
           if (shifttestUserIds.length>0){
-           
+
 
             m['__total'] = shiftTestQuestion.reduce((sum, item) => {
               if (shifttestUserIds.includes(item.shift_test_id)) {
@@ -69,10 +69,11 @@ export class ResultComponent implements OnInit {
 
           }
           return m;
-        })
+        }).sort((a,b)=>b['__total'] - a['__total']);
         console.log(this.userList);
         this.state = "data";
       },
+
       error:()=>{
         this.state = "loading";
         this.notificationService.toastError('Load dữ liệu không thành công ');

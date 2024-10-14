@@ -8,7 +8,7 @@
     <!--    [class.wrong-answer]="correctAnswerSet && !correctAnswerSet.has(question.id) && selectedSet.has(question.id)"-->
     <!--    [class.correct-answer]="correctAnswerSet && correctAnswerSet.has(question.id) && selectedSet.has(question.id)"-->
 
-    <button pRipple pButton class="ov-btn-radio ov-btn-radio-type--{{inputType}} content-inner-html"
+    <button pRipple pButton class="ov-btn-radio ov-btn-radio-type--{{inputType}} content-inner-html border-0"
             [ngClass]="{'active' : selectedSet.has(question.id)}"
             (click)="updateValue(question)">
       <div class="d-flex ">

@@ -14,7 +14,7 @@ import {
 
   SM_MODAL_OPTIONS_CUSTOM
 } from "@shared/utils/syscat";
-import {debounceTime, forkJoin, interval, merge, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
+import {debounceTime, forkJoin, interval, merge, Observable, of, Subject, switchMap, takeUntil, timeout} from "rxjs";
 import {Shift, ShiftTests} from "@shared/models/quan-ly-doi-thi";
 import {NganHangCauHoi, NganHangDe} from "@shared/models/quan-ly-ngan-hang";
 import {User} from "@core/models/user";
@@ -47,6 +47,8 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
   shiftTestQuestion    : ShiftTestQuestion[];
   table_loading        : boolean=false;
   isLoading            : boolean = false;
+  stream               : HTMLAudioElement;
+  soundEndTime                : HTMLAudioElement;
   constructor(
     private router: Router,
     private notificationService: NotificationService,
@@ -61,9 +63,39 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
 
   ) {
     this.user  = auth.user;
+
+    this.stream = document.createElement('audio');
+    this.soundEndTime = document.createElement('audio');
+
+    const audio = new Audio();
+    const source = document.createElement('source')
+    source.setAttribute('src', 'assets/sound/clock-ticking.mp3');
+    source.setAttribute('type', 'audio/mpeg');
+    audio.appendChild(source);
+    void audio.pause();
+    if(this.stream){
+      this.stream.remove();
+    }
+    this.stream =audio;
+
+    const audioEndTime = new Audio();
+    const sourceEndTime = document.createElement('source')
+    sourceEndTime.setAttribute('src', 'assets/sound/clock-alarm-end-test.mp3');
+    sourceEndTime.setAttribute('type', 'audio/mpeg');
+    audioEndTime.appendChild(sourceEndTime);
+    void audioEndTime.pause();
+    if(this.soundEndTime){
+      this.soundEndTime.remove();
+    }
+    this.soundEndTime= audioEndTime;
+
   }
 
   ngOnDestroy(): void {
+    this.soundEndTime.pause();
+    this.soundEndTime.remove();
+    this.stream.pause();
+    this.stream.remove();
     this.destroy$.next('closed');
     this.destroy$.complete();
     this.timeCloser$.complete();
@@ -154,9 +186,10 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
 
   socketStartTime(){
     this.isLoading=true;
-    this.shiftTestQuestionService.callSocketStartTime(this.shift.id).pipe(debounceTime(2000)).subscribe({
+    this.shiftTestQuestionService.callSocketStartTime(this.shift.id).subscribe({
       next:()=>{
         this.isLoading=false;
+        this.stream.play();
         this.startTimer(this.time_clone_for_end);
       },error:()=>{
         this.isLoading=false;
@@ -179,10 +212,13 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
         this.time_clone_for_end = Math.max(remainingTime, 0);
       } else {
         this.time_clone_for_end = 0;
-        this.viewAnswer= true;
+        // this.viewAnswer= true;
         this.btnViewTemplaceNotifi();
-        this.stopTimer();
+        this.stream.pause();
         this.isSubmitTimeEnd =true;
+        this.btnSoundEndTest();
+        this.stopTimer();
+
       }
       if (++couter === perious) {
         // this.updateTimeLeft(this.remainingTimeClone);// tính h sinh viên time giarm theo 20s 1 laamf
@@ -206,11 +242,13 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
     this.table_loading= true;
     const shift_id = this.shift.id;
     // const question_id = this.questionSelect.id;
-    this.shiftTestsService.getDataByShiftId(shift_id).pipe(switchMap(m=>{
+    this.shiftTestsService.getDataByShiftId(shift_id,null,this.shift.user_list).pipe(switchMap(m=>{
+
       const ids = m.map(m=>m.id);
       return forkJoin([of(m),this.shiftTestQuestionService.getDataByShiftTestIdsAndquestion_id(ids,question_id)])
     })).subscribe({
       next:([shiftTest,shiftTestQuestion])=>{
+
           this.shiftTest = shiftTest && shiftTest.length>0 ? shiftTest.map(m=>{
             const thisinh =m['users'];
 
@@ -264,9 +302,10 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
   callSocketStartQuestion(){
     this.isLoading=true;
     this.shiftTestQuestionService.callSocketStart(this.shift.id,this.questionSelect.id).pipe(switchMap(()=>
-    this.shiftTestQuestionService.getDataByShiftIdAndQuestionId(this.shift.id,this.questionSelect.id)
+    this.shiftTestQuestionService.getDataByShiftIdAndQuestionId(this.shift.id,this.questionSelect.id,this.shift.user_list)
     )).subscribe({
       next:(data)=>{
+
         this.shiftTestQuestion = data.map(m=>{
           const thisinh =m['users'];
           m['__display_name'] = thisinh ? thisinh['display_name'] :'Đội thi ...';
@@ -309,7 +348,7 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
   loadKetquaQueStion(shift_id:number,question_id:number){
     this.isLoading=true;
 
-    this.shiftTestQuestionService.getDataByShiftIdAndQuestionId(shift_id,question_id).subscribe({
+    this.shiftTestQuestionService.getDataByShiftIdAndQuestionId(shift_id,question_id,this.shift.user_list).subscribe({
       next:(data)=>{
         this.shiftTestQuestion = data.map(m=>{
           const thisinh =m['users'];
@@ -333,5 +372,13 @@ export class PannelByMcComponent implements OnInit,OnDestroy {
 
       }
     })
+  }
+
+  btnSoundEndTest(){
+    this.soundEndTime.play();
+
+    setTimeout(()=>{
+      this.soundEndTime.pause()
+    },1000)
   }
 }

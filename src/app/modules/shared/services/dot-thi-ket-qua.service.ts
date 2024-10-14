@@ -30,23 +30,27 @@ export class DotThiKetQuaService {
     return this.http.get<Dto>(''.concat(this.api, id.toString(10))).pipe(map(res => res.data));
   }
 
-  getShiftTest(shift_id: number, user_id: number): Observable<ShiftTests> {
+  getShiftTest(shift_id: number, user_id?: number): Observable<ShiftTests> {
     const conditions: OvicConditionParam[] = [
-      {
-        conditionName: 'thisinh_id',
-        condition: OvicQueryCondition.equal,
-        value: user_id.toString(10)
-      },
       {
         conditionName: 'shift_id',
         condition: OvicQueryCondition.equal,
         value: shift_id.toString(10),
-        orWhere: 'and'
       }
     ];
+
+    if(user_id){
+      conditions.push({
+        conditionName: 'thisinh_id',
+        condition: OvicQueryCondition.equal,
+        value: user_id.toString(10)
+      },)
+    }
     const params: HttpParams = this.httpParamsHelper.paramsConditionBuilder(conditions);
     return this.http.get<Dto>(this.api, {params}).pipe(map(res => res.data && res.data[0] ? res.data[0] : null));
   }
+
+
 
   createShiftTest(data: { shift_id: number, thisinh_id: number, question_ids: number[], time_start: string, time?: number, state?:number }): Observable<number> {
     return this.http.post<Dto>(this.api, data).pipe(map(res => res.data));
@@ -61,7 +65,7 @@ export class DotThiKetQuaService {
     return this.http.post<Dto>(''.concat(this.api, id.toString(10), '/point'), null).pipe(map(res => res.data))
   }
 
-  getDataByShiftId(shift_id: number, user_id ?:number): Observable<ShiftTests[]> {
+  getDataByShiftId(shift_id: number, user_id ?:number,user_list ?:number[]): Observable<ShiftTests[]> {
     const conditions: OvicConditionParam[] = [{
       conditionName: 'shift_id',
       condition: OvicQueryCondition.equal,
@@ -76,7 +80,13 @@ export class DotThiKetQuaService {
         },
       )
     }
-    const params: HttpParams = this.httpParamsHelper.paramsConditionBuilder(conditions, new HttpParams().set('with', 'users'));
+    const fromObject ={
+      paged:1,
+      limit:-1,
+      include: user_list.join(','),
+      include_by: 'thisinh_id'
+    }
+    const params: HttpParams = this.httpParamsHelper.paramsConditionBuilder(conditions, new HttpParams({fromObject}).set('with', 'users'));
     return this.http.get<Dto>(this.api, {params}).pipe(map(res => res.data));
   }
 

@@ -149,7 +149,6 @@ export class PannelByContestantComponent implements OnInit, OnDestroy {
   checkInit() {
 
     const shift_id: number = this.authService.getOption(KEY_NAME_SHIFT_ID);
-    console.log(shift_id);
     if (!Number.isNaN(shift_id)) {
       this._validInfo.shift_id = shift_id;
       this._initTest();
@@ -164,8 +163,7 @@ export class PannelByContestantComponent implements OnInit, OnDestroy {
     this.notificationService.isProcessing(true);
 
     this.shiftService.getDataById(this._validInfo.shift_id).pipe(switchMap(m => {
-      return forkJoin([of(m), this.shiftTestsService.getShiftTest(this._validInfo.shift_id,
-        this.authService.user.id), this.nganHangDeService.getDataById(m.bank_id),
+      return forkJoin([of(m), this.shiftTestsService.getShiftTest(this._validInfo.shift_id, this.authService.user.id), this.nganHangDeService.getDataById(m.bank_id),
         this.nganHangCauHoiService.getDataByBankId(m.bank_id)
       ])
     })).subscribe({
@@ -232,7 +230,6 @@ export class PannelByContestantComponent implements OnInit, OnDestroy {
         this.remainingTimeClone = 0;
         this.stopTimer();
         this.isSubmitTimeEnd = true;
-        console.log('time end');
         this.btnViewTemplaceNotifi();
       }
 
@@ -240,14 +237,17 @@ export class PannelByContestantComponent implements OnInit, OnDestroy {
   }
 
   socketStartQuestion(data: ShiftTestQuestion) {
+
     this.notificationService.isProcessing(true);
-    this.nganHangCauHoiService.getQuestionById(data.question_id).pipe(debounceTime(2000)).subscribe({
-      next: (q) => {
+    forkJoin([this.shiftTestsService.getShiftTestById(data.shift_test_id,),this.nganHangCauHoiService.getQuestionById(data.question_id)]).subscribe({
+      next: ([shift,q]) => {
+
+        this.shiftTest = shift;
         const q_current = q;
         q_current['__answer_coverted'] = q_current.correct_answer.join(',');
         q_current['__freeze'] = false;
         this.questionSelect = {...q_current};
-        this.curentQuestionNumber = (this.curentQuestionNumber + 1);
+        this.curentQuestionNumber = shift.question_ids.findIndex(f => f === q.id);
         this.viewAnswer = false;
         this.testView = "question";
         this.timeClone = this.bank ? this.bank.time_per_test_tungcau : 15;
@@ -274,7 +274,7 @@ export class PannelByContestantComponent implements OnInit, OnDestroy {
 
   onAnswerQuestion(questionId: number, answers: number[]) {
 
-    const bankCurrent = this.bankQuestions.find(f => f.id === questionId) ? this.bankQuestions.find(f => f.id === questionId) : this.questionSelect;
+    const bankCurrent = this.questionSelect;
     if (this.remainingTimeClone > 0) {
       if (this.bankQuestions && this.bankQuestions.length>0){
         this.bankQuestions.find(f => f.id === questionId)['__anserByContestant'] = answers;

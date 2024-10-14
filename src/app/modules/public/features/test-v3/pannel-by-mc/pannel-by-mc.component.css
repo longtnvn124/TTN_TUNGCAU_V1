@@ -8,8 +8,8 @@
   align-items: center;
 }
 .logo img{
-  width:100px;
-  height:100px;
+  width: 150px;
+  height: 150px;
 }
 /*-------------------------NewVer----------------------*/
 .panel-container{
@@ -86,11 +86,12 @@
   min-height:120px;
 }
 .panel-center-header_item{
-  height:60px;
-  display:flex;
-  flex-direction:row;
-  align-items:center;
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   padding: 10px 10px 0;
+  margin-bottom: 30px;
 }
 
 .panel-center-header_item-left{
@@ -129,9 +130,9 @@
 .panel-center-header_item .title{
   color: #FF0004;
   text-align: center;
-  font-size: 40px;
+  font-size: 70px;
   font-weight: 700;
-  font-family: Times New Roman, serif;
+  font-family: Roboto, sans-serif;
   text-shadow: -2px -2px 2px #FFF, 2px -2px 2px #fff, -2px 2px 2px #fff, 2px 2px 2px #fff;
 
 }
@@ -151,7 +152,7 @@
   background: #008DED;
   /* border-top-right-radius: 50px; */
   /* border-bottom-left-radius: 50px; */
-  width: 450px;
+  width: 500px;
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -171,8 +172,8 @@
 }
 .panel-center-body_left-title div{
   font-weight:500;
-  font-size: 24px;
-  line-height: 32px;
+  font-size: 32px;
+  line-height: 36px;
   text-align:justify;
 }
 .panel-center-body_left-title div p{
@@ -205,7 +206,7 @@
 }
 
 .panel-center-footer_item{
-  height: 50px;
+  height: 75px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -216,8 +217,7 @@
   border-radius: 6px;
 }
 .panel-center-footer_item-avatar{
-  height: calc(100% - 8px);
-  width: calc(50px - 8px);
+  height: calc(100% - 14px);
   padding: 2px;
   margin: 4px;
   background: #ffffff;
@@ -228,14 +228,16 @@
   border-radius: 50px;
 }
 .panel-center-footer_item-name{
-  padding:10px;
-  width:1%;
-  flex:1 1 auto;
-  font-size:16px;
-  color:#fff;
+  padding: 10px;
+  width: 1%;
+  flex: 1 1 auto;
+  font-size: 40px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
 }
 .panel-center-footer_item-answer{
-  width:50px;
+  width:74px;
   height:100%;
   padding:5px;
 }
@@ -247,7 +249,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 24px;
+  font-size: 46px;
   color: #fff;
   font-weight:700;
   font-family:Roboto, sans-serif;
@@ -257,17 +259,18 @@
 }
 
 .panel-center-footer-bottom{
-  height:60px ;
+  height:100px ;
 }
 /*------------- data all --------------*/
 .panel-center-body_data{
-  width:1024px;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  /*justify-content:center;*/
-  padding:40px 0;
+  width: 80%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  gap: 20px;
+
 }
 .panel-center-body_data_header{
   height:50px;
@@ -281,7 +284,7 @@
 .panel-center-body_data_header-name{
   width:1%;
   flex: 1 1 auto;
-  padding-left:25px;
+  /*padding-left:25px;*/
 }
 
 .panel-center-body_data_header-answer{
@@ -295,12 +298,12 @@
 .panel-center-body_data_header-name,
 .panel-center-body_data_header-answer,
 .panel-center-body_data_header-total{
-  height:100%;
-  display:flex;
+  height: 100%;
+  display: flex;
   align-items: center;
-  font-size: 24px;
+  font-size: 36px;
   font-weight: 600;
-  font-family:Roboto, sans-serif;
+  font-family: Roboto, sans-serif;
 }
 .panel-center-body_data_content{
   display: flex;
@@ -309,7 +312,7 @@
   flex-direction: column;
 }
 .panel-center-body_data_content-item{
-  height: 80px;
+  height: 90px;
   display: flex;
   align-items: center;
   width: 100%;
@@ -334,9 +337,10 @@
   padding: 2px;
 }
 .panel-center-body_data_content-item .name div{
-  font-size: 20px;
+  font-size: 38px;
   font-weight: 600;
   font-family: Roboto, sans-serif;
+  text-transform: uppercase;
 }
 .panel-center-body_data_content-item .answer{
   width:25%;
@@ -349,7 +353,7 @@
   display:flex;
   justify-content:center;
   align-items:center;
-  font-size:24px;
+  font-size:38px;
   font-weight:600;
   font-family:Roboto, sans-serif;
 }
@@ -362,6 +366,9 @@
   padding: 22px;
   border-radius: 42px;
   width: 128px;
+  position: absolute;
+  right: -40px;
+  bottom: 60px;
 }
 
 /*-----------------------------------------------------*/
@@ -411,7 +418,7 @@
 
 .counter-clock-wrap {
   background-color: #fff;
-  padding: 10px 15px;
+  padding: 16px 20px;
   border-radius: 999px;
   border: 1px solid #bdbdbd;
   height: 40px;
@@ -424,10 +431,10 @@
 }
 .timer {
   margin-top: 4px;
-  font-size: 34px;
-  font-weight: 500;
+  font-size: 60px;
+  font-weight: 600;
   /*color: #008eff;*/
-  color: #000;
+  color: #4b4b4b;
   font-family: 'alarm clock', sans-serif;
 }
 

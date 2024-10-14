@@ -121,7 +121,7 @@
   background-color: #db0a0a;
   display:flex;
   flex-direction:column;
-  background-image: url('/assets/images/bandanvan/background.png');
+  background-image: url('/assets/images/bandanvan/bg-bandanvan.png');
   background-repeat: no-repeat;
   background-position: center 100%;
   background-size: cover;
@@ -315,7 +315,7 @@
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:20px;
+  gap:50px;
   padding: 20px 0 ;
   margin-bottom:30px;
 }
@@ -327,7 +327,7 @@
 .shift-content-top div{
   font-size: 50px;
   font-weight: 600;
-  font-family: Times New Roman, serif;
+  font-family: Roboto, sans-serif;
   text-transform: uppercase;
   color: #FF0004;
   line-height: 50px;
@@ -351,7 +351,7 @@
 .user-data{
   display: flex;
   flex-direction: row;
-  max-width: 1440px;
+  max-width: calc(100% - 20px);
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
@@ -360,7 +360,7 @@
 
 .user_item{
   width: calc(100% / 3 - 40px);
-  height: 56px;
+  height: 70px;
   padding: 4px;
   display: flex;
   justify-content: space-between;
@@ -383,9 +383,10 @@
   background:#fff;
 }
 .user_item-left span, .user_item-left div{
-  font-size:16px;
-  font-weight:500;
+  font-size: 34px;
+  font-weight: 700;
   font-family: Roboto, sans-serif;
+  text-transform: uppercase;
 }
 .user_item-left div{
   padding-right:10px;

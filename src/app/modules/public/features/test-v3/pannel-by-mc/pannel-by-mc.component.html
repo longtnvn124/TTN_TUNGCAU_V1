@@ -38,9 +38,9 @@
 <!--              </div>-->
 <!--            </div>-->
           </div>
-          <div class="logo text-center">
-            <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">
-          </div>
+<!--          <div class="logo text-center">-->
+<!--            <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">-->
+<!--          </div>-->
           <div class="panel-center-header_item justify-content-center">
             <div class="title">PHẦN THI KIẾN THỨC</div>
           </div>
@@ -123,24 +123,6 @@
           <i class="pi pi-angle-right"></i>
         </div>
       </div>
-<!--      <div class="pannel-header">-->
-<!--        <div class="pannel-header-top">-->
-<!--          <div class="pannel-header-top-left">-->
-<!--            <div class="pannel-header-top-left_item">-->
-<!--              <div class="panel_mc_header-item__img">-->
-<!--                <img [src]="user.avatar" alt="">-->
-<!--              </div>-->
-<!--              <div class="panel_mc_header-item__name">-->
-<!--                {{user.display_name}}-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="pannel-header-top-left_item"></div>-->
-<!--          </div>-->
-<!--          <div class="pannel-header-top-right">-->
-
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
 
     </div>
 
@@ -153,7 +135,6 @@
     <div class="panel-container" >
       <div class="panel-top-left">
         <div class="panel-center-header_item-left__user" >
-          <img [src]="user.avatar" alt="">
           <div>{{user.display_name}}</div>
         </div>
       </div>
@@ -174,28 +155,16 @@
       <div class="panel-center">
         <div class="panel-center-header">
           <div class="panel-center-header_item justify-content-between">
-
-<!--            <div class="panel-center-header_item-left">-->
-<!--              <div class="panel-center-header_item-left__user" >-->
-<!--                <img [src]="user.avatar" alt="">-->
-<!--                <div>{{user.display_name}}</div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="panel-center-header_item-right">-->
-<!--              <div class="counter-clock-wrap h-100" >-->
-<!--                <div class="d-inline timer">{{ getFormattedTime() }}</div>-->
-<!--              </div>-->
-<!--            </div>-->
           </div>
           <div class="logo">
             <img src="assets/images/bandanvan/logo_bandanvan.png" alt="">
           </div>
           <div class="panel-center-header_item justify-content-center">
-            <div class="title">PHẦN THI KIẾN THỨC</div>
+            <div class="title">KẾT QUẢ PHẦN THI KIẾN THỨC</div>
           </div>
-          <div class="panel-center-header_item justify-content-center">
-            <div class="title"> KẾT QUẢ </div>
-          </div>
+<!--          <div class="panel-center-header_item justify-content-center">-->
+<!--            <div class="title"> KẾT QUẢ </div>-->
+<!--          </div>-->
 
         </div>
         <div class="panel-center-body">
@@ -249,10 +218,14 @@
       <i class="fa fa-info-circle" aria-hidden="true"></i>
     </div>
     <div class="notifi-right">
-      <div class="content">Hết thời gian làm bài </div>
+      <div class="content">Xem Kết quả các đội thi </div>
       <div class="btn_notifi">
-        <button pRipple pButton label="Xem đáp án " (click)="btnSubmitTimeEnd()" ></button>
+        <button pRipple pButton label="Xem kết quả " (click)="btnSubmitTimeEnd()" ></button>
       </div>
     </div>
   </div>
 </ng-template>
+<audio class="d-none" controls>
+  <source src="assets/sound/clock-ticking.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>

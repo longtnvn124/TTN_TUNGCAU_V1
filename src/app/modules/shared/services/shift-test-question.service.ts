@@ -8,13 +8,14 @@ import {map, Observable} from "rxjs";
 import {Dto, OvicConditionParam, OvicQueryCondition} from "@core/models/dto";
 
 export interface ShiftTestQuestion{
-  id?         : number;
-  shift_test_id: number;
-  bank_id     : number;
-  question_id : number;
-  score       : number;
-  answer      : number[];
-  thisinh_id  : number;
+  id?           : number;
+  shift_test_id : number;
+  shift_id      ?: number;
+  bank_id       : number;
+  question_id   : number;
+  score         : number;
+  answer        : number[];
+  thisinh_id    : number;
 }
 @Injectable({
   providedIn: 'root'
@@ -140,7 +141,7 @@ export class ShiftTestQuestionService {
     return this.http.get<Dto>(this.api, {params}).pipe(map(res => res ? res.data : []));
   }
 
-  getDataByShiftIdAndQuestionId(shiftTest_id:number,question_id?:number):Observable<ShiftTestQuestion[]>
+  getDataByShiftIdAndQuestionId(shiftTest_id:number,question_id?:number,user_list?:number[]):Observable<ShiftTestQuestion[]>
   {
     const conditions: OvicConditionParam[] = [
       {
@@ -161,6 +162,8 @@ export class ShiftTestQuestionService {
     const fromObject = {
       paged: 1,
       limit: -1,
+      include: user_list.join(','),
+      include_by: 'thisinh_id'
     }
     const params = this.httpParamsHelper.paramsConditionBuilder(conditions, new HttpParams({fromObject}).set('with', 'users'));
     return this.http.get<Dto>(this.api, {params}).pipe(map(res => res ? res.data : []));

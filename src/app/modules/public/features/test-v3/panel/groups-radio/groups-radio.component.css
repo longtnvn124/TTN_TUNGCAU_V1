@@ -40,7 +40,7 @@
 }
 
 .ov-btn-radio {
-  border: 1px solid #008DED;
+  /*border: 1px solid #008DED;*/
   margin: 0;
   display: flex;
   box-shadow: none !important;
@@ -246,9 +246,12 @@ p.ovic-radios__text {
 }
 
 .correct-answer .ov-btn-radio{
-  border: 2px solid #FFFF00;
+  /*border: 2px solid #FFFF00;*/
   /*background-color: #660000CC;*/
-  color: #FFFF00;
+  /*color: #FFFF00;*/
+
+  background: #04a601;
+
 }
 .correct-answer .ov-btn-radio .ov-prefix {
   /*background-color:#04AA1D;*/
@@ -257,7 +260,8 @@ p.ovic-radios__text {
 }
 .correct-answer .ovic-radios__text {
 	/*color: #3AB54A;*/
-	color: #FFF700;
+	/*color: #FFF700;*/
+  color: #fff;
 }
 
 .correct-answer .ovic-radios__tick--correct-answer {
@@ -268,10 +272,11 @@ p.ovic-radios__text {
 .ovic-radios__tick,
 .ov-prefix {
 	display: inline;
-	vertical-align: top;
-  padding:0 10px;
-  line-height: 27px;
-  text-align:justify;
+  vertical-align: top;
+  padding: 0 10px;
+  line-height: 32px;
+  text-align: justify;
+  font-size: 30px;
 }
 
 .ovic-radios__tick {
